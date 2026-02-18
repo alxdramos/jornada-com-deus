@@ -14,6 +14,21 @@ import { staggerContainer, staggerItem } from "@/lib/animations";
 const CATEGORIAS = ["TUDO", "MENTE", "CORPO", "ESPÍRITO", "MÚSICA", "ESTUDOS"];
 const CHIPS = ["TUDO", "DORMIR", "ANSIEDADE", "PAZ", "<5MINS", "MOTIVAÇÃO", "ORAÇÃO"];
 
+const LIVROS_AT = [
+  "Gênesis", "Êxodo", "Levítico", "Números", "Deuteronômio", "Josué", "Juízes", "Rute",
+  "1 Samuel", "2 Samuel", "1 Reis", "2 Reis", "1 Crônicas", "2 Crônicas", "Esdras", "Neemias",
+  "Ester", "Jó", "Salmos", "Provérbios", "Eclesiastes", "Cantares", "Isaías", "Jeremias",
+  "Lamentações", "Ezequiel", "Daniel", "Oséias", "Joel", "Amós", "Obadias", "Jonas",
+  "Miquéias", "Naum", "Habacuque", "Sofonias", "Ageu", "Zacarias", "Malaquias"
+];
+
+const LIVROS_NT = [
+  "Mateus", "Marcos", "Lucas", "João", "Atos", "Romanos", "1 Coríntios", "2 Coríntios",
+  "Gálatas", "Efésios", "Filipenses", "Colossenses", "1 Tessalonicenses", "2 Tessalonicenses",
+  "1 Timóteo", "2 Timóteo", "Tito", "Filemom", "Hebreus", "Tiago", "1 Pedro", "2 Pedro",
+  "1 João", "2 João", "3 João", "Judas", "Apocalipse"
+];
+
 interface MeditationCard {
   id: string;
   title: string;
@@ -597,10 +612,10 @@ export function TabExplorar() {
                           {["AT", "NT"].map((testamento) => (
                             <button
                               key={testamento}
-                              onClick={() => setTestamento(testamento as "AT" | "NT")}
+                              onClick={() => setModalTestamento(testamento as "AT" | "NT")}
                               className={cn(
                                 "px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors flex-shrink-0",
-                                testamento === testamento
+                                modalTestamento === testamento
                                   ? "bg-[#1F2937] text-white"
                                   : "bg-white text-[#1F2937] border border-[#E5E7EB]"
                               )}
@@ -610,7 +625,7 @@ export function TabExplorar() {
                           ))}
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                          {testamento === "AT" ? LIVROS_AT : LIVROS_NT.map((livro) => (
+                          {(modalTestamento === "AT" ? LIVROS_AT : LIVROS_NT).map((livro) => (
                             <div
                               key={livro}
                               className="bg-white rounded-2xl px-4 py-4 shadow-sm text-[#1F2937] font-medium border border-[#E5E7EB]"
