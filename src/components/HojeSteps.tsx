@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { useProgressStore } from "@/stores/progressStore";
 import { useUserStore } from "@/stores/userStore";
-import { toast } from "sonner";
+import { useToast } from "@/hooks/useToast";
 import { cn } from "@/lib/utils";
 import { ImmersiveAudioPlayer } from "./ImmersiveAudioPlayer";
 
@@ -67,6 +67,7 @@ export function HojeSteps() {
   const { completeDay } = useProgressStore();
   const user = useUserStore((s) => s.user);
   const isPlus = user?.isPlus ?? false;
+  const { dayCompleted } = useToast();
 
   const toggleEtapa = (id: string) => {
     setCompletados((prev) => {
@@ -79,15 +80,7 @@ export function HojeSteps() {
 
   const handleConcluirDia = () => {
     completeDay();
-    toast.success("Dia concluído! Glória a Deus 🙌", {
-      duration: 4000,
-      style: {
-        background: "#FAF9F6",
-        border: "1px solid #E5E7EB",
-        borderRadius: "16px",
-        boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
-      },
-    });
+    dayCompleted();
   };
 
   return (

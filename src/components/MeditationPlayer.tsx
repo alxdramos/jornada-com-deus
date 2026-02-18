@@ -24,6 +24,7 @@ interface MeditationPlayerProps {
   duracao: string;
   isPlus?: boolean;
   imagemFundo?: string;
+  audioUrl?: string;
 }
 
 export function MeditationPlayer({
@@ -33,7 +34,8 @@ export function MeditationPlayer({
   descricao,
   duracao,
   isPlus = false,
-  imagemFundo = "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=1200&fit=crop"
+  imagemFundo = "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=1200&fit=crop",
+  audioUrl
 }: MeditationPlayerProps) {
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -42,26 +44,68 @@ export function MeditationPlayer({
   const [currentTime, setCurrentTime] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
   const [repeat, setRepeat] = useState(false);
+  const [showPlusOverlay, setShowPlusOverlay] = useState(!isPlus);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const progressRef = useRef<HTMLDivElement>(null);
 
-  // Simular progresso para demonstração
+  // Setup audio element when URL is provided
   useEffect(() => {
-    if (playing) {
+    if (audioUrl && audioRef.current) {
+      audioRef.current.src = audioUrl;
+      audioRef.current.load();
+    }
+  }, [audioUrl]);
+
+  // Lidar com progresso do audio
+  useEffect(() => {
+    if (!playing || !isPlus) return;
+
+    if (audioUrl && audioRef.current) {
+      // Usar audio real
+      const audio = audioRef.current;
+      const updateProgress = () => {
+        if (audio.duration) {
+          setProgress((audio.currentTime / audio.duration) * 100);
+          setCurrentTime(audio.currentTime);
+        }
+      };
+
+      const handleEnded = () => {
+        if (repeat) {
+          audio.currentTime = 0;
+          audio.play();
+        } else {
+          setPlaying(false);
+        }
+      };
+
+      audio.addEventListener('timeupdate', updateProgress);
+      audio.addEventListener('ended', handleEnded);
+
+      return () => {
+        audio.removeEventListener('timeupdate', updateProgress);
+        audio.removeEventListener('ended', handleEnded);
+      };
+    } else {
+      // Simular progresso para demonstração
       const interval = setInterval(() => {
-        setProgress(prev => {
+        setProgress((prev) => {
           if (prev >= 100) {
-            setPlaying(false);
-            return 100;
+            if (repeat) {
+              return 0;
+            } else {
+              setPlaying(false);
+              return 100;
+            }
           }
-          return prev + 0.5;
+          return prev + 0.2;
         });
-        setCurrentTime(prev => prev + 1);
+        setCurrentTime((prev) => prev + 1);
       }, 1000);
       return () => clearInterval(interval);
     }
-  }, [playing]);
+  }, [playing, isPlus, repeat, audioUrl]);
 
   useEffect(() => {
     if (!isOpen) {
@@ -71,8 +115,30 @@ export function MeditationPlayer({
     }
   }, [isOpen]);
 
-  const togglePlay = () => {
-    setPlaying(!playing);
+  const togglePlay = async () => {
+    if (!isPlus) {
+      setShowPlusOverlay(true);
+      return;
+    }
+
+    if (audioUrl && audioRef.current) {
+      // Controlar audio real
+      try {
+        if (playing) {
+          audioRef.current.pause();
+          setPlaying(false);
+        } else {
+          await audioRef.current.play();
+          setPlaying(true);
+        }
+      } catch (error) {
+        console.error('Erro ao controlar audio:', error);
+        setPlaying(false);
+      }
+    } else {
+      // Simulação
+      setPlaying(!playing);
+    }
   };
 
   const handleProgressClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -119,8 +185,11 @@ export function MeditationPlayer({
 
       {/* Close button */}
       <button
-        onClick={onClose}
-        className="absolute top-6 right-6 z-10 w-10 h-10 rounded-full bg-white/20 backdrop-blur flex items-center justify-center text-white hover:bg-white/30 transition-colors"
+        onClick={(e) => {
+          e.stopPropagation();
+          onClose();
+        }}
+        className="absolute top-6 right-6 z-20 w-10 h-10 rounded-full bg-white/20 backdrop-blur flex items-center justify-center text-white hover:bg-white/30 transition-colors"
       >
         <X className="w-5 h-5" />
       </button>
@@ -291,6 +360,15 @@ export function MeditationPlayer({
               </button>
             </div>
           </motion.div>
+        )}
+
+        {/* Elemento audio oculto */}
+        {audioUrl && (
+          <audio
+            ref={audioRef}
+            preload="metadata"
+            style={{ display: 'none' }}
+          />
         )}
       </div>
     </motion.div>

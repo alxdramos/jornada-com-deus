@@ -5,6 +5,7 @@ import { useUserStore } from "@/stores/userStore";
 import { motion, AnimatePresence } from "framer-motion";
 import { PenLine, Plus, Heart, Quote, BookOpen, Calendar, X, Search, Filter } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { fadeInUp, staggerContainer, staggerItem, hoverLift } from "@/lib/animations";
 
 interface DiaryEntry {
   id: string;
@@ -238,7 +239,12 @@ export function TabDiario() {
           </div>
 
           {/* Lista de Entradas */}
-          <div className="space-y-4">
+          <motion.div
+            variants={staggerContainer}
+            initial="initial"
+            animate="animate"
+            className="space-y-4"
+          >
             {filteredEntries.length === 0 ? (
               <motion.div
                 initial={{ opacity: 0 }}
@@ -259,14 +265,15 @@ export function TabDiario() {
                 </p>
               </motion.div>
             ) : (
-              filteredEntries.map((entry) => {
+              filteredEntries.map((entry, index) => {
                 const Icon = getEntryIcon(entry.type);
                 return (
                   <motion.div
                     key={entry.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="bg-white rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow"
+                    variants={staggerItem}
+                    initial="initial"
+                    animate="animate"
+                    className="bg-white rounded-2xl p-4 shadow-sm hover:shadow-md transition-all duration-200"
                   >
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex items-start gap-3 flex-1">
@@ -332,9 +339,9 @@ export function TabDiario() {
                     </button>
                   </motion.div>
                 );
-              })
+              }              )
             )}
-          </div>
+          </motion.div>
 
           {/* FAB para criar nova entrada */}
           <motion.button
