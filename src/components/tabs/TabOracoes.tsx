@@ -78,8 +78,9 @@ export function TabOracoes() {
 
     if (savedPrayers) {
       try {
-        const parsed = JSON.parse(savedPrayers);
-        const customPrayers = parsed.map((p: any) => ({
+        type StoredPrayer = Omit<Prayer, 'createdAt'> & { createdAt: string };
+        const parsed = JSON.parse(savedPrayers) as StoredPrayer[];
+        const customPrayers = parsed.map((p) => ({
           ...p,
           createdAt: new Date(p.createdAt)
         }));

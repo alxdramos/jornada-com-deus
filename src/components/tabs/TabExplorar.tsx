@@ -132,16 +132,10 @@ export function TabExplorar() {
   const [paywallOpen, setPaywallOpen] = useState(false);
   const [playerOpen, setPlayerOpen] = useState(false);
   const [selectedMeditation, setSelectedMeditation] = useState<MeditationCard | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [showAllModal, setShowAllModal] = useState(false);
   const [selectedSection, setSelectedSection] = useState<'meditacoes' | 'escrituras' | 'novo'>('meditacoes');
   const [modalTestamento, setModalTestamento] = useState<"AT" | "NT">("AT");
-
-  // Simular loading inicial
-  useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 1000);
-    return () => clearTimeout(timer);
-  }, []);
 
   // Filtrar meditações por categoria e chip
   const meditatacoesFiltradas = MEDITACOES.filter(med => {

@@ -3,6 +3,7 @@
 import { GamificationCard } from "@/components/GamificationCard";
 import { HojeSteps } from "@/components/HojeSteps";
 import { ProfileModal } from "@/components/ProfileModal";
+import { CalendarioFavoritosModal } from "@/components/CalendarioFavoritosModal";
 import { useUserStore } from "@/stores/userStore";
 import { useProgressStore } from "@/stores/progressStore";
 import { useState } from "react";
@@ -10,6 +11,7 @@ import { Flame } from "lucide-react";
 
 export function TabHoje() {
   const [profileOpen, setProfileOpen] = useState(false);
+  const [calendarioOpen, setCalendarioOpen] = useState(false);
   const user = useUserStore((s) => s.user);
   const { progress } = useProgressStore();
 
@@ -27,7 +29,10 @@ export function TabHoje() {
             </button>
             <div>
               <h1 className="text-xl font-bold text-[#1F2937]">Cresça com Deus</h1>
-              <button className="text-sm text-[#FB923C] font-medium">
+              <button
+                onClick={() => setCalendarioOpen(true)}
+                className="text-sm text-[#FB923C] font-medium hover:text-[#EA580C] transition-colors"
+              >
                 VER CALENDÁRIO & FAVORITOS
               </button>
             </div>
@@ -74,6 +79,7 @@ export function TabHoje() {
       </div>
 
       <ProfileModal isOpen={profileOpen} onClose={() => setProfileOpen(false)} />
+      <CalendarioFavoritosModal isOpen={calendarioOpen} onClose={() => setCalendarioOpen(false)} />
     </div>
   );
 }

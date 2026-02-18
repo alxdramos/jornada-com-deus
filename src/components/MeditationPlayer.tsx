@@ -12,7 +12,9 @@ import {
   X,
   Heart,
   Share2,
-  Repeat
+  Repeat,
+  AlertCircle,
+  Loader2
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -45,6 +47,8 @@ export function MeditationPlayer({
   const [isFavorite, setIsFavorite] = useState(false);
   const [repeat, setRepeat] = useState(false);
   const [showPlusOverlay, setShowPlusOverlay] = useState(!isPlus);
+  const [audioError, setAudioError] = useState(false);
+  const [audioLoading, setAudioLoading] = useState(false);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const progressRef = useRef<HTMLDivElement>(null);
@@ -52,9 +56,35 @@ export function MeditationPlayer({
   // Setup audio element when URL is provided
   useEffect(() => {
     if (audioUrl && audioRef.current) {
+      setAudioError(false);
+      setAudioLoading(true);
       audioRef.current.src = audioUrl;
       audioRef.current.load();
     }
+  }, [audioUrl]);
+
+  // Lidar com eventos do audio element
+  useEffect(() => {
+    if (!audioUrl || !audioRef.current) return;
+    const audio = audioRef.current;
+
+    const handleCanPlay = () => setAudioLoading(false);
+    const handleWaiting = () => setAudioLoading(true);
+    const handleError = () => {
+      setAudioLoading(false);
+      setAudioError(true);
+      setPlaying(false);
+    };
+
+    audio.addEventListener('canplay', handleCanPlay);
+    audio.addEventListener('waiting', handleWaiting);
+    audio.addEventListener('error', handleError);
+
+    return () => {
+      audio.removeEventListener('canplay', handleCanPlay);
+      audio.removeEventListener('waiting', handleWaiting);
+      audio.removeEventListener('error', handleError);
+    };
   }, [audioUrl]);
 
   // Lidar com progresso do audio
@@ -274,9 +304,15 @@ export function MeditationPlayer({
 
           <button
             onClick={togglePlay}
-            className="w-16 h-16 rounded-full bg-white flex items-center justify-center text-black hover:scale-105 active:scale-95 transition-transform shadow-lg"
+            disabled={audioError || audioLoading}
+            className="w-16 h-16 rounded-full bg-white flex items-center justify-center text-black hover:scale-105 active:scale-95 transition-transform shadow-lg disabled:opacity-60 disabled:cursor-not-allowed"
+            title={audioError ? "Erro ao carregar áudio" : undefined}
           >
-            {playing ? (
+            {audioLoading ? (
+              <Loader2 className="w-7 h-7 animate-spin" />
+            ) : audioError ? (
+              <AlertCircle className="w-7 h-7 text-red-500" />
+            ) : playing ? (
               <Pause className="w-7 h-7" />
             ) : (
               <Play className="w-7 h-7 ml-1" />
@@ -362,11 +398,24 @@ export function MeditationPlayer({
           </motion.div>
         )}
 
+        {/* Mensagem de erro de áudio */}
+        {audioError && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex items-center gap-2 mt-4 px-4 py-2 bg-red-500/20 rounded-xl text-red-300 text-sm"
+          >
+            <AlertCircle className="w-4 h-4 shrink-0" />
+            <span>Não foi possível carregar o áudio. Verifique sua conexão.</span>
+          </motion.div>
+        )}
+
         {/* Elemento audio oculto */}
         {audioUrl && (
           <audio
             ref={audioRef}
             preload="metadata"
+            muted={muted}
             style={{ display: 'none' }}
           />
         )}

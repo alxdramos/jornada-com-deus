@@ -85,8 +85,9 @@ export function TabDiario() {
     const savedEntries = localStorage.getItem('diary-entries');
     if (savedEntries) {
       try {
-        const parsed = JSON.parse(savedEntries);
-        const customEntries = parsed.map((entry: any) => ({
+        type StoredEntry = Omit<DiaryEntry, 'createdAt'> & { createdAt: string };
+        const parsed = JSON.parse(savedEntries) as StoredEntry[];
+        const customEntries = parsed.map((entry) => ({
           ...entry,
           createdAt: new Date(entry.createdAt)
         }));
@@ -397,7 +398,7 @@ export function TabDiario() {
                     ].map(({ type, label, icon: Icon }) => (
                       <button
                         key={type}
-                        onClick={() => setNewEntryType(type as any)}
+                        onClick={() => setNewEntryType(type as DiaryEntry['type'])}
                         className={cn(
                           "p-4 rounded-xl border-2 transition-colors flex flex-col items-center gap-2",
                           newEntryType === type

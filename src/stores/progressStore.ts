@@ -9,6 +9,7 @@ interface Progress {
   treeLevel: number; // 0-10
   lastCompletedDate: Date | null;
   completedDays: number; // Total de dias completados
+  completedDates: string[]; // Array de datas 'YYYY-MM-DD' para o calendário
 }
 
 interface ProgressStore {
@@ -27,6 +28,7 @@ const INITIAL_PROGRESS: Progress = {
   treeLevel: 0,
   lastCompletedDate: null,
   completedDays: 0,
+  completedDates: [],
 };
 
 export const useProgressStore = create<ProgressStore>()(
@@ -75,6 +77,11 @@ export const useProgressStore = create<ProgressStore>()(
         const newCompletedDays = progress.completedDays + 1;
         const newTreeLevel = Math.min(Math.floor(newCompletedDays / 5), 10);
 
+        const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+        const newCompletedDates = progress.completedDates.includes(todayStr)
+          ? progress.completedDates
+          : [...(progress.completedDates ?? []), todayStr];
+
         const newProgress: Progress = {
           currentStreak: newStreak,
           maxStreak: Math.max(progress.maxStreak, newStreak),
@@ -83,6 +90,7 @@ export const useProgressStore = create<ProgressStore>()(
           treeLevel: newTreeLevel,
           lastCompletedDate: today,
           completedDays: newCompletedDays,
+          completedDates: newCompletedDates,
         };
 
         set({ progress: newProgress });
