@@ -52,6 +52,10 @@
 - **clsx 2.1.1** - Utilitário para classes condicionais
 - **Tailwind Merge 3.4.1** - Fusão inteligente de classes Tailwind
 
+### **APIs Externas**
+- **bible-api.com** - Bíblia Almeida Corrigida Fiel (domínio público)
+- **Cloudflare R2** - Hospedagem de arquivos de áudio
+
 ## 📁 Estrutura do Projeto
 
 ```
@@ -165,7 +169,7 @@ jornada-com-deus/
 - ✅ Integração com áudio real (Cloudflare R2)
 
 ### ✅ **AGENTE 9: Telas Bíblia, Orações, Diário**
-- ✅ **Bíblia**: Navegação completa (AT/NT → Livros → Capítulos → Versículos)
+- ✅ **Bíblia Online-Only**: Navegação completa via API (bible-api.com)
 - ✅ **Orações**: Banco com orações pré-definidas + criação pessoal
 - ✅ **Diário**: 4 tipos de entrada (anotações, destaques, versículos, citações)
 
@@ -229,11 +233,14 @@ npm run lint
 - **Paywall elegante** para conteúdo Plus
 
 ### **📖 Bíblia (TabBiblia.tsx)**
+- **100% Online-Only** usando bible-api.com (Almeida Corrigida Fiel)
 - **66 livros** organizados em Antigo/Novo Testamento
-- **Navegação hierárquica**: Livros → Capítulos → Versículos
-- **Busca inteligente** por livro/conteúdo
-- **Bookmarks** para versículos favoritos
-- **Version selector** preparado (atualmente NVI)
+- **Navegação hierárquica**: Livros → Capítulos → Versículos numerados
+- **Busca online** por palavra/frase/referência (ex: "João 3:16")
+- **Navegação anterior/próximo** capítulo com barra de progresso
+- **Página /biblia/sobre** com aviso legal sobre domínio público
+- **Cache inteligente** com sessionStorage para performance
+- **Indicador offline** específico para Bíblia
 
 ### **🙏 Orações (TabOracoes.tsx)**
 - **5 orações pré-definidas** categorizadas
@@ -265,6 +272,28 @@ npm run lint
 --error: #EF4444;         /* Vermelho para erros */
 --info: #3B82F6;          /* Azul para informações */
 ```
+
+## 🔧 Implementações Técnicas Recentes
+
+### **📱 Bíblia Online-Only**
+- **Hook `useBible.ts`**: Gerenciamento completo de API com cache sessionStorage
+- **Componentes específicos**: `BibleOfflineMessage`, `BibleApiError` para UX aprimorada
+- **Busca inteligente**: Parsing de referências bíblicas (João 3:16, Gn 1.1-5, etc.)
+- **Navegação avançada**: Anterior/próximo capítulo + jump para versículo
+- **Performance**: Cache limitado (20 entradas) + timeouts de 10s
+- **Legal**: Página `/biblia/sobre` com informações sobre domínio público
+
+### **🎵 Integração de Áudio**
+- **Cloudflare R2**: URLs públicas para distribuição global
+- **Player imersivo**: Tela cheia com background image + controles elegantes
+- **Controles avançados**: Velocidade, repeat, volume, progresso interativo
+- **Fallbacks**: Simulação offline + tratamento de erros robusto
+
+### **🔄 Correções e Polish**
+- **Modal "VER TUDO"**: Exploração completa de conteúdo por categoria
+- **Debug Plus/Free**: Botão para testes de funcionalidades premium
+- **BottomNav fixado**: z-index aumentado + pointer-events corrigidos
+- **Toast system**: Hook `useToast` com mensagens pré-configuradas
 
 ## 🔧 Próximos Passos e Melhorias
 
@@ -322,23 +351,27 @@ npm run lint
 
 ## 📋 Estado Atual do Desenvolvimento
 
-### **✅ Implementado (10/10 Agentes)**
+### **✅ Implementado (10/10 Agentes + Correções)**
 - ✅ **Setup + PWA** (Manifest, Service Worker, Install Prompt)
 - ✅ **Design System** (shadcn/ui, Tailwind, componentes)
 - ✅ **IndexedDB** (Dexie configurado, tabelas criadas)
 - ✅ **Zustand Stores** (user, progress, tab com persistência)
 - ✅ **Navegação** (Bottom tabs mobile + sidebar desktop preparada)
 - ✅ **Tela Hoje** (4 etapas + gamificação completa)
-- ✅ **Tela Explorar** (Meditações + filtros + paywall)
-- ✅ **Player Imersivo** (Tela cheia + controles lindos)
-- ✅ **Telas Secundárias** (Bíblia, Orações, Diário completas)
+- ✅ **Tela Explorar** (Meditações reais + filtros + paywall)
+- ✅ **Player Imersivo** (Tela cheia + controles lindos + Cloudflare R2)
+- ✅ **Telas Secundárias** (Bíblia Online-Only, Orações, Diário completas)
 - ✅ **Polish Final** (Animações, skeletons, offline, toasts)
+- ✅ **Correções Pós-Agente 10** (Modal "VER TUDO", Plus debug, áudio fixado)
 
 ### **🎵 Conteúdo Real Integrado**
 - **6 Meditações** com áudio hospedado no Cloudflare R2
 - **Conteúdo limpo** (tags Eleven Labs removidas)
 - **Player funcional** com controle de áudio real
 - **URLs públicas** para distribuição
+- **Modal "VER TUDO"** funcional para explorar conteúdo completo
+- **Botão debug Plus/Free** para testes de funcionalidades premium
+- **Links de áudio verificados** e corrigidos para reprodução perfeita
 
 ### **🚀 Pronto para Produção**
 - Build funcionando sem erros
@@ -358,6 +391,21 @@ Para dúvidas, sugestões ou relatar bugs:
 ## 📄 Licença
 
 Este projeto é **privado** e propriedade intelectual da Jornada com Deus. Todos os direitos reservados.
+
+---
+
+## 📅 Status do Desenvolvimento (18/02/2026)
+
+**✅ PROJETO CONCLUÍDO E PRONTO PARA PRODUÇÃO**
+
+- **10 Agentes implementados** com sucesso
+- **Correções pós-agente aplicadas** (áudio, navegação, Plus mode)
+- **Bíblia transformada** para versão 100% online-only
+- **Build testado** sem erros TypeScript
+- **PWA funcional** com service worker e manifest
+- **Performance otimizada** com cache e lazy loading
+
+**🎯 Pronto para deploy e testes em produção!**
 
 ---
 
