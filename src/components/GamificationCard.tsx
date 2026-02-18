@@ -1,20 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Flame, Star, TreePine, Trophy } from "lucide-react";
+import { Flame, Star, TreePine } from "lucide-react";
 import { useProgressStore } from "@/stores/progressStore";
 import { AppCard } from "./AppCard";
-import { theme } from "@/constants/theme";
 
 export function GamificationCard() {
-  const { progress, getXpForNextLevel, getTreeProgress, completeDay } = useProgressStore();
+  const { progress, getXpForNextLevel, getTreeProgress } = useProgressStore();
   const xpProgress = ((progress.totalXp % 100) / 100) * 100;
   const treeProgress = getTreeProgress();
-
-  const handleCompleteDay = () => {
-    completeDay();
-    // TODO: Mostrar toast de sucesso
-  };
 
   return (
     <AppCard title="Sua Jornada" className="bg-gradient-to-br from-primary/5 to-accent/5 border-primary/20">
@@ -109,17 +103,6 @@ export function GamificationCard() {
             {progress.completedDays} dias completados
           </div>
         </div>
-
-        {/* Botão completar dia */}
-        <motion.button
-          onClick={handleCompleteDay}
-          className="w-full bg-gradient-to-r from-primary to-accent text-primary-foreground py-4 px-6 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2"
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-        >
-          <Trophy className="w-5 h-5" />
-          Concluir meu dia hoje
-        </motion.button>
 
       </div>
     </AppCard>

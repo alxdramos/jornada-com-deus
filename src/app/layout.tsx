@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { InstallPrompt } from "@/components/install-prompt";
-import { BottomNav } from "@/components/BottomNav";
+import { Toaster } from "sonner";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -57,7 +57,7 @@ export default function RootLayout({
       <body className={`${inter.variable} font-sans antialiased bg-background text-foreground`}>
         {children}
         <InstallPrompt />
-        <BottomNav />
+        <Toaster position="top-center" richColors closeButton />
       </body>
     </html>
   );

@@ -26,7 +26,7 @@ export function BottomNav() {
 
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-50 bg-white shadow-[0_-4px_20px_rgba(0,0,0,0.06)] rounded-t-2xl md:max-w-lg md:left-1/2 md:-translate-x-1/2 md:rounded-t-2xl"
+      className="fixed bottom-0 left-0 right-0 z-[9999] bg-white shadow-[0_-4px_20px_rgba(0,0,0,0.06)] rounded-t-2xl md:max-w-lg md:left-1/2 md:-translate-x-1/2 md:rounded-t-2xl pointer-events-auto"
       style={{ paddingBottom: "env(safe-area-inset-bottom, 0)" }}
     >
       <div className="flex items-center justify-around px-2 py-3">
@@ -58,16 +58,10 @@ export function BottomNav() {
               )}
 
               <Icon
-                className="w-6 h-6 mb-1 transition-colors"
-                style={{
-                  color: isActive ? ACTIVE_ORANGE : "#6B7280",
-                }}
+                className={`w-6 h-6 mb-1 transition-colors ${isActive ? 'text-orange-500' : 'text-gray-500'}`}
               />
               <span
-                className="text-xs font-medium transition-colors"
-                style={{
-                  color: isActive ? ACTIVE_ORANGE : "#6B7280",
-                }}
+                className={`text-xs font-medium transition-colors ${isActive ? 'text-orange-500' : 'text-gray-500'}`}
               >
                 {item.label}
               </span>

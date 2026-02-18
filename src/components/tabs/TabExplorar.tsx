@@ -2,45 +2,153 @@
 
 import { useState } from "react";
 import { useUserStore } from "@/stores/userStore";
-import { Heart } from "lucide-react";
+import { Heart, Play, Lock, Crown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { PaywallModal } from "@/components/PaywallModal";
+import { MeditationPlayer } from "@/components/MeditationPlayer";
+import { useFavorites } from "@/hooks/useFavorites";
 
-const CATEGORIAS = ["MENTE", "MÚSICA", "ESTUDOS"];
-const CHIPS = ["TUDO", "DORMIR", "ANSIEDADE", "<5MINS", "MOTIVAÇÃO"];
+const CATEGORIAS = ["TUDO", "MENTE", "CORPO", "ESPÍRITO", "MÚSICA", "ESTUDOS"];
+const CHIPS = ["TUDO", "DORMIR", "ANSIEDADE", "PAZ", "<5MINS", "MOTIVAÇÃO", "ORAÇÃO"];
+
+interface MeditationCard {
+  id: string;
+  title: string;
+  duration: string;
+  category: string;
+  plus: boolean;
+  description?: string;
+  tags: string[];
+  image?: string;
+}
+
+const MEDITACOES: MeditationCard[] = [
+  {
+    id: "paz-interior",
+    title: "Paz Interior",
+    duration: "5 min",
+    category: "MENTE",
+    plus: false,
+    description: "Encontre paz e calma em meio à agitação do dia",
+    tags: ["PAZ", "CALMA", "<5MINS"],
+    image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop"
+  },
+  {
+    id: "sono-sagrado",
+    title: "Sono Sagrado",
+    duration: "15 min",
+    category: "CORPO",
+    plus: true,
+    description: "Meditação guiada para uma noite de descanso profundo",
+    tags: ["DORMIR", "SONO", "NOITE"],
+    image: "https://images.unsplash.com/photo-1511295742362-92c96b1cf68?w=400&h=300&fit=crop"
+  },
+  {
+    id: "ansiedade-crista",
+    title: "Ansiedade Cristã",
+    duration: "8 min",
+    category: "MENTE",
+    plus: false,
+    description: "Liberte-se da ansiedade através da fé e confiança em Deus",
+    tags: ["ANSIEDADE", "FÉ", "CONFIANÇA"],
+    image: "https://images.unsplash.com/photo-1544006659-f0b21884ce1?w=400&h=300&fit=crop"
+  },
+  {
+    id: "gratidao-diaria",
+    title: "Gratidão Diária",
+    duration: "3 min",
+    category: "ESPÍRITO",
+    plus: false,
+    description: "Cultive um coração agradecido pelas bênçãos diárias",
+    tags: ["GRATIDÃO", "<5MINS", "BÊNÇÃOS"],
+    image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop"
+  },
+  {
+    id: "oracao-guiada",
+    title: "Oração Guiada",
+    duration: "10 min",
+    category: "ESPÍRITO",
+    plus: true,
+    description: "Deixe-se guiar em uma conversa íntima com Deus",
+    tags: ["ORAÇÃO", "DIÁLOGO", "INTIMIDADE"],
+    image: "https://images.unsplash.com/photo-1507692049790-de58290a4354?w=400&h=300&fit=crop"
+  },
+  {
+    id: "musica-paz",
+    title: "Música para Paz",
+    duration: "20 min",
+    category: "MÚSICA",
+    plus: false,
+    description: "Instrumental suave para meditação e reflexão",
+    tags: ["MÚSICA", "INSTRUMENTAL", "PAZ"],
+    image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=300&fit=crop"
+  }
+];
 
 const cardsEscrituras = [
-  { title: "Salmo 76", duration: "3 min", plus: false },
-  { title: "Salmo 51", duration: "4 min", plus: true },
-  { title: "Salmo 23", duration: "3 min", plus: false },
+  { id: "salmo-76", title: "Salmo 76", duration: "3 min", plus: false, category: "ESTUDOS" },
+  { id: "salmo-51", title: "Salmo 51", duration: "4 min", plus: true, category: "ESTUDOS" },
+  { id: "salmo-23", title: "Salmo 23", duration: "3 min", plus: false, category: "ESTUDOS" },
 ];
 
 const cardsNovo = [
-  { title: "O Crente é uma Exceção", duration: "3 min", plus: false },
-  { title: "Uma Palavra Final", duration: "8 min", plus: true },
-  { title: "Deus É Fiel", duration: "5 min", plus: false },
+  { id: "crente-excecao", title: "O Crente é uma Exceção", duration: "3 min", plus: false, category: "ESTUDOS" },
+  { id: "palavra-final", title: "Uma Palavra Final", duration: "8 min", plus: true, category: "ESTUDOS" },
+  { id: "deus-fiel", title: "Deus É Fiel", duration: "5 min", plus: false, category: "ESTUDOS" },
 ];
 
 export function TabExplorar() {
   const user = useUserStore((s) => s.user);
-  const [catAtiva, setCatAtiva] = useState("MENTE");
+  const isPlus = user?.isPlus ?? false;
+  const { toggleFavorite, isFavorite } = useFavorites();
+
+  const [catAtiva, setCatAtiva] = useState("TUDO");
   const [chipAtivo, setChipAtivo] = useState("TUDO");
+  const [paywallOpen, setPaywallOpen] = useState(false);
+  const [playerOpen, setPlayerOpen] = useState(false);
+  const [selectedMeditation, setSelectedMeditation] = useState<MeditationCard | null>(null);
+
+  // Filtrar meditações por categoria e chip
+  const meditatacoesFiltradas = MEDITACOES.filter(med => {
+    const categoriaMatch = catAtiva === "TUDO" || med.category === catAtiva;
+    const chipMatch = chipAtivo === "TUDO" || med.tags.includes(chipAtivo);
+    return categoriaMatch && chipMatch;
+  });
+
+  const handlePlayMeditation = (meditation: MeditationCard) => {
+    if (meditation.plus && !isPlus) {
+      setSelectedMeditation(meditation);
+      setPaywallOpen(true);
+    } else {
+      setSelectedMeditation(meditation);
+      setPlayerOpen(true);
+    }
+  };
+
+
+  const handleUpgrade = () => {
+    // Simular upgrade
+    console.log("Upgrade realizado!");
+    // Aqui seria chamada a API de pagamento
+  };
 
   return (
-    <div className="min-h-screen bg-[#FAF9F6] p-6 pb-24">
-      <div className="max-w-4xl mx-auto space-y-6">
-        {/* Header: avatar + Explorar + Favoritos */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-[#FB923C] flex items-center justify-center text-white font-bold">
-              {user?.name?.charAt(0)?.toUpperCase() || "A"}
+    <>
+      <div className="min-h-screen bg-[#FAF9F6] p-6 pb-28">
+        <div className="max-w-4xl mx-auto space-y-6">
+          {/* Header: avatar + Explorar + Favoritos */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-[#FB923C] flex items-center justify-center text-white font-bold">
+                {user?.name?.charAt(0)?.toUpperCase() || "A"}
+              </div>
+              <h1 className="text-xl font-bold text-[#1F2937]">Explorar</h1>
             </div>
-            <h1 className="text-xl font-bold text-[#1F2937]">Explorar</h1>
+            <button className="flex items-center gap-1 text-[#FB923C]">
+              <Heart className="w-5 h-5" />
+              <span className="text-sm font-medium">Favoritos</span>
+            </button>
           </div>
-          <button className="flex items-center gap-1 text-[#FB923C]">
-            <Heart className="w-5 h-5" />
-            <span className="text-sm font-medium">Favoritos</span>
-          </button>
-        </div>
 
         {/* Abas de categoria */}
         <div className="flex gap-2 overflow-x-auto pb-2">
@@ -76,6 +184,90 @@ export function TabExplorar() {
           ))}
         </div>
 
+        {/* Seção Meditações */}
+        <section>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-base font-semibold text-[#1F2937]">Meditações</h2>
+            <button className="text-sm text-[#FB923C] font-medium">VER TUDO &gt;</button>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {meditatacoesFiltradas.map((med) => (
+              <div
+                key={med.id}
+                className="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow"
+              >
+                {/* Imagem de fundo */}
+                <div
+                  className="h-32 bg-cover bg-center relative"
+                  style={{ backgroundImage: `url(${med.image})` }}
+                >
+                  <div className="absolute inset-0 bg-black/20" />
+
+                  {/* Overlay Plus */}
+                  {med.plus && !isPlus && (
+                    <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-black/60 flex items-center justify-center">
+                      <Crown className="w-3 h-3 text-white" />
+                    </div>
+                  )}
+
+                  {/* Botão favorito */}
+                  <button
+                    onClick={() => toggleFavorite(med.id)}
+                    className="absolute top-2 left-2 w-8 h-8 rounded-full bg-white/20 backdrop-blur flex items-center justify-center hover:bg-white/30 transition-colors"
+                  >
+                    <Heart className={cn("w-4 h-4", isFavorite(med.id) ? "text-red-500 fill-current" : "text-white")} />
+                  </button>
+
+                  {/* Botão play */}
+                  <button
+                    onClick={() => handlePlayMeditation(med)}
+                    className="absolute bottom-2 right-2 w-10 h-10 rounded-full bg-white/90 backdrop-blur flex items-center justify-center hover:bg-white hover:scale-105 transition-all shadow-lg"
+                  >
+                    <Play className="w-5 h-5 text-black ml-0.5" />
+                  </button>
+                </div>
+
+                {/* Conteúdo */}
+                <div className="p-4">
+                  <div className="flex items-start justify-between mb-2">
+                    <h3 className="font-semibold text-[#1F2937] text-sm line-clamp-2">{med.title}</h3>
+                  </div>
+
+                  {med.description && (
+                    <p className="text-xs text-[#6B7280] mb-3 line-clamp-2">{med.description}</p>
+                  )}
+
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-[#6B7280]">{med.duration}</span>
+                      {med.plus && (
+                        <>
+                          <span className="text-[#6B7280]">•</span>
+                          <div className="flex items-center gap-1">
+                            <Crown className="w-3 h-3 text-[#FB923C]" />
+                            <span className="text-xs text-[#FB923C] font-medium">Plus</span>
+                          </div>
+                        </>
+                      )}
+                    </div>
+
+                    <div className="flex gap-1">
+                      {med.tags.slice(0, 2).map(tag => (
+                        <span
+                          key={tag}
+                          className="px-2 py-0.5 bg-[#F1F5F9] text-[#64748B] text-xs rounded-full"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
         {/* Seção Escrituras */}
         <section>
           <div className="flex items-center justify-between mb-4">
@@ -85,16 +277,43 @@ export function TabExplorar() {
           <div className="flex gap-4 overflow-x-auto pb-2">
             {cardsEscrituras.map((card) => (
               <div
-                key={card.title}
-                className="min-w-[140px] bg-white rounded-2xl shadow-sm overflow-hidden"
+                key={card.id}
+                className="min-w-[140px] bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow"
               >
-                <div className="h-24 bg-gradient-to-br from-slate-200 to-slate-300" />
+                <div className="h-24 bg-gradient-to-br from-slate-200 to-slate-300 relative">
+                  {/* Overlay Plus */}
+                  {card.plus && !isPlus && (
+                    <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-black/60 flex items-center justify-center">
+                      <Crown className="w-3 h-3 text-white" />
+                    </div>
+                  )}
+
+                  {/* Botão play */}
+                  <button
+                    onClick={() => handlePlayMeditation({
+                      id: card.id,
+                      title: card.title,
+                      duration: card.duration,
+                      category: card.category,
+                      plus: card.plus,
+                      tags: []
+                    })}
+                    className="absolute bottom-2 right-2 w-8 h-8 rounded-full bg-white/90 backdrop-blur flex items-center justify-center hover:bg-white hover:scale-105 transition-all shadow-lg"
+                  >
+                    <Play className="w-4 h-4 text-black ml-0.5" />
+                  </button>
+                </div>
                 <div className="p-3">
                   <p className="font-medium text-[#1F2937] text-sm">{card.title}</p>
-                  <p className="text-xs text-[#6B7280]">{card.duration}</p>
-                  {card.plus && (
-                    <span className="inline-block w-4 h-4 rounded bg-gray-800 mt-1" title="Plus" />
-                  )}
+                  <div className="flex items-center gap-2 mt-1">
+                    <p className="text-xs text-[#6B7280]">{card.duration}</p>
+                    {card.plus && (
+                      <div className="flex items-center gap-1">
+                        <Crown className="w-3 h-3 text-[#FB923C]" />
+                        <span className="text-xs text-[#FB923C] font-medium">Plus</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             ))}
@@ -110,23 +329,70 @@ export function TabExplorar() {
           <div className="flex gap-4 overflow-x-auto pb-2">
             {cardsNovo.map((card) => (
               <div
-                key={card.title}
-                className="min-w-[140px] bg-white rounded-2xl shadow-sm overflow-hidden"
+                key={card.id}
+                className="min-w-[140px] bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow"
               >
-                <div className="h-24 bg-gradient-to-br from-amber-100 to-orange-200" />
+                <div className="h-24 bg-gradient-to-br from-amber-100 to-orange-200 relative">
+                  {/* Overlay Plus */}
+                  {card.plus && !isPlus && (
+                    <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-black/60 flex items-center justify-center">
+                      <Crown className="w-3 h-3 text-white" />
+                    </div>
+                  )}
+
+                  {/* Botão play */}
+                  <button
+                    onClick={() => handlePlayMeditation({
+                      id: card.id,
+                      title: card.title,
+                      duration: card.duration,
+                      category: card.category,
+                      plus: card.plus,
+                      tags: []
+                    })}
+                    className="absolute bottom-2 right-2 w-8 h-8 rounded-full bg-white/90 backdrop-blur flex items-center justify-center hover:bg-white hover:scale-105 transition-all shadow-lg"
+                  >
+                    <Play className="w-4 h-4 text-black ml-0.5" />
+                  </button>
+                </div>
                 <div className="p-3">
                   <p className="font-medium text-[#1F2937] text-sm">{card.title}</p>
-                  <p className="text-xs text-[#6B7280]">{card.duration}</p>
-                  {card.plus && (
-                    <span className="inline-block w-4 h-4 rounded bg-gray-800 mt-1" title="Plus" />
-                  )}
+                  <div className="flex items-center gap-2 mt-1">
+                    <p className="text-xs text-[#6B7280]">{card.duration}</p>
+                    {card.plus && (
+                      <div className="flex items-center gap-1">
+                        <Crown className="w-3 h-3 text-[#FB923C]" />
+                        <span className="text-xs text-[#FB923C] font-medium">Plus</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             ))}
           </div>
         </section>
+        </div>
+
+        {/* Modais */}
+        <PaywallModal
+          isOpen={paywallOpen}
+          onClose={() => setPaywallOpen(false)}
+          onUpgrade={handleUpgrade}
+          feature={selectedMeditation?.title}
+        />
+
+        {selectedMeditation && (
+          <MeditationPlayer
+            isOpen={playerOpen}
+            onClose={() => setPlayerOpen(false)}
+            titulo={selectedMeditation.title}
+            descricao={selectedMeditation.description}
+            duracao={selectedMeditation.duration}
+            isPlus={isPlus || !selectedMeditation.plus}
+          />
+        )}
       </div>
-    </div>
+    </>
   );
 }
 

@@ -1,4 +1,4 @@
-import { db } from '@/lib/db';
+import { db, JournalEntry } from '@/lib/db';
 
 export async function seedDatabase() {
   try {
@@ -243,23 +243,23 @@ export async function seedDatabase() {
     console.log(`✅ Adicionadas ${prayersData.length} orações`);
 
     // Seed de entradas do diário (algumas de exemplo)
-    const journalData = [
+    const journalData: JournalEntry[] = [
       {
-        type: 'anotacao',
+        type: 'anotacao' as const,
         content: 'Hoje senti profundamente a presença de Deus durante minha oração da manhã. Foi um momento especial de conexão.',
         date: new Date('2024-01-15'),
         favorite: true,
         userId: 1,
       },
       {
-        type: 'destaque',
+        type: 'destaque' as const,
         content: '"O Senhor é meu pastor, nada me faltará." - Salmos 23:1',
         date: new Date('2024-01-14'),
         favorite: true,
         userId: 1,
       },
       {
-        type: 'reflexao',
+        type: 'citacao' as const,
         content: 'Refletindo sobre a fidelidade de Deus. Mesmo nos momentos difíceis, Ele sempre esteve ao meu lado.',
         date: new Date('2024-01-13'),
         favorite: false,
