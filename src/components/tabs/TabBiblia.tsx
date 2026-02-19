@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useUserStore } from "@/stores/userStore";
+import { UserHeader } from "@/components/layout/UserHeader";
 import { BookOpen, ArrowLeft, Loader2, Share2, Search, X, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
@@ -99,27 +100,24 @@ export function TabBiblia() {
   return (
     <div className="min-h-screen bg-[#FAF9F6] p-6 pb-28">
       <div className="max-w-4xl mx-auto space-y-6">
-        {/* Header: avatar + Bíblia + ícone grupo */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-[#FB923C] flex items-center justify-center text-white font-bold">
-              {user?.name?.charAt(0)?.toUpperCase() || "A"}
-            </div>
-            <h1 className="text-xl font-bold text-[#1F2937]">Bíblia</h1>
-          </div>
-          <div className="flex items-center gap-2">
-            <Link
-              href="/biblia/sobre"
-              className="w-10 h-10 rounded-full bg-[#FB923C]/20 flex items-center justify-center hover:bg-[#FB923C]/30 transition-colors"
-              title="Sobre a Bíblia"
-            >
-              <Info className="w-5 h-5 text-[#FB923C]" />
-            </Link>
-            <div className="w-10 h-10 rounded-full bg-[#FB923C]/20 flex items-center justify-center">
-              <span className="text-lg">👥</span>
-            </div>
-          </div>
-        </div>
+        {/* Header reutilizável com avatar Google + ProfileModal */}
+        <UserHeader
+          title="Bíblia"
+          rightElement={
+            <>
+              <Link
+                href="/biblia/sobre"
+                className="w-10 h-10 rounded-full bg-[#FB923C]/20 flex items-center justify-center hover:bg-[#FB923C]/30 transition-colors"
+                title="Sobre a Bíblia"
+              >
+                <Info className="w-5 h-5 text-[#FB923C]" />
+              </Link>
+              <div className="w-10 h-10 rounded-full bg-[#FB923C]/20 flex items-center justify-center">
+                <span className="text-lg">👥</span>
+              </div>
+            </>
+          }
+        />
 
         {/* Navigation Breadcrumb */}
         {viewState !== "books" && (

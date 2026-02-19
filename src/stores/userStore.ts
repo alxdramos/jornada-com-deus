@@ -2,9 +2,9 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 interface User {
-  id: number;
+  id: number; // ID do Dexie (auto-increment)
   name: string;
-  email?: string;
+  email: string; // Email agora é obrigatório (identificador único)
   isPlus: boolean;
   avatar?: string;
   createdAt: Date;
@@ -21,12 +21,7 @@ interface UserStore {
 export const useUserStore = create<UserStore>()(
   persist(
     (set, get) => ({
-      user: {
-        id: 1,
-        name: 'Usuário',
-        isPlus: false,
-        createdAt: new Date(),
-      },
+      user: null, // Começar sem usuário até autenticação
 
       setUser: (user) => set({ user }),
 

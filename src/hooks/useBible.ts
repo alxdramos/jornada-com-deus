@@ -190,7 +190,9 @@ export function useBible() {
         // Limitar cache a 20 entradas para não crescer demais
         if (newCache.size > 20) {
           const firstKey = newCache.keys().next().value;
-          newCache.delete(firstKey);
+          if (firstKey) {
+            newCache.delete(firstKey);
+          }
         }
         setCache(newCache);
         saveCache(newCache);

@@ -4,6 +4,8 @@ import "./globals.css";
 import { InstallPrompt } from "@/components/install-prompt";
 import { OfflineIndicator } from "@/components/OfflineIndicator";
 import { Toaster } from "sonner";
+import { SessionProvider } from "@/components/providers/SessionProvider";
+import { AuthSyncWrapper } from "@/components/AuthSyncWrapper";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -56,10 +58,14 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <body className={`${inter.variable} font-sans antialiased bg-background text-foreground`}>
-        <OfflineIndicator />
-        {children}
-        <InstallPrompt />
-        <Toaster position="top-center" richColors closeButton />
+        <SessionProvider>
+          <AuthSyncWrapper>
+            <OfflineIndicator />
+            {children}
+            <InstallPrompt />
+            <Toaster position="top-center" richColors closeButton />
+          </AuthSyncWrapper>
+        </SessionProvider>
       </body>
     </html>
   );

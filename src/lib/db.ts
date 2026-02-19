@@ -6,6 +6,7 @@ export interface User {
   name: string;
   email?: string;
   isPlus: boolean;
+  avatar?: string;
   createdAt: Date;
 }
 
@@ -70,7 +71,7 @@ export class JornadaComDeusDB extends Dexie {
   constructor() {
     super('JornadaComDeusDB');
     this.version(1).stores({
-      users: '++id, name, email, isPlus, createdAt',
+      users: '++id, name, email, isPlus, avatar, createdAt',
       progress: '++id, streak, xp, level, treeLevel, lastCompletedDate, userId',
       devotionals: '++id, title, duration, category, isPlus, audioUrl, imageUrl, description, createdAt',
       prayers: '++id, title, text, audioUrl, isPersonal, answered, createdAt, userId',
@@ -79,39 +80,13 @@ export class JornadaComDeusDB extends Dexie {
     });
 
     // Hook para seed automático na primeira criação
+    // NOTA: Removido seed automático para evitar conflito com autenticação
+    // O seed será feito apenas quando necessário via código específico
     this.on('ready', async () => {
-      const userCount = await this.users.count();
-      if (userCount === 0) {
-        console.log('🌱 Fazendo seed inicial do banco de dados...');
-        await this.seedInitialData();
-      }
+      console.log('📱 Banco de dados IndexedDB pronto para Jornada com Deus');
     });
   }
 
-  private async seedInitialData() {
-    try {
-      // Criar usuário padrão
-      const userId = await this.users.add({
-        name: 'Usuário',
-        isPlus: false,
-        createdAt: new Date(),
-      });
-
-      // Criar progresso inicial
-      await this.progress.add({
-        streak: 0,
-        xp: 0,
-        level: 1,
-        treeLevel: 0,
-        userId: userId,
-      });
-
-      // Seed será feito pelo arquivo seed.ts separado
-      console.log('✅ Seed inicial concluído!');
-    } catch (error) {
-      console.error('❌ Erro no seed inicial:', error);
-    }
-  }
 }
 
 // Instância singleton do banco

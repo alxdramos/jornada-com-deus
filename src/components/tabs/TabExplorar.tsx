@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useUserStore } from "@/stores/userStore";
+import { UserHeader } from "@/components/layout/UserHeader";
 import { Heart, Play, Lock, Crown, X, BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { PaywallModal } from "@/components/PaywallModal";
@@ -177,28 +178,25 @@ export function TabExplorar() {
     <>
       <div className="min-h-screen bg-[#FAF9F6] p-6 pb-28">
         <div className="max-w-4xl mx-auto space-y-6">
-          {/* Header: avatar + Explorar + Favoritos */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-[#FB923C] flex items-center justify-center text-white font-bold">
-                {user?.name?.charAt(0)?.toUpperCase() || "A"}
-              </div>
-              <h1 className="text-xl font-bold text-[#1F2937]">Explorar</h1>
-            </div>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={togglePlusForTesting}
-                className="px-2 py-1 bg-[#10B981] text-white text-xs rounded hover:bg-[#059669] transition-colors"
-                title={isPlus ? "Desativar Plus (debug)" : "Ativar Plus (debug)"}
-              >
-                {isPlus ? "PLUS" : "FREE"}
-              </button>
-              <button className="flex items-center gap-1 text-[#FB923C]">
-                <Heart className="w-5 h-5" />
-                <span className="text-sm font-medium">Favoritos</span>
-              </button>
-            </div>
-          </div>
+          {/* Header reutilizável com avatar Google + ProfileModal */}
+          <UserHeader
+            title="Explorar"
+            rightElement={
+              <>
+                <button
+                  onClick={togglePlusForTesting}
+                  className="px-2 py-1 bg-[#10B981] text-white text-xs rounded hover:bg-[#059669] transition-colors"
+                  title={isPlus ? "Desativar Plus (debug)" : "Ativar Plus (debug)"}
+                >
+                  {isPlus ? "PLUS" : "FREE"}
+                </button>
+                <button className="flex items-center gap-1 text-[#FB923C]">
+                  <Heart className="w-5 h-5" />
+                  <span className="text-sm font-medium">Favoritos</span>
+                </button>
+              </>
+            }
+          />
 
         {/* Abas de categoria */}
         <div className="flex gap-2 overflow-x-auto pb-2">

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useUserStore } from "@/stores/userStore";
+import { UserHeader } from "@/components/layout/UserHeader";
 import { motion, AnimatePresence } from "framer-motion";
 import { PenLine, Plus, Heart, Quote, BookOpen, Calendar, X, Search, Filter } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -189,18 +190,15 @@ export function TabDiario() {
     <>
       <div className="min-h-screen bg-[#FAF9F6] p-6 pb-28">
         <div className="max-w-4xl mx-auto space-y-6">
-          {/* Header */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-[#FB923C] flex items-center justify-center text-white font-bold">
-                {user?.name?.charAt(0)?.toUpperCase() || "A"}
+          {/* Header reutilizável com avatar Google + ProfileModal */}
+          <UserHeader
+            title="Diário"
+            rightElement={
+              <div className="w-10 h-10 rounded-full bg-[#F59E0B]/20 flex items-center justify-center">
+                <BookOpen className="w-5 h-5 text-[#F59E0B]" />
               </div>
-              <h1 className="text-xl font-bold text-[#1F2937]">Diário</h1>
-            </div>
-            <div className="w-10 h-10 rounded-full bg-[#F59E0B]/20 flex items-center justify-center">
-              <BookOpen className="w-5 h-5 text-[#F59E0B]" />
-            </div>
-          </div>
+            }
+          />
 
           {/* Abas */}
           <div className="flex gap-2 overflow-x-auto pb-2">
