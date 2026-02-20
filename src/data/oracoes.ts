@@ -14,9 +14,10 @@ export interface Oracao {
   };
   createdAt: string;
   theme: string;
+  duration?: number; // Duração em segundos
 }
 
-// Interface antiga mantida para compatibilidade
+// Interface antiga mantida para compatibilidade + audioUrl
 export interface Prayer {
   id: string;
   title: string;
@@ -24,12 +25,48 @@ export interface Prayer {
   category: string;
   isCustom: boolean;
   createdAt: Date;
+  audioUrl?: string;
+  duration?: number; // Duração em segundos
+  imagem?: {
+    background: string;
+    icon: string;
+  };
 }
 
 export const CATEGORIAS = ["Todas", "Esperança", "Paz", "Graças", "Perdão", "Força", "Fé", "Minhas"];
 
-// Orações predefinidas convertidas para formato Prayer (compatibilidade com código antigo)
-export const PRAYERS_PREDEFINIDAS: Prayer[] = [];
+// Mapeamento de tema para categoria
+const temaParaCategoria: Record<string, string> = {
+  "esperanca": "Esperança",
+  "paz": "Paz",
+  "gracas": "Graças",
+  "perdao": "Perdão",
+  "forca": "Força",
+  "fe": "Fé",
+  "default": "Graças"
+};
+
+// Converter Oracao para Prayer
+function converterOracaoEmPrayer(oracao: Oracao): Prayer {
+  // Extrair tema da descrição ou ID para categoria
+  const tema = oracao.theme?.toLowerCase() || "default";
+  const categoria = temaParaCategoria[tema] || "Graças";
+
+  return {
+    id: oracao.id,
+    title: oracao.titulo,
+    content: oracao.texto,
+    category: categoria,
+    isCustom: false,
+    createdAt: new Date(oracao.createdAt),
+    audioUrl: oracao.audioUrl,
+    duration: oracao.duration || 0,
+    imagem: oracao.imagem
+  };
+}
+
+// Será inicializado após ORACOES ser definido
+export let PRAYERS_PREDEFINIDAS: Prayer[] = [];
 
 export const ORACOES: Oracao[] = [
   {
@@ -453,6 +490,24 @@ export const ORACOES: Oracao[] = [
     "theme": "default"
   }
 ];
+
+// Popula PRAYERS_PREDEFINIDAS a partir de ORACOES
+PRAYERS_PREDEFINIDAS = ORACOES.map((oracao) => {
+  const tema = oracao.theme?.toLowerCase() || "default";
+  const categoria = temaParaCategoria[tema] || "Graças";
+
+  return {
+    id: oracao.id,
+    title: oracao.titulo,
+    content: oracao.texto,
+    category: categoria,
+    isCustom: false,
+    createdAt: new Date(oracao.createdAt),
+    audioUrl: oracao.audioUrl,
+    duration: oracao.duration || 0,
+    imagem: oracao.imagem,
+  };
+});
 
 export const ORACOES_COUNT = 35;
 

@@ -1,7 +1,6 @@
 import { Prayer } from "@/data/oracoes";
-import { Heart, Clock } from "lucide-react";
+import { Heart, Play } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
 
 interface PrayerCardProps {
   prayer: Prayer;
@@ -10,60 +9,87 @@ interface PrayerCardProps {
   onViewDetails: (prayer: Prayer) => void;
 }
 
+// Helper para formatar duração (segundos para MM:SS)
+function formatDuration(seconds?: number): string {
+  if (!seconds || seconds === 0) return "--:--";
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  return `${mins}:${secs.toString().padStart(2, "0")}`;
+}
+
 export function PrayerCard({
   prayer,
   isFavorite,
   onToggleFavorite,
   onViewDetails
 }: PrayerCardProps) {
+  // Extrai a cor do background da imagem
+  const bgColor = prayer.imagem?.background || "#10B981";
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="bg-white rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow"
-    >
-      <div className="flex items-start justify-between mb-3">
-        <div className="flex-1">
-          <h3 className="font-semibold text-[#1F2937] text-base mb-1">
-            {prayer.title}
-          </h3>
-          <div className="flex items-center gap-2 text-xs text-[#6B7280]">
-            <span className={cn(
-              "px-2 py-0.5 rounded-full",
-              prayer.isCustom ? "bg-[#FB923C]/10 text-[#FB923C]" : "bg-[#10B981]/10 text-[#10B981]"
-            )}>
-              {prayer.category}
-            </span>
-            <span>•</span>
-            <div className="flex items-center gap-1">
-              <Clock className="w-3 h-3" />
-              <span>{prayer.createdAt.toLocaleDateString('pt-BR')}</span>
-            </div>
+    <div className="rounded-lg overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow group cursor-pointer" onClick={() => onViewDetails(prayer)}>
+      {/* Imagem */}
+      <div className="relative h-40 overflow-hidden bg-gray-200" style={{ backgroundColor: bgColor }}>
+        {prayer.imagem?.icon ? (
+          <div className="w-full h-full flex items-center justify-center text-white text-5xl">
+            {prayer.imagem.icon}
           </div>
+        ) : (
+          <div className="w-full h-full" style={{ backgroundColor: bgColor }} />
+        )}
+
+        {/* Overlay de botões */}
+        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-center justify-center gap-2">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onViewDetails(prayer);
+            }}
+            className="p-3 rounded-full transition-all bg-white text-[#FB923C] hover:bg-[#FB923C] hover:text-white"
+          >
+            <Play className="w-5 h-5 fill-current" />
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleFavorite(prayer.id);
+            }}
+            className={cn(
+              "p-3 rounded-full transition-all",
+              isFavorite ? "bg-[#FB923C] text-white" : "bg-white text-[#FB923C] hover:bg-[#FB923C] hover:text-white"
+            )}
+          >
+            <Heart className="w-5 h-5 fill-current" />
+          </button>
         </div>
-        <button
-          onClick={() => onToggleFavorite(prayer.id)}
-          className={cn(
-            "p-2 rounded-lg transition-colors",
-            isFavorite
-              ? "text-red-500"
-              : "text-[#6B7280] hover:text-red-500"
-          )}
-        >
-          <Heart className={cn("w-5 h-5", isFavorite && "fill-current")} />
-        </button>
       </div>
 
-      <p className="text-[#6B7280] text-sm leading-relaxed mb-3 line-clamp-2">
-        {prayer.content}
-      </p>
-
-      <button
-        onClick={() => onViewDetails(prayer)}
-        className="text-[#10B981] text-sm font-medium hover:text-[#059669] transition-colors"
-      >
-        Ver oração completa →
-      </button>
-    </motion.div>
+      {/* Conteúdo */}
+      <div className="p-3 space-y-1">
+        <h3 className="font-semibold text-sm text-[#1F2937] line-clamp-2">
+          {prayer.title}
+        </h3>
+        <p className="text-xs text-[#6B7280]">{formatDuration(prayer.duration)}</p>
+        {prayer.content && (
+          <p className="text-xs text-[#6B7280] line-clamp-2 mt-2">
+            {prayer.content}
+          </p>
+        )}
+        {prayer.category && (
+          <div className="flex gap-1 mt-2 flex-wrap">
+            <span
+              className={cn(
+                "px-2 py-0.5 rounded text-xs",
+                prayer.isCustom
+                  ? "bg-[#FB923C]/10 text-[#FB923C]"
+                  : "bg-[#10B981]/10 text-[#10B981]"
+              )}
+            >
+              {prayer.category}
+            </span>
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
