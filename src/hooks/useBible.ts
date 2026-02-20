@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { BibleBook, LIVROS_AT, LIVROS_NT, ALL_BOOKS } from '@/data/biblia';
 
 export interface BibleVerse {
   book: string;
@@ -11,12 +12,6 @@ export interface BibleChapter {
   book: string;
   chapter: number;
   verses: BibleVerse[];
-}
-
-export interface BibleBook {
-  name: string;
-  testament: 'AT' | 'NT';
-  chapters: number;
 }
 
 interface BibleApiResponse {
@@ -36,78 +31,8 @@ interface BibleApiResponse {
 
 const BIBLE_API_BASE = 'https://bible-api.com';
 
-// Lista completa de livros da Bíblia (AT + NT)
-export const BIBLE_BOOKS: BibleBook[] = [
-  // Antigo Testamento
-  { name: "Gênesis", testament: "AT", chapters: 50 },
-  { name: "Êxodo", testament: "AT", chapters: 40 },
-  { name: "Levítico", testament: "AT", chapters: 27 },
-  { name: "Números", testament: "AT", chapters: 36 },
-  { name: "Deuteronômio", testament: "AT", chapters: 34 },
-  { name: "Josué", testament: "AT", chapters: 24 },
-  { name: "Juízes", testament: "AT", chapters: 21 },
-  { name: "Rute", testament: "AT", chapters: 4 },
-  { name: "1 Samuel", testament: "AT", chapters: 31 },
-  { name: "2 Samuel", testament: "AT", chapters: 24 },
-  { name: "1 Reis", testament: "AT", chapters: 22 },
-  { name: "2 Reis", testament: "AT", chapters: 25 },
-  { name: "1 Crônicas", testament: "AT", chapters: 29 },
-  { name: "2 Crônicas", testament: "AT", chapters: 36 },
-  { name: "Esdras", testament: "AT", chapters: 10 },
-  { name: "Neemias", testament: "AT", chapters: 13 },
-  { name: "Ester", testament: "AT", chapters: 10 },
-  { name: "Jó", testament: "AT", chapters: 42 },
-  { name: "Salmos", testament: "AT", chapters: 150 },
-  { name: "Provérbios", testament: "AT", chapters: 31 },
-  { name: "Eclesiastes", testament: "AT", chapters: 12 },
-  { name: "Cantares", testament: "AT", chapters: 8 },
-  { name: "Isaías", testament: "AT", chapters: 66 },
-  { name: "Jeremias", testament: "AT", chapters: 52 },
-  { name: "Lamentações", testament: "AT", chapters: 5 },
-  { name: "Ezequiel", testament: "AT", chapters: 48 },
-  { name: "Daniel", testament: "AT", chapters: 12 },
-  { name: "Oséias", testament: "AT", chapters: 14 },
-  { name: "Joel", testament: "AT", chapters: 3 },
-  { name: "Amós", testament: "AT", chapters: 9 },
-  { name: "Obadias", testament: "AT", chapters: 1 },
-  { name: "Jonas", testament: "AT", chapters: 4 },
-  { name: "Miquéias", testament: "AT", chapters: 7 },
-  { name: "Naum", testament: "AT", chapters: 3 },
-  { name: "Habacuque", testament: "AT", chapters: 3 },
-  { name: "Sofonias", testament: "AT", chapters: 3 },
-  { name: "Ageu", testament: "AT", chapters: 2 },
-  { name: "Zacarias", testament: "AT", chapters: 14 },
-  { name: "Malaquias", testament: "AT", chapters: 4 },
-
-  // Novo Testamento
-  { name: "Mateus", testament: "NT", chapters: 28 },
-  { name: "Marcos", testament: "NT", chapters: 16 },
-  { name: "Lucas", testament: "NT", chapters: 24 },
-  { name: "João", testament: "NT", chapters: 21 },
-  { name: "Atos", testament: "NT", chapters: 28 },
-  { name: "Romanos", testament: "NT", chapters: 16 },
-  { name: "1 Coríntios", testament: "NT", chapters: 16 },
-  { name: "2 Coríntios", testament: "NT", chapters: 13 },
-  { name: "Gálatas", testament: "NT", chapters: 6 },
-  { name: "Efésios", testament: "NT", chapters: 6 },
-  { name: "Filipenses", testament: "NT", chapters: 4 },
-  { name: "Colossenses", testament: "NT", chapters: 4 },
-  { name: "1 Tessalonicenses", testament: "NT", chapters: 5 },
-  { name: "2 Tessalonicenses", testament: "NT", chapters: 3 },
-  { name: "1 Timóteo", testament: "NT", chapters: 6 },
-  { name: "2 Timóteo", testament: "NT", chapters: 4 },
-  { name: "Tito", testament: "NT", chapters: 3 },
-  { name: "Filemom", testament: "NT", chapters: 1 },
-  { name: "Hebreus", testament: "NT", chapters: 13 },
-  { name: "Tiago", testament: "NT", chapters: 5 },
-  { name: "1 Pedro", testament: "NT", chapters: 5 },
-  { name: "2 Pedro", testament: "NT", chapters: 3 },
-  { name: "1 João", testament: "NT", chapters: 5 },
-  { name: "2 João", testament: "NT", chapters: 1 },
-  { name: "3 João", testament: "NT", chapters: 1 },
-  { name: "Judas", testament: "NT", chapters: 1 },
-  { name: "Apocalipse", testament: "NT", chapters: 22 }
-];
+// Re-export books for backward compatibility
+export const BIBLE_BOOKS = ALL_BOOKS;
 
 export function useBible() {
   const [loading, setLoading] = useState(false);
@@ -284,8 +209,8 @@ export function useBible() {
   };
 
   // Buscar livros por testamento
-  const getBooksByTestament = (testament: 'AT' | 'NT') => {
-    return BIBLE_BOOKS.filter(book => book.testament === testament);
+  const getBooksByTestament = (testament: 'AT' | 'NT'): BibleBook[] => {
+    return BIBLE_BOOKS.filter(book => book.testamento === testament);
   };
 
   // Limpar dados
