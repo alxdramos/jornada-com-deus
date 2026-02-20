@@ -1,0 +1,186 @@
+[
+  {
+    "slug": "genesis",
+    "name": "Gênesis",
+    "abbrev": "gn",
+    "testament": "AT",
+    "chapters": 414,
+    "totalVerses": 1533
+  },
+  {
+    "slug": "exodo",
+    "name": "Êxodo",
+    "abbrev": "ex",
+    "testament": "AT",
+    "chapters": 215,
+    "totalVerses": 1213
+  },
+  {
+    "slug": "levitico",
+    "name": "Levítico",
+    "abbrev": "lv",
+    "testament": "AT",
+    "chapters": 200,
+    "totalVerses": 860
+  },
+  {
+    "slug": "numeros",
+    "name": "Números",
+    "abbrev": "nm",
+    "testament": "AT",
+    "chapters": 434,
+    "totalVerses": 1288
+  },
+  {
+    "slug": "deuteronomio",
+    "name": "Deuteronômio",
+    "abbrev": "dt",
+    "testament": "AT",
+    "chapters": 295,
+    "totalVerses": 960
+  },
+  {
+    "slug": "josue",
+    "name": "Josué",
+    "abbrev": "js",
+    "testament": "AT",
+    "chapters": 98,
+    "totalVerses": 658
+  },
+  {
+    "slug": "juizes",
+    "name": "Juízes",
+    "abbrev": "jz",
+    "testament": "AT",
+    "chapters": 107,
+    "totalVerses": 619
+  },
+  {
+    "slug": "rute",
+    "name": "Rute",
+    "abbrev": "rt",
+    "testament": "AT",
+    "chapters": 31,
+    "totalVerses": 85
+  },
+  {
+    "slug": "1samuel",
+    "name": "1 Samuel",
+    "abbrev": "1sm",
+    "testament": "AT",
+    "chapters": 176,
+    "totalVerses": 812
+  },
+  {
+    "slug": "2samuel",
+    "name": "2 Samuel",
+    "abbrev": "2sm",
+    "testament": "AT",
+    "chapters": 95,
+    "totalVerses": 695
+  },
+  {
+    "slug": "1reis",
+    "name": "1 Reis",
+    "abbrev": "1rs",
+    "testament": "AT",
+    "chapters": 177,
+    "totalVerses": 817
+  },
+  {
+    "slug": "2reis",
+    "name": "2 Reis",
+    "abbrev": "2rs",
+    "testament": "AT",
+    "chapters": 221,
+    "totalVerses": 719
+  },
+  {
+    "slug": "1cronicas",
+    "name": "1 Crônicas",
+    "abbrev": "1cr",
+    "testament": "AT",
+    "chapters": 133,
+    "totalVerses": 942
+  },
+  {
+    "slug": "2cronicas",
+    "name": "2 Crônicas",
+    "abbrev": "2cr",
+    "testament": "AT",
+    "chapters": 121,
+    "totalVerses": 822
+  },
+  {
+    "slug": "esdras",
+    "name": "Esdras",
+    "abbrev": "ed",
+    "testament": "AT",
+    "chapters": 62,
+    "totalVerses": 280
+  },
+  {
+    "slug": "neemias",
+    "name": "Neemias",
+    "abbrev": "ne",
+    "testament": "AT",
+    "chapters": 57,
+    "totalVerses": 406
+  },
+  {
+    "slug": "ester",
+    "name": "Ester",
+    "abbrev": "et",
+    "testament": "AT",
+    "chapters": 16,
+    "totalVerses": 167
+  },
+  {
+    "slug": "jo",
+    "name": "Jó",
+    "abbrev": "jó",
+    "testament": "AT",
+    "chapters": 102,
+    "totalVerses": 1070
+  },
+  {
+    "slug": "salmos",
+    "name": "Salmos",
+    "abbrev": "sl",
+    "testament": "AT",
+    "chapters": 1631,
+    "totalVerses": 9118
+  },
+  {
+    "slug": "mateus",
+    "name": "Mateus",
+    "abbrev": "mt",
+    "testament": "NT",
+    "chapters": 268,
+    "totalVerses": 1071
+  },
+  {
+    "slug": "marcos",
+    "name": "Marcos",
+    "abbrev": "mc",
+    "testament": "NT",
+    "chapters": 73,
+    "totalVerses": 677
+  },
+  {
+    "slug": "lucas",
+    "name": "Lucas",
+    "abbrev": "lc",
+    "testament": "NT",
+    "chapters": 249,
+    "totalVerses": 1151
+  },
+  {
+    "slug": "joao",
+    "name": "João",
+    "abbrev": "jo",
+    "testament": "NT",
+    "chapters": 1098,
+    "totalVerses": 5057
+  }
+]
