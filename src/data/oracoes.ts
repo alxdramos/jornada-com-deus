@@ -2,6 +2,7 @@
 // Este arquivo é gerado automaticamente pelo script sync-oracoes.ts
 // NÃO EDITE MANUALMENTE
 
+// Novas interfaces para o sistema de orações
 export interface Oracao {
   id: string;
   titulo: string;
@@ -14,6 +15,21 @@ export interface Oracao {
   createdAt: string;
   theme: string;
 }
+
+// Interface antiga mantida para compatibilidade
+export interface Prayer {
+  id: string;
+  title: string;
+  content: string;
+  category: string;
+  isCustom: boolean;
+  createdAt: Date;
+}
+
+export const CATEGORIAS = ["Todas", "Esperança", "Paz", "Graças", "Perdão", "Força", "Fé", "Minhas"];
+
+// Orações predefinidas convertidas para formato Prayer (compatibilidade com código antigo)
+export const PRAYERS_PREDEFINIDAS: Prayer[] = [];
 
 export const ORACOES: Oracao[] = [
   {
