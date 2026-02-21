@@ -1,44 +1,29 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# dependencies
-/node_modules
-/.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
 
-# testing
-/coverage
-
-# next.js
-/.next/
-/out/
-
-# production
-/build
-
-# misc
-.DS_Store
+# Environment & Secrets (AIOS)
+.env
+.env.local
+.env.*.local
+*.key
 *.pem
 
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
+# Dependencies (AIOS)
+node_modules/
+node_modules
 
-# env files (can opt-in for committing if needed)
-.env*
+# Build & Logs (AIOS)
+dist/
+build/
+*.log
+logs/
 
-# vercel
-.vercel
+# IDE & OS (AIOS)
+.DS_Store
+Thumbs.db
+.idea/
+*.swp
 
-# typescript
-*.tsbuildinfo
-next-env.d.ts
-
-# banco de dados local de credenciais (apenas desenvolvimento)
-/data/
+# AIOS Local (AIOS)
+.aios-core/local/
+.claude/settings.local.json
+.aios/install-log.txt
