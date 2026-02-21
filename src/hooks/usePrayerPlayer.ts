@@ -25,7 +25,9 @@ export function usePrayerPlayer({
     if (audioUrl && audioRef.current) {
       setAudioError(false);
       setAudioLoading(true);
-      audioRef.current.src = audioUrl;
+      // Usar proxy para evitar problemas de CORS
+      const proxiedUrl = `/api/audio?url=${encodeURIComponent(audioUrl)}`;
+      audioRef.current.src = proxiedUrl;
       audioRef.current.load();
     }
   }, [audioUrl]);

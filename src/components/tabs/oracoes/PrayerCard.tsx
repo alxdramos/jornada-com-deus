@@ -1,6 +1,7 @@
 import { Prayer } from "@/data/oracoes";
 import { Heart, Play } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useState } from "react";
 
 interface PrayerCardProps {
   prayer: Prayer;
@@ -23,19 +24,22 @@ export function PrayerCard({
   onToggleFavorite,
   onViewDetails
 }: PrayerCardProps) {
-  // Extrai a cor do background da imagem
-  const bgColor = prayer.imagem?.background || "#10B981";
+  const [imgError, setImgError] = useState(false);
+  const imageUrl = prayer.imagem?.background ? `/images/${prayer.imagem.background}` : null;
 
   return (
     <div className="rounded-lg overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow group cursor-pointer" onClick={() => onViewDetails(prayer)}>
       {/* Imagem */}
-      <div className="relative h-40 overflow-hidden bg-gray-200" style={{ backgroundColor: bgColor }}>
-        {prayer.imagem?.icon ? (
-          <div className="w-full h-full flex items-center justify-center text-white text-5xl">
-            {prayer.imagem.icon}
-          </div>
+      <div className="relative h-40 overflow-hidden bg-gray-200">
+        {imageUrl && !imgError ? (
+          <img
+            src={imageUrl}
+            alt={prayer.title}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+            onError={() => setImgError(true)}
+          />
         ) : (
-          <div className="w-full h-full" style={{ backgroundColor: bgColor }} />
+          <div className="w-full h-full bg-gradient-to-br from-green-400 to-blue-500" />
         )}
 
         {/* Overlay de botões */}
