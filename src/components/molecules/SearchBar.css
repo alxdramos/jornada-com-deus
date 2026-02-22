@@ -1,0 +1,47 @@
+/* ========================================
+   SEARCH BAR — Molecule Component
+   Input + Icon + Clear Button
+   ======================================== */
+
+.search-bar {
+  width: auto;
+}
+
+.search-bar--full-width {
+  width: 100%;
+}
+
+.search-bar-clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  color: var(--color-text-secondary);
+  font-size: 0.9em;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.search-bar-clear:hover {
+  color: var(--color-text-primary);
+  transform: scale(1.1);
+}
+
+.search-bar-clear:active {
+  transform: scale(0.95);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .search-bar-clear:hover {
+    transform: none;
+  }
+
+  .search-bar-clear:active {
+    transform: none;
+  }
+}

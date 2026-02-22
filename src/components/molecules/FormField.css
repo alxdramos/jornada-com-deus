@@ -1,0 +1,37 @@
+/* ========================================
+   FORM FIELD — Molecule Component
+   Label + Input + Error/Helper Text
+   ======================================== */
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  width: 100%;
+}
+
+.form-field-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-2);
+}
+
+.form-field-label {
+  display: block;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  cursor: pointer;
+}
+
+.form-field-required {
+  color: var(--color-red);
+  margin-left: 2px;
+}
+
+.form-field-hint {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
