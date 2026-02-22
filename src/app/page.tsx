@@ -1,5 +1,8 @@
 "use client";
 
+// Força rendering dinâmico em produção para middleware de autenticação funcionar
+export const dynamic = "force-dynamic";
+
 import { useTabStore } from "@/stores/tabStore";
 import { Header } from "@/components/layout";
 import { TabHoje } from "@/components/tabs/TabHoje";

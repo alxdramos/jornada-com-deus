@@ -11,6 +11,11 @@ export default auth((req) => {
   const isRegisterPage = req.nextUrl.pathname === "/register";
   const isAuthRoute = req.nextUrl.pathname.startsWith("/api/auth");
 
+  // Debug: Log autenticação para diagnóstico
+  if (process.env.NODE_ENV === "production") {
+    console.log(`[Auth Middleware] Path: ${req.nextUrl.pathname}, Authenticated: ${isAuthenticated}, Has Auth: ${!!req.auth}`);
+  }
+
   // Rotas protegidas
   const protectedRoutes = ["/", "/explorar", "/biblia", "/oracoes", "/meditacoes", "/diario"];
 
