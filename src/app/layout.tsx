@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Suspense } from "react";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { InstallPrompt } from "@/components/install-prompt";
@@ -58,14 +59,16 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <body className={`${inter.variable} font-sans antialiased bg-background text-foreground`}>
-        <SessionProvider>
-          <AuthSyncWrapper>
-            <OfflineIndicator />
-            {children}
-            <InstallPrompt />
-            <Toaster position="top-center" richColors closeButton />
-          </AuthSyncWrapper>
-        </SessionProvider>
+        <Suspense fallback={<div className="w-screen h-screen flex items-center justify-center">Carregando...</div>}>
+          <SessionProvider>
+            <AuthSyncWrapper>
+              <OfflineIndicator />
+              {children}
+              <InstallPrompt />
+              <Toaster position="top-center" richColors closeButton />
+            </AuthSyncWrapper>
+          </SessionProvider>
+        </Suspense>
       </body>
     </html>
   );

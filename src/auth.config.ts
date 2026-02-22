@@ -19,6 +19,8 @@ export const authConfig: NextAuthConfig = {
     }),
   ],
 
+  trustHost: true,
+
   callbacks: {
     async session({ session, token }) {
       if (token.sub) {

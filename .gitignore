@@ -27,3 +27,7 @@ Thumbs.db
 .aios-core/local/
 .claude/settings.local.json
 .aios/install-log.txt
+
+# Credentials & Sensitive Data
+data/credentials-users.json
+data/*.json

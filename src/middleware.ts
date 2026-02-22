@@ -12,7 +12,7 @@ export default auth((req) => {
   const isAuthRoute = req.nextUrl.pathname.startsWith("/api/auth");
 
   // Rotas protegidas
-  const protectedRoutes = ["/", "/explorar", "/biblia", "/oracoes", "/diario"];
+  const protectedRoutes = ["/", "/explorar", "/biblia", "/oracoes", "/meditacoes", "/diario"];
 
   // Se estiver acessando uma rota protegida sem estar autenticado
   if (protectedRoutes.includes(req.nextUrl.pathname) && !isAuthenticated) {
