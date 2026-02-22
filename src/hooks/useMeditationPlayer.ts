@@ -30,9 +30,11 @@ export function useMeditationPlayer({
     if (audioUrl && audioRef.current) {
       setAudioError(false);
       setAudioLoading(true);
-      audioRef.current.src = audioUrl;
+      // Usar proxy para evitar problemas de CORS com Cloudflare R2
+      const proxiedUrl = `/api/audio?url=${encodeURIComponent(audioUrl)}`;
+      audioRef.current.src = proxiedUrl;
       audioRef.current.load();
-      console.log('Audio loaded:', audioUrl);
+      console.log('Audio loaded via proxy:', proxiedUrl);
     }
   }, [audioUrl]);
 
@@ -41,7 +43,8 @@ export function useMeditationPlayer({
     const timer = setTimeout(() => {
       if (audioUrl && audioRef.current && !audioRef.current.src) {
         console.log('Fallback: Loading audio URL', audioUrl);
-        audioRef.current.src = audioUrl;
+        const proxiedUrl = `/api/audio?url=${encodeURIComponent(audioUrl)}`;
+        audioRef.current.src = proxiedUrl;
         audioRef.current.load();
       }
     }, 100);
