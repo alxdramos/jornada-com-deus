@@ -2,17 +2,15 @@
 
 import { useState } from "react";
 import { useUserStore } from "@/stores/userStore";
+import { useTabStore } from "@/stores/tabStore";
 import { UserHeader } from "@/components/layout/UserHeader";
 import { Heart } from "lucide-react";
-import { PaywallModal } from "@/components/PaywallModal";
-import { MeditationPlayer } from "@/components/MeditationPlayer";
 import { useFavorites } from "@/hooks/useFavorites";
 
 // Sub-componentes
 import { ExploreFilters } from "./explorar/ExploreFilters";
 import { MeditationCard } from "./explorar/MeditationCard";
 import { ContentSection } from "./explorar/ContentSection";
-import { AllContentModal } from "./explorar/AllContentModal";
 
 // Dados
 import { MEDITACOES, CARDS_ESCRITURAS, CARDS_NOVO, MeditationCard as MeditationCardType } from "@/data/meditacoes";
@@ -21,15 +19,11 @@ export function TabExplorar() {
   const user = useUserStore((s) => s.user);
   const isPlus = user?.isPlus ?? false;
   const { toggleFavorite, isFavorite } = useFavorites();
+  const { setActiveTab } = useTabStore();
 
   // Estados
   const [catAtiva, setCatAtiva] = useState("TUDO");
   const [chipAtivo, setChipAtivo] = useState("TUDO");
-  const [paywallOpen, setPaywallOpen] = useState(false);
-  const [playerOpen, setPlayerOpen] = useState(false);
-  const [selectedMeditation, setSelectedMeditation] = useState<MeditationCardType | null>(null);
-  const [showAllModal, setShowAllModal] = useState(false);
-  const [selectedSection, setSelectedSection] = useState<'meditacoes' | 'escrituras' | 'novo'>('meditacoes');
 
   // Filtrar meditações
   const meditatacoesFiltradas = MEDITACOES.filter(med => {
@@ -39,14 +33,8 @@ export function TabExplorar() {
   });
 
   // Handlers
-  const handlePlayMeditation = (meditation: MeditationCardType) => {
-    if (meditation.plus && !isPlus) {
-      setSelectedMeditation(meditation);
-      setPaywallOpen(true);
-    } else {
-      setSelectedMeditation(meditation);
-      setPlayerOpen(true);
-    }
+  const handleViewAllMeditacoes = () => {
+    setActiveTab('meditacoes');
   };
 
   const togglePlusForTesting = () => {
@@ -87,21 +75,18 @@ export function TabExplorar() {
             onChipChange={setChipAtivo}
           />
 
-          {/* Seção Meditações */}
+          {/* Seção Meditações - Preview com 4 cards */}
           <ContentSection
             title="Meditações"
-            onViewAll={() => {
-              setSelectedSection('meditacoes');
-              setShowAllModal(true);
-            }}
+            onViewAll={handleViewAllMeditacoes}
           >
-            {meditatacoesFiltradas.map((med) => (
+            {meditatacoesFiltradas.slice(0, 4).map((med) => (
               <MeditationCard
                 key={med.id}
                 meditation={med}
                 isPlus={isPlus}
                 isFavorite={isFavorite(med.id)}
-                onPlay={handlePlayMeditation}
+                onPlay={() => handleViewAllMeditacoes()}
                 onFavorite={toggleFavorite}
               />
             ))}
@@ -110,10 +95,7 @@ export function TabExplorar() {
           {/* Seção Escrituras */}
           <ContentSection
             title="Escrituras"
-            onViewAll={() => {
-              setSelectedSection('escrituras');
-              setShowAllModal(true);
-            }}
+            onViewAll={() => {}}
           >
             {CARDS_ESCRITURAS.map((card) => (
               <MeditationCard
@@ -121,7 +103,7 @@ export function TabExplorar() {
                 meditation={card}
                 isPlus={isPlus}
                 isFavorite={isFavorite(card.id)}
-                onPlay={handlePlayMeditation}
+                onPlay={() => {}}
                 onFavorite={toggleFavorite}
               />
             ))}
@@ -130,10 +112,7 @@ export function TabExplorar() {
           {/* Seção Novo */}
           <ContentSection
             title="Tudo novo, de novo"
-            onViewAll={() => {
-              setSelectedSection('novo');
-              setShowAllModal(true);
-            }}
+            onViewAll={() => {}}
           >
             {CARDS_NOVO.map((card) => (
               <MeditationCard
@@ -141,42 +120,12 @@ export function TabExplorar() {
                 meditation={card}
                 isPlus={isPlus}
                 isFavorite={isFavorite(card.id)}
-                onPlay={handlePlayMeditation}
+                onPlay={() => {}}
                 onFavorite={toggleFavorite}
               />
             ))}
           </ContentSection>
         </div>
-
-        {/* Modais */}
-        <PaywallModal
-          isOpen={paywallOpen}
-          onClose={() => setPaywallOpen(false)}
-          onUpgrade={() => console.log("Upgrade realizado!")}
-          feature={selectedMeditation?.title}
-        />
-
-        {selectedMeditation && (
-          <MeditationPlayer
-            isOpen={playerOpen}
-            onClose={() => setPlayerOpen(false)}
-            titulo={selectedMeditation.title}
-            descricao={selectedMeditation.description}
-            duracao={selectedMeditation.duration}
-            isPlus={isPlus || !selectedMeditation.plus}
-            audioUrl={selectedMeditation.audioUrl}
-          />
-        )}
-
-        <AllContentModal
-          isOpen={showAllModal}
-          onClose={() => setShowAllModal(false)}
-          section={selectedSection}
-          isPlus={isPlus}
-          onPlayMeditation={handlePlayMeditation}
-          isFavorite={isFavorite}
-          onToggleFavorite={toggleFavorite}
-        />
       </div>
     </>
   );

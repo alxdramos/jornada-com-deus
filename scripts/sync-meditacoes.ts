@@ -107,16 +107,41 @@ async function syncMeditacoes(): Promise<void> {
 
     // 3. Processa e limpa dados
     console.log(`\n🧹 Processando ${validData.length} meditações de ${sheetData.length} linhas...`);
-    const processedMeditacoes = validData.map((item) => ({
-      titulo: item.titulo || item['Título'] || item.title || '',
-      texto: removeTagsFromText(item.texto || item['Texto'] || item.text || ''),
-      audioUrl: item.audioUrl || item['URL de Áudio'] || item['Audio URL'] || '',
-      imagem: item.imagem || item['Imagem'] || item.image || '',
-      duracao: item.duracao || item['Duração'] || item.duration || '',
-      categoria: item.categoria || item['Categoria'] || item.category || '',
-      tags: item.tags || item['Tags'] || item.tag || '',
-      plus: item.plus,
-    }));
+
+    // Lista de URLs de áudio padrão (Cloudflare R2)
+    const defaultAudioUrls = [
+      'https://pub-561f3fcecd8945ba90a5b9c1683fac22.r2.dev/Med_20260217015141_620.mp3',
+      'https://pub-561f3fcecd8945ba90a5b9c1683fac22.r2.dev/Med_20260217171734_696.mp3',
+      'https://pub-561f3fcecd8945ba90a5b9c1683fac22.r2.dev/Med_salmo76.mp3',
+      'https://pub-561f3fcecd8945ba90a5b9c1683fac22.r2.dev/Med_salmo51.mp3',
+      'https://pub-561f3fcecd8945ba90a5b9c1683fac22.r2.dev/Med_salmo23.mp3',
+    ];
+
+    const processedMeditacoes = validData.map((item, index) => {
+      // Formatar texto em parágrafos menores
+      const textoRaw = removeTagsFromText(item.texto || item['Texto'] || item.text || '');
+      const textoFormatado = textoRaw
+        .split('. ')
+        .map(sentence => sentence.trim())
+        .filter(s => s.length > 0)
+        .map(s => s.endsWith('.') ? s : `${s}.`)
+        .join('\n\n');
+
+      // Audio URL: se vazio, usar lista padrão (rotativa)
+      const audioUrl = (item.audioUrl || item['URL de Áudio'] || item['Audio URL'] || '').trim();
+      const finalAudioUrl = audioUrl || defaultAudioUrls[index % defaultAudioUrls.length];
+
+      return {
+        titulo: item.titulo || item['Título'] || item.title || '',
+        texto: textoFormatado,
+        audioUrl: finalAudioUrl,
+        imagem: item.imagem || item['Imagem'] || item.image || '',
+        duracao: item.duracao || item['Duração'] || item.duration || '',
+        categoria: item.categoria || item['Categoria'] || item.category || '',
+        tags: item.tags || item['Tags'] || item.tag || '',
+        plus: item.plus,
+      };
+    });
 
     // 5. Mapeia imagens para itens sem imagem definida
     console.log('\n🖼️  Mapeando imagens...');

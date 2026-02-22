@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { CheckCircle, Headphones, BookOpen, Bird, PenLine } from "lucide-react";
+import { CheckCircle, Headphones, BookOpen, Bird, Music, PenLine } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTabStore, type TabId } from "@/stores/tabStore";
 
@@ -17,6 +17,7 @@ const navItems: NavItem[] = [
   { id: "hoje", label: "Hoje", icon: CheckCircle },
   { id: "explorar", label: "Explorar", icon: Headphones },
   { id: "biblia", label: "Bíblia", icon: BookOpen },
+  { id: "meditacoes", label: "Meditação", icon: Music },
   { id: "oracoes", label: "Orações", icon: Bird },
   { id: "diario", label: "Diário", icon: PenLine },
 ];
