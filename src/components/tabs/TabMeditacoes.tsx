@@ -92,25 +92,21 @@ export function TabMeditacoes() {
           </div>
 
           {/* Seção de Meditações */}
-          <ContentSection title="Meditações" onViewAll={() => {}}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {meditacoesFiltradas.length > 0 ? (
-                meditacoesFiltradas.map((meditacao) => (
-                  <MeditationCard
-                    key={meditacao.id}
-                    meditation={meditacao}
-                    isPlus={isPlus}
-                    isFavorite={isFavorite(meditacao.id)}
-                    onPlay={handleViewDetails}
-                    onFavorite={toggleFavorite}
-                  />
-                ))
-              ) : (
-                <div className="col-span-full text-center py-8 text-gray-500">
-                  Nenhuma meditação encontrada com esses filtros
-                </div>
-              )}
-            </div>
+          <ContentSection
+            title="Meditações"
+            onViewAll={() => {}}
+            emptyState="Nenhuma meditação encontrada com esses filtros"
+          >
+            {meditacoesFiltradas.map((meditacao) => (
+              <MeditationCard
+                key={meditacao.id}
+                meditation={meditacao}
+                isPlus={isPlus}
+                isFavorite={isFavorite(meditacao.id)}
+                onPlay={handleViewDetails}
+                onFavorite={toggleFavorite}
+              />
+            ))}
           </ContentSection>
         </div>
       </div>
