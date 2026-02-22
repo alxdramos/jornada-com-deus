@@ -22,6 +22,11 @@ export function TabMeditacoes() {
   const [catAtiva, setCatAtiva] = useState("TUDO");
   const [chipAtivo, setChipAtivo] = useState("TUDO");
 
+  // Gerar chips dinamicamente a partir das tags das meditações
+  const CATEGORIAS = ["TUDO", "MENTE", "CORPO", "ESPÍRITO", "MÚSICA", "ESTUDOS"];
+  const tagsUnicas = Array.from(new Set(MEDITACOES.flatMap(m => m.tags))).sort();
+  const CHIPS = ["TUDO", ...tagsUnicas];
+
   // Filtrar meditações
   const meditacoesFiltradas = MEDITACOES.filter(med => {
     const categoriaMatch = catAtiva === "TUDO" || med.category === catAtiva;
@@ -39,9 +44,6 @@ export function TabMeditacoes() {
       setShowDetailModal(true);
     }
   };
-
-  const CATEGORIAS = ["TUDO", "MENTE", "CORPO", "ESPÍRITO", "MÚSICA", "ESTUDOS"];
-  const CHIPS = ["TUDO", "DORMIR", "ANSIEDADE", "PAZ", "<5MINS", "MOTIVAÇÃO", "ORAÇÃO"];
 
   return (
     <>
