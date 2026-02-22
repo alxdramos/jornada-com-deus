@@ -1,15 +1,16 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { MEDITACOES, MeditationCard as MeditationCardType } from "@/data/meditacoes";
-import { UserHeader } from "@/components/layout/UserHeader";
-import { ContentSection } from "./explorar/ContentSection";
-import { MeditationCard } from "./explorar/MeditationCard";
-import { MeditationDetailModalWithPlayer } from "./meditacoes/MeditationDetailModalWithPlayer";
-import { PaywallModal } from "@/components/PaywallModal";
-import { useUserStore } from "@/stores/userStore";
-import { useFavorites } from "@/hooks/useFavorites";
-import { Music } from "lucide-react";
+import { useState } from 'react';
+import { MEDITACOES, MeditationCard as MeditationCardType } from '@/data/meditacoes';
+import { UserHeader } from '@/components/layout/UserHeader';
+import { Chip } from '@/components/atoms/Chip';
+import { ContentSection } from './explorar/ContentSection';
+import { MeditationCard } from './explorar/MeditationCard';
+import { MeditationDetailModalWithPlayer } from './meditacoes/MeditationDetailModalWithPlayer';
+import { PaywallModal } from '@/components/PaywallModal';
+import { useUserStore } from '@/stores/userStore';
+import { useFavorites } from '@/hooks/useFavorites';
+import { Music } from 'lucide-react';
 
 export function TabMeditacoes() {
   const user = useUserStore((s) => s.user);
@@ -47,14 +48,14 @@ export function TabMeditacoes() {
 
   return (
     <>
-      <div className="min-h-screen bg-[#FAF9F6] p-6 pb-28">
+      <div className="min-h-screen bg-bg-primary p-6 pb-28">
         <div className="max-w-4xl mx-auto space-y-6">
           {/* Header padronizado */}
           <UserHeader
             title="Meditações"
             rightElement={
-              <div className="w-10 h-10 rounded-full bg-[#8B5CF6]/20 flex items-center justify-center">
-                <Music className="w-5 h-5 text-[#8B5CF6]" />
+              <div className="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center">
+                <Music className="w-5 h-5 text-purple-500" />
               </div>
             }
           />
@@ -62,34 +63,25 @@ export function TabMeditacoes() {
           {/* Filtros - Categorias */}
           <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
             {CATEGORIAS.map((cat) => (
-              <button
+              <Chip
                 key={cat}
+                label={cat}
+                selected={catAtiva === cat}
                 onClick={() => setCatAtiva(cat)}
-                className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
-                  catAtiva === cat
-                    ? "bg-[#8B5CF6] text-white"
-                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                }`}
-              >
-                {cat}
-              </button>
+                variant="filled"
+              />
             ))}
           </div>
 
-          {/* Filtros - Chips */}
+          {/* Filtros - Tags/Chips */}
           <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
             {CHIPS.map((chip) => (
-              <button
+              <Chip
                 key={chip}
+                label={chip}
+                selected={chipAtivo === chip}
                 onClick={() => setChipAtivo(chip)}
-                className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
-                  chipAtivo === chip
-                    ? "bg-[#8B5CF6] text-white"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                }`}
-              >
-                {chip}
-              </button>
+              />
             ))}
           </div>
 

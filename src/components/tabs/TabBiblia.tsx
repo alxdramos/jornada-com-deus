@@ -111,7 +111,7 @@ export function TabBiblia() {
   const totalChapters = bookData?.chapters || 0;
 
   return (
-    <div className="min-h-screen bg-[#FAF9F6] p-6 pb-28">
+    <div className="min-h-screen bg-bg-primary p-6 pb-28">
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Header */}
         <UserHeader
@@ -120,12 +120,12 @@ export function TabBiblia() {
             <>
               <Link
                 href="/biblia/sobre"
-                className="w-10 h-10 rounded-full bg-[#FB923C]/20 flex items-center justify-center hover:bg-[#FB923C]/30 transition-colors"
+                className="w-10 h-10 rounded-full bg-orange-500/20 flex items-center justify-center hover:bg-orange-500/30 transition-colors"
                 title="Sobre a Bíblia"
               >
-                <Info className="w-5 h-5 text-[#FB923C]" />
+                <Info className="w-5 h-5 text-orange-500" />
               </Link>
-              <div className="w-10 h-10 rounded-full bg-[#FB923C]/20 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-full bg-orange-500/20 flex items-center justify-center">
                 <span className="text-lg">👥</span>
               </div>
             </>

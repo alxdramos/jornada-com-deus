@@ -40,14 +40,14 @@ export function TabOracoes() {
 
   return (
     <>
-      <div className="min-h-screen bg-[#FAF9F6] p-6 pb-28">
+      <div className="min-h-screen bg-bg-primary p-6 pb-28">
         <div className="max-w-4xl mx-auto space-y-6">
           {/* Header padronizado */}
           <UserHeader
             title="Orações"
             rightElement={
-              <div className="w-10 h-10 rounded-full bg-[#10B981]/20 flex items-center justify-center">
-                <Bird className="w-5 h-5 text-[#10B981]" />
+              <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center">
+                <Bird className="w-5 h-5 text-green-500" />
               </div>
             }
           />

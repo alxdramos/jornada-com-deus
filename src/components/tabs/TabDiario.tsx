@@ -66,15 +66,15 @@ export function TabDiario() {
 
   if (!loaded) {
     return (
-      <div className="min-h-screen bg-[#FAF9F6] p-6 pb-28 flex items-center justify-center">
-        <div className="text-[#6B7280]">Carregando...</div>
+      <div className="min-h-screen bg-bg-primary p-6 pb-28 flex items-center justify-center">
+        <div className="text-text-secondary">Carregando...</div>
       </div>
     );
   }
 
   return (
     <>
-      <div className="min-h-screen bg-[#FAF9F6] p-6 pb-28">
+      <div className="min-h-screen bg-bg-primary p-6 pb-28">
         <div className="max-w-4xl mx-auto space-y-6">
           {/* Header */}
           <UserHeader
@@ -82,9 +82,9 @@ export function TabDiario() {
             rightElement={
               <button
                 onClick={() => setShowSearch(!showSearch)}
-                className="p-2 hover:bg-white rounded-lg transition-colors"
+                className="p-2 hover:bg-bg-secondary rounded-lg transition-colors"
               >
-                <Search className="w-5 h-5 text-[#1F2937]" />
+                <Search className="w-5 h-5 text-text-primary" />
               </button>
             }
           />
