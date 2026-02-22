@@ -32,7 +32,20 @@ export function useMeditationPlayer({
       setAudioLoading(true);
       audioRef.current.src = audioUrl;
       audioRef.current.load();
+      console.log('Audio loaded:', audioUrl);
     }
+  }, [audioUrl]);
+
+  // Fallback: Ensure audio is loaded even if ref wasn't ready on first effect
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (audioUrl && audioRef.current && !audioRef.current.src) {
+        console.log('Fallback: Loading audio URL', audioUrl);
+        audioRef.current.src = audioUrl;
+        audioRef.current.load();
+      }
+    }, 100);
+    return () => clearTimeout(timer);
   }, [audioUrl]);
 
   // Lidar com eventos do audio element

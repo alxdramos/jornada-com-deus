@@ -79,9 +79,9 @@ export function MeditationPlayer({
         <X className="w-5 h-5" />
       </button>
 
-      <div className="relative z-10 flex flex-col items-center justify-center h-full px-6 text-center text-white">
+      <div className="relative z-10 flex flex-col items-center justify-center h-full px-6 text-center text-white overflow-hidden">
         {/* Título e descrição */}
-        <div className="max-w-md space-y-4 mb-8">
+        <div className="max-w-md space-y-4 mb-8 flex flex-col max-h-[70vh] overflow-y-auto">
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -90,14 +90,14 @@ export function MeditationPlayer({
             {titulo}
           </motion.h1>
           {descricao && (
-            <motion.p
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="text-white/80 text-sm leading-relaxed"
+              className="text-white/80 text-base leading-relaxed whitespace-pre-wrap overflow-y-auto max-h-[40vh] px-2 py-2 rounded-lg"
             >
               {descricao}
-            </motion.p>
+            </motion.div>
           )}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -147,14 +147,12 @@ export function MeditationPlayer({
 
         <AudioErrorMessage show={audioError} />
 
-        {audioUrl && (
-          <audio
-            ref={audioRef}
-            preload="metadata"
-            muted={muted}
-            style={{ display: 'none' }}
-          />
-        )}
+        <audio
+          ref={audioRef}
+          preload="metadata"
+          muted={muted}
+          style={{ display: 'none' }}
+        />
       </div>
     </motion.div>
   );
