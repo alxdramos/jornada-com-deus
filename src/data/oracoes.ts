@@ -79,7 +79,7 @@ export const ORACOES: Oracao[] = [
       "icon": "creation_2422229105.png"
     },
     "createdAt": "2026-02-20T19:20:23.621Z",
-    "theme": "default"
+    "theme": "Perdão"
   },
   {
     "id": "esperanca-viva-junto-as-aguas-eternas",
@@ -91,7 +91,7 @@ export const ORACOES: Oracao[] = [
       "icon": "creation_2422250576.png"
     },
     "createdAt": "2026-02-20T19:20:23.621Z",
-    "theme": "default"
+    "theme": "Cura Divina"
   },
   {
     "id": "renovados-pelas-suas-misericordias-eternas",
@@ -103,7 +103,7 @@ export const ORACOES: Oracao[] = [
       "icon": "creation_2422246495.png"
     },
     "createdAt": "2026-02-20T19:20:23.621Z",
-    "theme": "default"
+    "theme": "Ansiedade"
   },
   {
     "id": "cenaculo-de-perdao-e-graca-transformadora",
@@ -115,7 +115,7 @@ export const ORACOES: Oracao[] = [
       "icon": "creation_2422204545.png"
     },
     "createdAt": "2026-02-20T19:20:23.621Z",
-    "theme": "default"
+    "theme": "Gratidão"
   },
   {
     "id": "caminhando-na-luz-da-tua-sabedoria",
@@ -127,7 +127,7 @@ export const ORACOES: Oracao[] = [
       "icon": "creation_2422222803.png"
     },
     "createdAt": "2026-02-20T19:20:23.621Z",
-    "theme": "default"
+    "theme": "Fortalecimento"
   },
   {
     "id": "firmados-na-rocha-inabalaveis-no-senhor",
@@ -139,7 +139,7 @@ export const ORACOES: Oracao[] = [
       "icon": "creation_2422225692.png"
     },
     "createdAt": "2026-02-20T19:20:23.621Z",
-    "theme": "default"
+    "theme": "Perdão"
   },
   {
     "id": "caminhada-de-fe-que-move-montanhas",
@@ -151,7 +151,7 @@ export const ORACOES: Oracao[] = [
       "icon": "creation_2422227254.png"
     },
     "createdAt": "2026-02-20T19:20:23.621Z",
-    "theme": "default"
+    "theme": "Gratidão"
   },
   {
     "id": "do-rio-que-restaura-nos-bebemos",
@@ -187,7 +187,7 @@ export const ORACOES: Oracao[] = [
       "icon": "creation_2422206449.png"
     },
     "createdAt": "2026-02-20T19:20:23.621Z",
-    "theme": "default"
+    "theme": "Fortalecimento"
   },
   {
     "id": "em-silencio-escutamos-a-voz-do-espirito",
@@ -199,7 +199,7 @@ export const ORACOES: Oracao[] = [
       "icon": "creation_2422245487.png"
     },
     "createdAt": "2026-02-20T19:20:23.621Z",
-    "theme": "default"
+    "theme": "Intercessão"
   },
   {
     "id": "agora-um-ceu-aberto-sobre-nos",
@@ -223,7 +223,7 @@ export const ORACOES: Oracao[] = [
       "icon": "creation_2422216442.png"
     },
     "createdAt": "2026-02-20T19:20:23.621Z",
-    "theme": "default"
+    "theme": "Família"
   },
   {
     "id": "no-silencio-encontramos-tua-presenca",
@@ -235,7 +235,7 @@ export const ORACOES: Oracao[] = [
       "icon": "creation_2422225674.png"
     },
     "createdAt": "2026-02-20T19:20:23.621Z",
-    "theme": "default"
+    "theme": "Paz Interior"
   },
   {
     "id": "o-amor-perfeito-que-lanca-fora-o-medo",
@@ -247,7 +247,7 @@ export const ORACOES: Oracao[] = [
       "icon": "creation_2422250580.png"
     },
     "createdAt": "2026-02-20T19:20:23.621Z",
-    "theme": "default"
+    "theme": "Gratidão"
   },
   {
     "id": "no-jardim-da-entrega-e-da-paz",
@@ -259,7 +259,7 @@ export const ORACOES: Oracao[] = [
       "icon": "creation_2422225719.png"
     },
     "createdAt": "2026-02-20T19:20:23.621Z",
-    "theme": "default"
+    "theme": "Perdão"
   },
   {
     "id": "raizes-profundas-na-videira-verdadeira",
@@ -271,7 +271,7 @@ export const ORACOES: Oracao[] = [
       "icon": "creation_2422206437.png"
     },
     "createdAt": "2026-02-20T19:20:23.621Z",
-    "theme": "default"
+    "theme": "Proteção"
   },
   {
     "id": "na-videira-verdadeira-encontramos-vida-e-avivamento",
@@ -283,7 +283,7 @@ export const ORACOES: Oracao[] = [
       "icon": "creation_2422246526.png"
     },
     "createdAt": "2026-02-20T19:20:23.621Z",
-    "theme": "default"
+    "theme": "Proteção"
   },
   {
     "id": "renova-nos-em-tua-misericordia-infinita",
@@ -295,7 +295,7 @@ export const ORACOES: Oracao[] = [
       "icon": "creation_2422238920.png"
     },
     "createdAt": "2026-02-20T19:20:23.621Z",
-    "theme": "default"
+    "theme": "Perdão"
   },
   {
     "id": "no-jardim-da-provisao-do-pai",
@@ -307,7 +307,7 @@ export const ORACOES: Oracao[] = [
       "icon": "creation_2422243341.png"
     },
     "createdAt": "2026-02-20T19:20:23.621Z",
-    "theme": "default"
+    "theme": "Família"
   },
   {
     "id": "no-jardim-da-presenca-divina",
@@ -319,7 +319,7 @@ export const ORACOES: Oracao[] = [
       "icon": "creation_2422245524.png"
     },
     "createdAt": "2026-02-20T19:20:23.621Z",
-    "theme": "default"
+    "theme": "Paz Interior"
   },
   {
     "id": "bebendo-do-rio-que-restaura-a-alma",
@@ -331,7 +331,7 @@ export const ORACOES: Oracao[] = [
       "icon": "creation_2422244258.png"
     },
     "createdAt": "2026-02-20T19:20:23.621Z",
-    "theme": "default"
+    "theme": "Proteção"
   },
   {
     "id": "nosso-refugio-no-jardim-da-fraqueza",
@@ -343,7 +343,7 @@ export const ORACOES: Oracao[] = [
       "icon": "creation_2422206392.png"
     },
     "createdAt": "2026-02-20T19:20:23.621Z",
-    "theme": "default"
+    "theme": "Intercessão"
   },
   {
     "id": "o-descanso-perfeito-no-bom-pastor",
@@ -355,7 +355,7 @@ export const ORACOES: Oracao[] = [
       "icon": "creation_2422204530.png"
     },
     "createdAt": "2026-02-20T19:20:23.621Z",
-    "theme": "default"
+    "theme": "Intercessão"
   },
   {
     "id": "no-monte-da-graca-forca-em-nossa-fraqueza",
@@ -367,7 +367,7 @@ export const ORACOES: Oracao[] = [
       "icon": "creation_2422227240.png"
     },
     "createdAt": "2026-02-20T19:20:23.621Z",
-    "theme": "default"
+    "theme": "Ansiedade"
   },
   {
     "id": "vestidos-com-a-armadura-do-senhor",
@@ -379,7 +379,7 @@ export const ORACOES: Oracao[] = [
       "icon": "creation_2422247629.png"
     },
     "createdAt": "2026-02-20T19:20:23.621Z",
-    "theme": "default"
+    "theme": "Intercessão"
   },
   {
     "id": "santuario-de-cura-coracoes-e-corpos-restaurados",
@@ -403,7 +403,7 @@ export const ORACOES: Oracao[] = [
       "icon": "creation_2422245508.png"
     },
     "createdAt": "2026-02-20T19:20:23.621Z",
-    "theme": "default"
+    "theme": "Gratidão"
   },
   {
     "id": "descanso-profundo-no-amor-do-bom-pastor",
@@ -415,7 +415,7 @@ export const ORACOES: Oracao[] = [
       "icon": "creation_2422227208.png"
     },
     "createdAt": "2026-02-20T19:20:23.621Z",
-    "theme": "default"
+    "theme": "Intercessão"
   },
   {
     "id": "sob-a-tenda-da-graca-e-perdao",
@@ -427,7 +427,7 @@ export const ORACOES: Oracao[] = [
       "icon": "creation_2422244287.png"
     },
     "createdAt": "2026-02-20T19:20:23.621Z",
-    "theme": "default"
+    "theme": "Família"
   },
   {
     "id": "esperanca-viva-a-beira-das-aguas-eternas",
@@ -439,7 +439,7 @@ export const ORACOES: Oracao[] = [
       "icon": "creation_2422229084.png"
     },
     "createdAt": "2026-02-20T19:20:23.621Z",
-    "theme": "default"
+    "theme": "Intercessão"
   },
   {
     "id": "fe-que-move-montanhas-a-chama-da-esperanca",
@@ -451,7 +451,7 @@ export const ORACOES: Oracao[] = [
       "icon": "creation_2422201804.png"
     },
     "createdAt": "2026-02-20T19:20:23.621Z",
-    "theme": "default"
+    "theme": "Fortalecimento"
   },
   {
     "id": "a-paz-que-acalma-todas-as-tempestades",
@@ -475,7 +475,7 @@ export const ORACOES: Oracao[] = [
       "icon": "creation_2422229092.png"
     },
     "createdAt": "2026-02-20T19:20:23.621Z",
-    "theme": "default"
+    "theme": "Perdão"
   },
   {
     "id": "pensamentos-puros-e-nobres-filipenses-4-8",
@@ -487,7 +487,7 @@ export const ORACOES: Oracao[] = [
       "icon": "creation_2422241888.png"
     },
     "createdAt": "2026-02-20T19:20:23.621Z",
-    "theme": "default"
+    "theme": "Caráter e transformação pessoal"
   }
 ];
 
