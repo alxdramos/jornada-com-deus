@@ -1,6 +1,7 @@
 "use client";
 
 import { useTabStore } from "@/stores/tabStore";
+import { Header } from "@/components/layout";
 import { TabHoje } from "@/components/tabs/TabHoje";
 import { TabExplorar } from "@/components/tabs/TabExplorar";
 import { TabBiblia } from "@/components/tabs/TabBiblia";
@@ -15,6 +16,7 @@ export default function Home() {
 
   return (
     <>
+      <Header />
       <ErrorBoundary fallbackLabel="Erro na aba Hoje">
         {activeTab === "hoje" && <TabHoje />}
       </ErrorBoundary>

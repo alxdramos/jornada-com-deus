@@ -1,3 +1,7 @@
+/* Design System Imports */
+@import "../styles/tokens.css";
+@import "../styles/animations.css";
+
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";

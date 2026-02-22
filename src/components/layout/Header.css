@@ -1,0 +1,171 @@
+/* ========================================
+   HEADER — Layout Component
+   Profile | Logo | Actions
+   ======================================== */
+
+.header {
+  height: 64px;
+  background-color: var(--color-bg-secondary);
+  box-shadow: var(--shadow-md);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--spacing-4);
+  position: sticky;
+  top: 0;
+  z-index: var(--z-header);
+  border-bottom: 1px solid var(--color-border-subtle);
+  gap: var(--spacing-4);
+}
+
+/* ========== PROFILE (LEFT) ========== */
+.header-profile {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  cursor: pointer;
+  padding: var(--spacing-2) var(--spacing-3);
+  border-radius: var(--radius-md);
+  transition: background-color var(--transition-base);
+  flex-shrink: 0;
+  min-width: 60px;
+}
+
+.header-profile:hover {
+  background-color: var(--color-bg-tertiary);
+}
+
+.header-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.header-avatar-placeholder {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-orange);
+  color: var(--color-text-inverse);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  flex-shrink: 0;
+}
+
+.header-profile-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.header-profile-name {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ========== TITLE (CENTER) ========== */
+.header-title {
+  text-align: center;
+  flex: 1;
+  min-width: 0;
+}
+
+.header-title h1 {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ========== ACTIONS (RIGHT) ========== */
+.header-actions {
+  display: flex;
+  gap: var(--spacing-2);
+  flex-shrink: 0;
+}
+
+.header-action-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  padding: var(--spacing-2);
+  border-radius: var(--radius-md);
+  transition: background-color var(--transition-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+}
+
+.header-action-btn:hover {
+  background-color: var(--color-bg-tertiary);
+}
+
+.header-action-btn:active {
+  background-color: var(--color-border-subtle);
+}
+
+/* ========== MOBILE (375px) ========== */
+@media (max-width: 640px) {
+  .header {
+    height: 56px;
+    padding: 0 var(--spacing-3);
+    gap: var(--spacing-3);
+  }
+
+  .header-profile {
+    min-width: 48px;
+    padding: var(--spacing-2);
+  }
+
+  .header-avatar {
+    width: 32px;
+    height: 32px;
+  }
+
+  .header-avatar-placeholder {
+    width: 32px;
+    height: 32px;
+    font-size: var(--font-size-base);
+  }
+
+  .header-profile-text {
+    display: none;
+  }
+
+  .header-title h1 {
+    font-size: var(--font-size-lg);
+  }
+
+  .header-action-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+  }
+}
+
+/* ========== ACCESSIBILITY ========== */
+.header-action-btn:focus {
+  outline: 2px solid var(--color-orange);
+  outline-offset: 2px;
+}
+
+.header-profile:focus {
+  outline: 2px solid var(--color-orange);
+  outline-offset: 2px;
+}

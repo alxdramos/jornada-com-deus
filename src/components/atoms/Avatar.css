@@ -1,0 +1,140 @@
+/* ========================================
+   AVATAR — Atom Component
+   User profile images with initials fallback
+   Sizes: xs, sm, md, lg, xl
+   Status indicators: online, offline, away
+   ======================================== */
+
+.avatar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  background-color: var(--color-bg-tertiary);
+  border: 2px solid var(--color-bg-secondary);
+}
+
+/* ========== SIZES ========== */
+
+.avatar--xs {
+  width: 24px;
+  height: 24px;
+  font-size: var(--font-size-xs);
+}
+
+.avatar--sm {
+  width: 32px;
+  height: 32px;
+  font-size: var(--font-size-sm);
+}
+
+.avatar--md {
+  width: 40px;
+  height: 40px;
+  font-size: var(--font-size-base);
+}
+
+.avatar--lg {
+  width: 48px;
+  height: 48px;
+  font-size: var(--font-size-lg);
+}
+
+.avatar--xl {
+  width: 64px;
+  height: 64px;
+  font-size: var(--font-size-2xl);
+}
+
+/* ========== IMAGE ========== */
+
+.avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* ========== INITIALS ========== */
+
+.avatar-initials {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-inverse);
+  text-transform: uppercase;
+  user-select: none;
+}
+
+/* ========== COLORS ========== */
+
+.avatar-initials--orange {
+  background-color: var(--color-orange);
+}
+
+.avatar-initials--purple {
+  background-color: var(--color-purple);
+}
+
+.avatar-initials--green {
+  background-color: var(--color-green);
+}
+
+.avatar-initials--blue {
+  background-color: var(--color-blue);
+}
+
+.avatar-initials--red {
+  background-color: var(--color-red);
+}
+
+.avatar-initials--yellow {
+  background-color: var(--color-yellow);
+  color: var(--color-text-primary);
+}
+
+/* ========== STATUS INDICATOR ========== */
+
+.avatar-status-indicator {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 40%;
+  height: 40%;
+  border-radius: 50%;
+  border: 2px solid var(--color-bg-secondary);
+  background-color: currentColor;
+}
+
+.avatar--online .avatar-status-indicator {
+  background-color: var(--color-green);
+}
+
+.avatar--offline .avatar-status-indicator {
+  background-color: var(--color-text-secondary);
+}
+
+.avatar--away .avatar-status-indicator {
+  background-color: var(--color-yellow);
+}
+
+/* ========== FOCUS STATE ========== */
+
+.avatar:focus-visible {
+  outline: 2px solid var(--color-orange);
+  outline-offset: 2px;
+}
+
+/* ========== ACCESSIBILITY ========== */
+
+@media (prefers-reduced-motion: reduce) {
+  .avatar {
+    animation: none;
+  }
+}

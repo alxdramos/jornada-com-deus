@@ -1,0 +1,94 @@
+/* ========================================
+   DESIGN TOKENS — Jornada com Deus
+   All colors, spacing, typography, shadows
+   ======================================== */
+
+:root {
+  /* ========== COLORS — BACKGROUNDS ========== */
+  --color-bg-primary: #F8F7F4;
+  --color-bg-secondary: #FFFFFF;
+  --color-bg-tertiary: #F3F4F6;
+  --color-bg-inverse: #1F2937;
+
+  /* ========== COLORS — TEXT ========== */
+  --color-text-primary: #1F2937;
+  --color-text-secondary: #6B7280;
+  --color-text-tertiary: #9CA3AF;
+  --color-text-inverse: #FFFFFF;
+
+  /* ========== COLORS — BORDERS ========== */
+  --color-border-subtle: #E5E7EB;
+  --color-border-normal: #D1D5DB;
+  --color-border-strong: #9CA3AF;
+
+  /* ========== COLORS — SEMANTIC ========== */
+  --color-orange: #FB923C;
+  --color-purple: #8B5CF6;
+  --color-green: #10B981;
+  --color-red: #EF4444;
+  --color-blue: #3B82F6;
+  --color-yellow: #FBBF24;
+
+  /* ========== TYPOGRAPHY — FONT FAMILY ========== */
+  --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    sans-serif;
+
+  /* ========== TYPOGRAPHY — FONT SIZES ========== */
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-base: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 28px;
+  --font-size-4xl: 32px;
+
+  /* ========== TYPOGRAPHY — FONT WEIGHTS ========== */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+
+  /* ========== TYPOGRAPHY — LINE HEIGHTS ========== */
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+
+  /* ========== SPACING ========== */
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-5: 20px;
+  --spacing-6: 24px;
+  --spacing-8: 32px;
+  --spacing-10: 40px;
+  --spacing-12: 48px;
+
+  /* ========== BORDER RADIUS ========== */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
+
+  /* ========== SHADOWS ========== */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --shadow-xl: 0 8px 24px rgba(0, 0, 0, 0.2);
+
+  /* ========== Z-INDEX ========== */
+  --z-base: 1;
+  --z-dropdown: 10;
+  --z-sticky: 20;
+  --z-fixed: 30;
+  --z-header: 100;
+  --z-modal-overlay: 1000;
+  --z-modal: 1001;
+  --z-tooltip: 1002;
+
+  /* ========== TRANSITIONS ========== */
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.2s ease;
+  --transition-slow: 0.3s ease;
+}

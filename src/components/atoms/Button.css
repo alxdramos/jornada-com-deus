@@ -1,0 +1,205 @@
+/* ========================================
+   BUTTON — Atom Component
+   5 Variants: Primary, Secondary, Ghost, Danger, Outline
+   3 Sizes: sm, md, lg
+   ======================================== */
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-medium);
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+  outline: none;
+}
+
+/* ========== SIZES ========== */
+.button--sm {
+  padding: var(--spacing-2) var(--spacing-3);
+  font-size: var(--font-size-sm);
+  min-height: 32px;
+}
+
+.button--md {
+  padding: var(--spacing-3) var(--spacing-4);
+  font-size: var(--font-size-base);
+  min-height: 40px;
+}
+
+.button--lg {
+  padding: var(--spacing-4) var(--spacing-6);
+  font-size: var(--font-size-lg);
+  min-height: 48px;
+}
+
+/* ========== VARIANTS ========== */
+
+/* PRIMARY — Main action button */
+.button--primary {
+  background-color: var(--color-orange);
+  color: var(--color-text-inverse);
+  border-color: var(--color-orange);
+}
+
+.button--primary:hover:not(:disabled) {
+  background-color: #EA8B1D;
+  border-color: #EA8B1D;
+  transform: translateY(-2px);
+}
+
+.button--primary:active:not(:disabled) {
+  background-color: #D87F1A;
+  border-color: #D87F1A;
+  transform: translateY(0);
+}
+
+/* SECONDARY — Alternative action */
+.button--secondary {
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+  border-color: var(--color-border-subtle);
+}
+
+.button--secondary:hover:not(:disabled) {
+  background-color: #E5E7EB;
+  border-color: var(--color-border-normal);
+}
+
+.button--secondary:active:not(:disabled) {
+  background-color: #D1D5DB;
+  border-color: var(--color-border-strong);
+}
+
+/* GHOST — Minimal style */
+.button--ghost {
+  background-color: transparent;
+  color: var(--color-text-primary);
+  border-color: transparent;
+}
+
+.button--ghost:hover:not(:disabled) {
+  background-color: var(--color-bg-tertiary);
+  border-color: transparent;
+}
+
+.button--ghost:active:not(:disabled) {
+  background-color: #E5E7EB;
+  border-color: transparent;
+}
+
+/* DANGER — Destructive action */
+.button--danger {
+  background-color: var(--color-red);
+  color: var(--color-text-inverse);
+  border-color: var(--color-red);
+}
+
+.button--danger:hover:not(:disabled) {
+  background-color: #DC2626;
+  border-color: #DC2626;
+  transform: translateY(-2px);
+}
+
+.button--danger:active:not(:disabled) {
+  background-color: #B91C1C;
+  border-color: #B91C1C;
+  transform: translateY(0);
+}
+
+/* OUTLINE — Bordered style */
+.button--outline {
+  background-color: transparent;
+  color: var(--color-text-primary);
+  border-color: var(--color-border-normal);
+}
+
+.button--outline:hover:not(:disabled) {
+  background-color: var(--color-bg-primary);
+  border-color: var(--color-border-strong);
+}
+
+.button--outline:active:not(:disabled) {
+  background-color: var(--color-bg-tertiary);
+  border-color: var(--color-border-strong);
+}
+
+/* ========== STATES ========== */
+
+.button--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.button--full-width {
+  width: 100%;
+}
+
+/* ========== ICONS ========== */
+
+.button-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2em;
+}
+
+.button-icon--left {
+  margin-right: var(--spacing-1);
+}
+
+.button-icon--right {
+  margin-left: var(--spacing-1);
+}
+
+/* ========== LOADING STATE ========== */
+
+.button-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ========== FOCUS STATE ========== */
+
+.button:focus-visible {
+  outline: 2px solid var(--color-orange);
+  outline-offset: 2px;
+}
+
+/* ========== ACCESSIBILITY ========== */
+
+@media (prefers-reduced-motion: reduce) {
+  .button {
+    transition: none;
+  }
+
+  .button--primary:hover:not(:disabled),
+  .button--danger:hover:not(:disabled) {
+    transform: none;
+  }
+
+  .button-spinner {
+    animation: none;
+    border-top-color: currentColor;
+    opacity: 0.6;
+  }
+}
