@@ -25,6 +25,10 @@ export function TabExplorar() {
   const [catAtiva, setCatAtiva] = useState("TUDO");
   const [chipAtivo, setChipAtivo] = useState("TUDO");
 
+  // Gerar chips dinamicamente das tags reais
+  const tagsUnicas = Array.from(new Set(MEDITACOES.flatMap(m => m.tags))).sort();
+  const CHIPS = ["TUDO", ...tagsUnicas];
+
   // Filtrar meditações
   const meditatacoesFiltradas = MEDITACOES.filter(med => {
     const categoriaMatch = catAtiva === "TUDO" || med.category === catAtiva;
@@ -71,6 +75,7 @@ export function TabExplorar() {
           <ExploreFilters
             categoryActive={catAtiva}
             chipActive={chipAtivo}
+            chips={CHIPS}
             onCategoryChange={setCatAtiva}
             onChipChange={setChipAtivo}
           />
