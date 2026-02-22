@@ -20,19 +20,16 @@ export function TabMeditacoes() {
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedMeditation, setSelectedMeditation] = useState<MeditationCardType | null>(null);
   const [paywallOpen, setPaywallOpen] = useState(false);
-  const [catAtiva, setCatAtiva] = useState("TUDO");
   const [chipAtivo, setChipAtivo] = useState("TUDO");
 
   // Gerar chips dinamicamente a partir das tags das meditações
-  const CATEGORIAS = ["TUDO", "MENTE", "CORPO", "ESPÍRITO", "MÚSICA", "ESTUDOS"];
   const tagsUnicas = Array.from(new Set(MEDITACOES.flatMap(m => m.tags))).sort();
   const CHIPS = ["TUDO", ...tagsUnicas];
 
-  // Filtrar meditações
+  // Filtrar meditações apenas por chips
   const meditacoesFiltradas = MEDITACOES.filter(med => {
-    const categoriaMatch = catAtiva === "TUDO" || med.category === catAtiva;
     const chipMatch = chipAtivo === "TUDO" || med.tags.includes(chipAtivo);
-    return categoriaMatch && chipMatch;
+    return chipMatch;
   });
 
   // Handlers
@@ -59,19 +56,6 @@ export function TabMeditacoes() {
               </div>
             }
           />
-
-          {/* Filtros - Categorias */}
-          <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-            {CATEGORIAS.map((cat) => (
-              <Chip
-                key={cat}
-                label={cat}
-                selected={catAtiva === cat}
-                onClick={() => setCatAtiva(cat)}
-                variant="filled"
-              />
-            ))}
-          </div>
 
           {/* Filtros - Tags/Chips */}
           <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">

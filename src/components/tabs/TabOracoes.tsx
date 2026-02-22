@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ORACOES, Prayer } from "@/data/oracoes";
 import { UserHeader } from "@/components/layout/UserHeader";
+import { Chip } from "@/components/atoms/Chip";
 import { ContentSection } from "./explorar/ContentSection";
 import { OracoesModal } from "./oracoes/OracoesModal";
 import { PrayerDetailModalWithPlayer } from "./oracoes/PrayerDetailModalWithPlayer";
@@ -14,6 +15,20 @@ export function TabOracoes() {
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedPrayer, setSelectedPrayer] = useState<Prayer | null>(null);
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
+  const [chipAtivo, setChipAtivo] = useState("TUDO");
+
+  // Gerar chips dinamicamente a partir dos themes das orações
+  const temasUnicos = Array.from(new Set(ORACOES.map(o => o.theme))).filter(t => t && t !== "default").sort();
+  const CHIPS = ["TUDO", ...temasUnicos];
+
+  // Filtrar orações apenas por chips
+  const oracoesFiltradas = ORACOES.filter(oracao => {
+    const chipMatch = chipAtivo === "TUDO" || oracao.theme === chipAtivo;
+    return chipMatch;
+  });
+
+  // Pega apenas os primeiros 4 itens para a lista inicial
+  const inicialOracoes = oracoesFiltradas.slice(0, 4);
 
   // Handlers
   const handleViewDetails = (prayer: Prayer) => {
@@ -35,9 +50,6 @@ export function TabOracoes() {
 
   const isFavorite = (id: string) => favorites.has(id);
 
-  // Pega apenas os primeiros 4 itens para a lista inicial
-  const inicialOracoes = ORACOES.slice(0, 4);
-
   return (
     <>
       <div className="min-h-screen bg-bg-primary p-6 pb-28">
@@ -51,6 +63,18 @@ export function TabOracoes() {
               </div>
             }
           />
+
+          {/* Filtros - Tags/Chips */}
+          <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+            {CHIPS.map((chip) => (
+              <Chip
+                key={chip}
+                label={chip}
+                selected={chipAtivo === chip}
+                onClick={() => setChipAtivo(chip)}
+              />
+            ))}
+          </div>
 
           {/* Seção de Orações */}
           <ContentSection
