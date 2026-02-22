@@ -2,10 +2,12 @@
 
 import { useUserStore } from '@/stores/userStore';
 import Image from 'next/image';
+import { useDarkMode } from '@/hooks/useDarkMode';
 import './Header.css';
 
 export function Header() {
   const user = useUserStore((s) => s.user);
+  const { isDark, toggle, mounted } = useDarkMode();
 
   const handleProfileClick = () => {
     // TODO: Abrir modal de perfil
@@ -41,6 +43,15 @@ export function Header() {
 
       {/* Actions — Direita */}
       <div className="header-actions">
+        {mounted && (
+          <button
+            className="header-action-btn"
+            title={isDark ? 'Modo claro' : 'Modo escuro'}
+            onClick={toggle}
+          >
+            {isDark ? '☀️' : '🌙'}
+          </button>
+        )}
         <button className="header-action-btn" title="Configurações">
           ⚙️
         </button>

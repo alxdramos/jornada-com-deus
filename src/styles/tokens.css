@@ -92,3 +92,42 @@
   --transition-base: 0.2s ease;
   --transition-slow: 0.3s ease;
 }
+
+/* ========================================
+   DARK MODE
+   ======================================== */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* ========== COLORS — BACKGROUNDS ========== */
+    --color-bg-primary: #0F172A;
+    --color-bg-secondary: #1E293B;
+    --color-bg-tertiary: #334155;
+    --color-bg-inverse: #F8F7F4;
+
+    /* ========== COLORS — TEXT ========== */
+    --color-text-primary: #F8F7F4;
+    --color-text-secondary: #CBD5E1;
+    --color-text-tertiary: #94A3B8;
+    --color-text-inverse: #0F172A;
+
+    /* ========== COLORS — BORDERS ========== */
+    --color-border-subtle: #334155;
+    --color-border-normal: #475569;
+    --color-border-strong: #64748B;
+  }
+}
+
+.dark {
+  --color-bg-primary: #0F172A;
+  --color-bg-secondary: #1E293B;
+  --color-bg-tertiary: #334155;
+  --color-bg-inverse: #F8F7F4;
+  --color-text-primary: #F8F7F4;
+  --color-text-secondary: #CBD5E1;
+  --color-text-tertiary: #94A3B8;
+  --color-text-inverse: #0F172A;
+  --color-border-subtle: #334155;
+  --color-border-normal: #475569;
+  --color-border-strong: #64748B;
+}
