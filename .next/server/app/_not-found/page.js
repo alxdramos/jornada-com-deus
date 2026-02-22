@@ -1,0 +1,13 @@
+var R=require("../../chunks/ssr/[turbopack]_runtime.js")("server/app/_not-found/page.js")
+R.c("server/chunks/ssr/[root-of-the-server]__c2be0c26._.js")
+R.c("server/chunks/ssr/0da21_next_dist_4aaf1033._.js")
+R.c("server/chunks/ssr/0da21_next_dist_esm_build_templates_app-page_3faec00d.js")
+R.c("server/chunks/ssr/[root-of-the-server]__c3e63d60._.js")
+R.c("server/chunks/ssr/[root-of-the-server]__ced4dec7._.js")
+R.c("server/chunks/ssr/0da21_next_dist_6d4ae131._.js")
+R.c("server/chunks/ssr/[root-of-the-server]__721b1ef3._.js")
+R.c("server/chunks/ssr/0da21_next_dist_client_components_7bd33619._.js")
+R.c("server/chunks/ssr/0da21_next_dist_client_components_builtin_forbidden_7ada3944.js")
+R.c("server/chunks/ssr/jornada-com-deus__next-internal_server_app__not-found_page_actions_52970692.js")
+R.m(21785)
+module.exports=R.m(21785).exports

@@ -1,0 +1,79 @@
+name: Sync Meditações
+
+on:
+  schedule:
+    # Roda todos os dias às 04:00 UTC (01:00 Brasília)
+    # 30 minutos depois do sync de orações (03:30 UTC)
+    - cron: '0 4 * * *'
+
+  # Permite manual trigger via GitHub Actions UI
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create credentials file
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+        run: |
+          echo "$GOOGLE_CREDENTIALS" > jornadacomdeus-ce9c0e55fc3e.json
+
+      - name: Sync meditacoes from Google Sheets
+        run: npm run sync:meditacoes
+
+      - name: Check for changes
+        id: check-changes
+        run: |
+          if git diff --quiet; then
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          else
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and push changes
+        if: steps.check-changes.outputs.has_changes == 'true'
+        run: |
+          git config --local user.email "bot@jornadacomdeus.app"
+          git config --local user.name "Jornada Bot"
+
+          git add src/data/meditacoes.ts public/data/meditacoes.json
+
+          git commit -m "chore(meditacoes): sincronizar meditacoes do Google Sheets
+
+          - Fetched meditacoes from Google Sheets API
+          - Processed and cleaned data
+          - Mapped images without repetition
+          - Updated TypeScript and JSON data files
+
+          [skip ci]"
+
+          git push
+
+      - name: Success notification
+        if: success()
+        run: |
+          echo "Sincronizacao de meditacoes concluida com sucesso!"
+          echo "Total de meditacoes: $(grep -o '"id":' src/data/meditacoes.ts | wc -l)"
+
+      - name: Failure notification
+        if: failure()
+        run: |
+          echo "Erro na sincronizacao de meditacoes"
+          echo "Verifique os logs acima para mais detalhes"
+          exit 1

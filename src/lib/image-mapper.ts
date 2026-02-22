@@ -130,6 +130,13 @@ export class ImageMapper {
   }
 
   /**
+   * Mapeia meditações para imagens (reutiliza lógica de mapOracoes)
+   */
+  mapMeditacoes(titulos: string[]): ImageMapping[] {
+    return this.mapOracoes(titulos);
+  }
+
+  /**
    * Obtém mapeamento para um título específico
    */
   getMapping(titulo: string): ImageMapping | undefined {

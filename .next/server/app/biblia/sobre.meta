@@ -1,0 +1,16 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/biblia/layout,_N_T_/biblia/sobre/layout,_N_T_/biblia/sobre/page,_N_T_/biblia/sobre"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/biblia/sobre/__PAGE__",
+    "/biblia/sobre",
+    "/biblia",
+    "/_index",
+    "/_head"
+  ]
+}

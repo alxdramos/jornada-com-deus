@@ -1,0 +1,20 @@
+{
+  "node": {
+    "0020792bde1c781970581c5ef9c26c2b9e50512748": {
+      "workers": {
+        "app/login/page": {
+          "moduleId": 73627,
+          "async": false,
+          "exportedName": "$$RSC_SERVER_ACTION_0",
+          "filename": "jornada-com-deus/src/app/login/page.tsx"
+        }
+      },
+      "layer": {
+        "app/login/page": "rsc"
+      },
+      "exportedName": "$$RSC_SERVER_ACTION_0",
+      "filename": "jornada-com-deus/src/app/login/page.tsx"
+    }
+  },
+  "edge": {}
+}

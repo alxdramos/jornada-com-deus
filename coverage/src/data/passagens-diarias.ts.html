@@ -1,0 +1,751 @@
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Code coverage report for src/data/passagens-diarias.ts</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+    
+<body>
+<div class='wrapper'>
+    <div class='pad1'>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">src/data</a> passagens-diarias.ts</h1>
+        <div class='clearfix'>
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">0% </span>
+                <span class="quiet">Statements</span>
+                <span class='fraction'>0/5</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">100% </span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>0/0</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">0% </span>
+                <span class="quiet">Functions</span>
+                <span class='fraction'>0/1</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">0% </span>
+                <span class="quiet">Lines</span>
+                <span class='fraction'>0/5</span>
+            </div>
+        
+            
+        </div>
+        <p class="quiet">
+            Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
+        </p>
+        <template id="filterTemplate">
+            <div class="quiet">
+                Filter:
+                <input type="search" id="fileSearch">
+            </div>
+        </template>
+    </div>
+    <div class='status-line low'></div>
+    <pre><table class="coverage">
+<tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
+<a name='L2'></a><a href='#L2'>2</a>
+<a name='L3'></a><a href='#L3'>3</a>
+<a name='L4'></a><a href='#L4'>4</a>
+<a name='L5'></a><a href='#L5'>5</a>
+<a name='L6'></a><a href='#L6'>6</a>
+<a name='L7'></a><a href='#L7'>7</a>
+<a name='L8'></a><a href='#L8'>8</a>
+<a name='L9'></a><a href='#L9'>9</a>
+<a name='L10'></a><a href='#L10'>10</a>
+<a name='L11'></a><a href='#L11'>11</a>
+<a name='L12'></a><a href='#L12'>12</a>
+<a name='L13'></a><a href='#L13'>13</a>
+<a name='L14'></a><a href='#L14'>14</a>
+<a name='L15'></a><a href='#L15'>15</a>
+<a name='L16'></a><a href='#L16'>16</a>
+<a name='L17'></a><a href='#L17'>17</a>
+<a name='L18'></a><a href='#L18'>18</a>
+<a name='L19'></a><a href='#L19'>19</a>
+<a name='L20'></a><a href='#L20'>20</a>
+<a name='L21'></a><a href='#L21'>21</a>
+<a name='L22'></a><a href='#L22'>22</a>
+<a name='L23'></a><a href='#L23'>23</a>
+<a name='L24'></a><a href='#L24'>24</a>
+<a name='L25'></a><a href='#L25'>25</a>
+<a name='L26'></a><a href='#L26'>26</a>
+<a name='L27'></a><a href='#L27'>27</a>
+<a name='L28'></a><a href='#L28'>28</a>
+<a name='L29'></a><a href='#L29'>29</a>
+<a name='L30'></a><a href='#L30'>30</a>
+<a name='L31'></a><a href='#L31'>31</a>
+<a name='L32'></a><a href='#L32'>32</a>
+<a name='L33'></a><a href='#L33'>33</a>
+<a name='L34'></a><a href='#L34'>34</a>
+<a name='L35'></a><a href='#L35'>35</a>
+<a name='L36'></a><a href='#L36'>36</a>
+<a name='L37'></a><a href='#L37'>37</a>
+<a name='L38'></a><a href='#L38'>38</a>
+<a name='L39'></a><a href='#L39'>39</a>
+<a name='L40'></a><a href='#L40'>40</a>
+<a name='L41'></a><a href='#L41'>41</a>
+<a name='L42'></a><a href='#L42'>42</a>
+<a name='L43'></a><a href='#L43'>43</a>
+<a name='L44'></a><a href='#L44'>44</a>
+<a name='L45'></a><a href='#L45'>45</a>
+<a name='L46'></a><a href='#L46'>46</a>
+<a name='L47'></a><a href='#L47'>47</a>
+<a name='L48'></a><a href='#L48'>48</a>
+<a name='L49'></a><a href='#L49'>49</a>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a>
+<a name='L60'></a><a href='#L60'>60</a>
+<a name='L61'></a><a href='#L61'>61</a>
+<a name='L62'></a><a href='#L62'>62</a>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a>
+<a name='L72'></a><a href='#L72'>72</a>
+<a name='L73'></a><a href='#L73'>73</a>
+<a name='L74'></a><a href='#L74'>74</a>
+<a name='L75'></a><a href='#L75'>75</a>
+<a name='L76'></a><a href='#L76'>76</a>
+<a name='L77'></a><a href='#L77'>77</a>
+<a name='L78'></a><a href='#L78'>78</a>
+<a name='L79'></a><a href='#L79'>79</a>
+<a name='L80'></a><a href='#L80'>80</a>
+<a name='L81'></a><a href='#L81'>81</a>
+<a name='L82'></a><a href='#L82'>82</a>
+<a name='L83'></a><a href='#L83'>83</a>
+<a name='L84'></a><a href='#L84'>84</a>
+<a name='L85'></a><a href='#L85'>85</a>
+<a name='L86'></a><a href='#L86'>86</a>
+<a name='L87'></a><a href='#L87'>87</a>
+<a name='L88'></a><a href='#L88'>88</a>
+<a name='L89'></a><a href='#L89'>89</a>
+<a name='L90'></a><a href='#L90'>90</a>
+<a name='L91'></a><a href='#L91'>91</a>
+<a name='L92'></a><a href='#L92'>92</a>
+<a name='L93'></a><a href='#L93'>93</a>
+<a name='L94'></a><a href='#L94'>94</a>
+<a name='L95'></a><a href='#L95'>95</a>
+<a name='L96'></a><a href='#L96'>96</a>
+<a name='L97'></a><a href='#L97'>97</a>
+<a name='L98'></a><a href='#L98'>98</a>
+<a name='L99'></a><a href='#L99'>99</a>
+<a name='L100'></a><a href='#L100'>100</a>
+<a name='L101'></a><a href='#L101'>101</a>
+<a name='L102'></a><a href='#L102'>102</a>
+<a name='L103'></a><a href='#L103'>103</a>
+<a name='L104'></a><a href='#L104'>104</a>
+<a name='L105'></a><a href='#L105'>105</a>
+<a name='L106'></a><a href='#L106'>106</a>
+<a name='L107'></a><a href='#L107'>107</a>
+<a name='L108'></a><a href='#L108'>108</a>
+<a name='L109'></a><a href='#L109'>109</a>
+<a name='L110'></a><a href='#L110'>110</a>
+<a name='L111'></a><a href='#L111'>111</a>
+<a name='L112'></a><a href='#L112'>112</a>
+<a name='L113'></a><a href='#L113'>113</a>
+<a name='L114'></a><a href='#L114'>114</a>
+<a name='L115'></a><a href='#L115'>115</a>
+<a name='L116'></a><a href='#L116'>116</a>
+<a name='L117'></a><a href='#L117'>117</a>
+<a name='L118'></a><a href='#L118'>118</a>
+<a name='L119'></a><a href='#L119'>119</a>
+<a name='L120'></a><a href='#L120'>120</a>
+<a name='L121'></a><a href='#L121'>121</a>
+<a name='L122'></a><a href='#L122'>122</a>
+<a name='L123'></a><a href='#L123'>123</a>
+<a name='L124'></a><a href='#L124'>124</a>
+<a name='L125'></a><a href='#L125'>125</a>
+<a name='L126'></a><a href='#L126'>126</a>
+<a name='L127'></a><a href='#L127'>127</a>
+<a name='L128'></a><a href='#L128'>128</a>
+<a name='L129'></a><a href='#L129'>129</a>
+<a name='L130'></a><a href='#L130'>130</a>
+<a name='L131'></a><a href='#L131'>131</a>
+<a name='L132'></a><a href='#L132'>132</a>
+<a name='L133'></a><a href='#L133'>133</a>
+<a name='L134'></a><a href='#L134'>134</a>
+<a name='L135'></a><a href='#L135'>135</a>
+<a name='L136'></a><a href='#L136'>136</a>
+<a name='L137'></a><a href='#L137'>137</a>
+<a name='L138'></a><a href='#L138'>138</a>
+<a name='L139'></a><a href='#L139'>139</a>
+<a name='L140'></a><a href='#L140'>140</a>
+<a name='L141'></a><a href='#L141'>141</a>
+<a name='L142'></a><a href='#L142'>142</a>
+<a name='L143'></a><a href='#L143'>143</a>
+<a name='L144'></a><a href='#L144'>144</a>
+<a name='L145'></a><a href='#L145'>145</a>
+<a name='L146'></a><a href='#L146'>146</a>
+<a name='L147'></a><a href='#L147'>147</a>
+<a name='L148'></a><a href='#L148'>148</a>
+<a name='L149'></a><a href='#L149'>149</a>
+<a name='L150'></a><a href='#L150'>150</a>
+<a name='L151'></a><a href='#L151'>151</a>
+<a name='L152'></a><a href='#L152'>152</a>
+<a name='L153'></a><a href='#L153'>153</a>
+<a name='L154'></a><a href='#L154'>154</a>
+<a name='L155'></a><a href='#L155'>155</a>
+<a name='L156'></a><a href='#L156'>156</a>
+<a name='L157'></a><a href='#L157'>157</a>
+<a name='L158'></a><a href='#L158'>158</a>
+<a name='L159'></a><a href='#L159'>159</a>
+<a name='L160'></a><a href='#L160'>160</a>
+<a name='L161'></a><a href='#L161'>161</a>
+<a name='L162'></a><a href='#L162'>162</a>
+<a name='L163'></a><a href='#L163'>163</a>
+<a name='L164'></a><a href='#L164'>164</a>
+<a name='L165'></a><a href='#L165'>165</a>
+<a name='L166'></a><a href='#L166'>166</a>
+<a name='L167'></a><a href='#L167'>167</a>
+<a name='L168'></a><a href='#L168'>168</a>
+<a name='L169'></a><a href='#L169'>169</a>
+<a name='L170'></a><a href='#L170'>170</a>
+<a name='L171'></a><a href='#L171'>171</a>
+<a name='L172'></a><a href='#L172'>172</a>
+<a name='L173'></a><a href='#L173'>173</a>
+<a name='L174'></a><a href='#L174'>174</a>
+<a name='L175'></a><a href='#L175'>175</a>
+<a name='L176'></a><a href='#L176'>176</a>
+<a name='L177'></a><a href='#L177'>177</a>
+<a name='L178'></a><a href='#L178'>178</a>
+<a name='L179'></a><a href='#L179'>179</a>
+<a name='L180'></a><a href='#L180'>180</a>
+<a name='L181'></a><a href='#L181'>181</a>
+<a name='L182'></a><a href='#L182'>182</a>
+<a name='L183'></a><a href='#L183'>183</a>
+<a name='L184'></a><a href='#L184'>184</a>
+<a name='L185'></a><a href='#L185'>185</a>
+<a name='L186'></a><a href='#L186'>186</a>
+<a name='L187'></a><a href='#L187'>187</a>
+<a name='L188'></a><a href='#L188'>188</a>
+<a name='L189'></a><a href='#L189'>189</a>
+<a name='L190'></a><a href='#L190'>190</a>
+<a name='L191'></a><a href='#L191'>191</a>
+<a name='L192'></a><a href='#L192'>192</a>
+<a name='L193'></a><a href='#L193'>193</a>
+<a name='L194'></a><a href='#L194'>194</a>
+<a name='L195'></a><a href='#L195'>195</a>
+<a name='L196'></a><a href='#L196'>196</a>
+<a name='L197'></a><a href='#L197'>197</a>
+<a name='L198'></a><a href='#L198'>198</a>
+<a name='L199'></a><a href='#L199'>199</a>
+<a name='L200'></a><a href='#L200'>200</a>
+<a name='L201'></a><a href='#L201'>201</a>
+<a name='L202'></a><a href='#L202'>202</a>
+<a name='L203'></a><a href='#L203'>203</a>
+<a name='L204'></a><a href='#L204'>204</a>
+<a name='L205'></a><a href='#L205'>205</a>
+<a name='L206'></a><a href='#L206'>206</a>
+<a name='L207'></a><a href='#L207'>207</a>
+<a name='L208'></a><a href='#L208'>208</a>
+<a name='L209'></a><a href='#L209'>209</a>
+<a name='L210'></a><a href='#L210'>210</a>
+<a name='L211'></a><a href='#L211'>211</a>
+<a name='L212'></a><a href='#L212'>212</a>
+<a name='L213'></a><a href='#L213'>213</a>
+<a name='L214'></a><a href='#L214'>214</a>
+<a name='L215'></a><a href='#L215'>215</a>
+<a name='L216'></a><a href='#L216'>216</a>
+<a name='L217'></a><a href='#L217'>217</a>
+<a name='L218'></a><a href='#L218'>218</a>
+<a name='L219'></a><a href='#L219'>219</a>
+<a name='L220'></a><a href='#L220'>220</a>
+<a name='L221'></a><a href='#L221'>221</a>
+<a name='L222'></a><a href='#L222'>222</a>
+<a name='L223'></a><a href='#L223'>223</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">export interface PassagemDiaria {
+  titulo: string;
+  referencia: string;
+  texto: string;
+  reflexao: string;
+  perguntas: string[];
+}
+&nbsp;
+export const PASSAGENS_DIARIAS: PassagemDiaria[] = <span class="cstat-no" title="statement not covered" >[</span>
+  {
+    titulo: "O Pai Nosso — Modelo de Oração",
+    referencia: "Mateus 6:9-13",
+    texto: "Pai nosso que estás nos céus, santificado seja o teu nome; venha o teu reino, seja feita a tua vontade, assim na terra como no céu; o pão nosso de cada dia nos dá hoje; e perdoa-nos as nossas dívidas, assim como nós perdoamos aos nossos devedores; e não nos induzas à tentação, mas livra-nos do mal.",
+    reflexao: "Jesus não ensinou uma fórmula mágica — ensinou uma postura. Quando começamos com 'Pai nosso', reconhecemos que somos filhos, não mendigos. Quando dizemos 'santificado seja o teu nome', colocamos a glória de Deus acima dos nossos desejos. A oração começa sempre voltada para cima, antes de olhar para dentro. O que você tem colocado em primeiro lugar quando chega diante de Deus?",
+    perguntas: ["Qual parte do Pai Nosso mais ressoa com o que você está vivendo hoje?", "Você tem orado pedindo primeiro a vontade de Deus, ou a sua própria?"],
+  },
+  {
+    titulo: "Fé que Move Montanhas",
+    referencia: "Marcos 11:22-24",
+    texto: "Jesus respondeu: 'Tende fé em Deus. Em verdade vos digo que quem disser a este monte: Levanta-te e lança-te no mar; e não duvidar no seu coração, mas crer que o que diz acontecerá, assim lhe será feito. Por isso vos digo: tudo o que pedirdes, orando, crede que recebestes, e ser-vos-á concedido.'",
+    reflexao: "A fé que move montanhas não é uma emoção passageira — é uma confiança enraizada no caráter de Deus. Jesus não disse 'tede fé nas suas próprias forças', mas 'tede fé em Deus'. A diferença é tudo. Muitas vezes nossas orações são tímidas porque no fundo duvidamos que Deus realmente cuida. Mas o histórico de Deus com Seu povo revela: Ele é fiel.",
+    perguntas: ["Existe alguma 'montanha' na sua vida que você parou de crer que Deus pode mover?", "O que seria diferente se você orasse com plena certeza de que Deus ouve?"],
+  },
+  {
+    titulo: "O Bom Pastor",
+    referencia: "João 10:11-15",
+    texto: "Eu sou o bom pastor. O bom pastor dá a sua vida pelas ovelhas. O mercenário, que não é pastor, a quem as ovelhas não pertencem, vê vir o lobo, abandona as ovelhas e foge; e o lobo as arrebata e as dispersa. Eu sou o bom pastor; conheço as minhas ovelhas, e as minhas ovelhas me conhecem a mim, assim como o Pai me conhece, e eu conheço o Pai.",
+    reflexao: "Há uma diferença radical entre um pastor e um mercenário: o comprometimento. O mercenário trabalha pelo salário; o pastor trabalha por amor. Jesus se declara Bom Pastor — alguém que conhece cada ovelha pelo nome, que rastreia a que se perdeu, que vai na frente para proteger. Você é amado assim: não por sua performance, mas por Sua graça.",
+    perguntas: ["Em que áreas da sua vida você tem tentado ser sua própria guia em vez de seguir o Pastor?", "Como é saber que Deus te conhece pelo nome e te protege ativamente?"],
+  },
+  {
+    titulo: "Renove sua Mente",
+    referencia: "Romanos 12:1-2",
+    texto: "Portanto, irmãos, rogo-vos pelas misericórdias de Deus que apresenteis o vosso corpo como sacrifício vivo, santo e agradável a Deus, que é o vosso culto racional. E não vos conformeis com este século, mas transformai-vos pela renovação da vossa mente, para que experimenteis qual seja a boa, agradável e perfeita vontade de Deus.",
+    reflexao: "A transformação cristã começa na mente, não no comportamento. Paulo usa a palavra 'metamorfose' — a mesma transformação radical de uma lagarta em borboleta. Mudar hábitos sem mudar a mente é trocar de roupa sem tomar banho. A renovação da mente acontece dia a dia, através da Palavra, da oração e da comunhão com o Espírito.",
+    perguntas: ["Que padrão de pensamento você mais precisa 'desconstruir' com a verdade de Deus?", "Qual prática concreta está ajudando você a renovar a sua mente?"],
+  },
+  {
+    titulo: "A Videira e os Ramos",
+    referencia: "João 15:1-5",
+    texto: "Eu sou a videira verdadeira, e meu Pai é o agricultor. Todo ramo que em mim não dá fruto, ele corta; e todo ramo que dá fruto, ele poda, para que dê ainda mais fruto. Permanecei em mim, e eu permanecerei em vós. Assim como o ramo não pode dar fruto por si mesmo, se não permanecer na videira, assim também vós não podeis dar fruto, se não permanecerdes em mim.",
+    reflexao: "A chave desta passagem é uma palavra: permanecer. Não se trata de esforço extraordinário, mas de conexão constante. Um galho não force a seiva — ele simplesmente permanece ligado à videira e a seiva flui. Quando você tenta produzir fruto espiritual na sua própria força, está vivendo como um galho cortado. Permaneça. O fruto vem da conexão.",
+    perguntas: ["O que 'permanecer em Jesus' significa para você na prática, hoje?", "Existe algo que está cortando sua conexão com a Videira?"],
+  },
+  {
+    titulo: "Armadura de Deus",
+    referencia: "Efésios 6:10-11",
+    texto: "Finalmente, sede fortes no Senhor e na força do seu poder. Revesti-vos de toda a armadura de Deus, para que possais ficar firmes contra as ciladas do diabo.",
+    reflexao: "Paulo escreveu isso acorrentado a um soldado romano. Ele olhava para cada peça da armadura e via uma correspondência espiritual. O cinto da verdade, o escudo da fé, a espada do Espírito. A armadura não é para atacar pessoas — é para resistir ao inimigo espiritual. E repare: você se veste dela, mas a força vem do Senhor.",
+    perguntas: ["Qual 'peça da armadura' você mais tem deixado de usar ultimamente?", "Como você pode ser mais intencional em se 'vestir' espiritualmente antes do seu dia começar?"],
+  },
+  {
+    titulo: "A Ressurreição e a Vida",
+    referencia: "João 11:25-26",
+    texto: "Jesus lhe disse: Eu sou a ressurreição e a vida. Quem crê em mim, ainda que esteja morto, viverá. E todo o que vive e crê em mim não morrerá eternamente. Crês tu isto?",
+    reflexao: "Marta estava em luto. E Jesus não apenas consolou — Ele se apresentou como a solução. 'Eu sou a ressurreição' — não 'eu faço ressurreições', mas 'Eu sou a própria vida'. Note a pergunta que Ele faz no final: 'Crês tu isto?' Não é uma pergunta retórica. Ele quer sua resposta pessoal. A fé não é algo que acontece de longe — ela exige uma resposta do coração.",
+    perguntas: ["O que está 'morto' na sua vida que você precisa trazer diante de Jesus?", "Você crê, de verdade, que Jesus tem poder sobre as suas circunstâncias mais impossíveis?"],
+  },
+  {
+    titulo: "Força nos Momentos de Fraqueza",
+    referencia: "2 Coríntios 12:9-10",
+    texto: "Mas ele me disse: 'A minha graça te é suficiente, porque o poder se aperfeiçoa na fraqueza.' Portanto, de boa vontade me gloriarei nas minhas fraquezas, para que em mim habite o poder de Cristo.",
+    reflexao: "Paulo recebeu uma resposta que ele não queria. Pediu três vezes que o 'espinho na carne' fosse removido. E Deus disse não — mas deu algo melhor: graça suficiente. O espinho que Paulo queria que fosse tirado era exatamente o que o mantinha dependente de Deus. Às vezes, a coisa que mais nos incomoda é o que nos mantém no lugar certo.",
+    perguntas: ["Existe algo em sua vida que você pediu que Deus removesse, mas Ele ainda não removeu?", "Como você pode enxergar sua fraqueza atual como um espaço para o poder de Deus?"],
+  },
+  {
+    titulo: "O Sermão da Montanha — As Bem-Aventuranças",
+    referencia: "Mateus 5:3-6",
+    texto: "Bem-aventurados os pobres em espírito, porque deles é o reino dos céus. Bem-aventurados os que choram, porque serão consolados. Bem-aventurados os mansos, porque herdarão a terra. Bem-aventurados os que têm fome e sede de justiça, porque serão fartos.",
+    reflexao: "Jesus inverteu todos os valores do mundo. A bênção não é para os ricos, os felizes e os poderosos — é para os pobres em espírito, os que choram, os mansos. 'Bem-aventurado' pode ser traduzido como 'profundamente feliz' ou 'no caminho certo'. Jesus está descrevendo não o que você sente, mas em quem você se tornou. Quem reconhece sua necessidade de Deus está no lugar certo.",
+    perguntas: ["Qual das Bem-aventuranças mais descreve onde você está hoje?", "O que significa para você ser 'pobre em espírito' na prática?"],
+  },
+  {
+    titulo: "Confiança Total em Deus",
+    referencia: "Provérbios 3:5-6",
+    texto: "Confia no Senhor de todo o teu coração e não te apoies no teu próprio entendimento. Reconhece-o em todos os teus caminhos, e ele endireitará as tuas veredas.",
+    reflexao: "O maior desafio desta passagem não é confiar em Deus — é não se apoiar no próprio entendimento. Nossa mente é treinada para resolver problemas, analisar situações e chegar a conclusões. Isso é bom. Mas há momentos em que Deus pede que você confie mesmo quando a lógica sugere o contrário. Reconhece-lo 'em todos os caminhos' significa incluí-lo nas pequenas e grandes decisões.",
+    perguntas: ["Em qual área da sua vida você mais se apoia no próprio entendimento, em vez de buscar Deus?", "O que seria diferente se você buscasse Deus antes de resolver, e não depois?"],
+  },
+  {
+    titulo: "Amor ao Próximo",
+    referencia: "Mateus 22:37-39",
+    texto: "Jesus respondeu-lhe: Amarás o Senhor teu Deus de todo o teu coração, e de toda a tua alma, e de todo o teu entendimento. Este é o grande e primeiro mandamento. O segundo, semelhante a este, é: Amarás o teu próximo como a ti mesmo.",
+    reflexao: "Um escriba tentou testar Jesus com uma pergunta sobre qual mandamento era o maior. Jesus respondeu com dois que são inseparáveis. Você não pode amar a Deus genuinamente e odiar seu irmão. E você não pode amar o próximo com profundidade sem que esse amor venha de Deus. O amor ao próximo é o termômetro do amor a Deus.",
+    perguntas: ["Existe alguém na sua vida com quem está difícil praticar o amor ao próximo?", "Como você pode amar a Deus 'de todo o coração' de forma mais concreta hoje?"],
+  },
+  {
+    titulo: "A Parábola do Filho Pródigo",
+    referencia: "Lucas 15:20",
+    texto: "Levantou-se, pois, e foi ter com seu pai. Quando ainda estava longe, seu pai o viu e, movido de misericórdia, correu, lançou-se ao seu pescoço e o beijou.",
+    reflexao: "A imagem mais poderosa nesta parábola não é o filho voltando — é o pai correndo. Um pai no Oriente Médio do século 1 nunca corria; era considerado indigno. Mas este pai correu, ignorando o que diriam, para abraçar o filho que havia desperdiçado tudo. Esse é o coração do Pai celestial em relação a você — não importa o que você fez ou quão longe foi.",
+    perguntas: ["Você se vê mais como o filho pródigo, o filho mais velho ou o pai, nesta parábola?", "Há alguma área da sua vida onde você ainda não voltou para o Pai?"],
+  },
+  {
+    titulo: "A Criação — Ordem do Caos",
+    referencia: "Gênesis 1:1-3",
+    texto: "No princípio, Deus criou os céus e a terra. A terra era sem forma e vazia; as trevas cobriam a face do abismo, e o Espírito de Deus pairava sobre a face das águas. Disse Deus: 'Haja luz'; e houve luz.",
+    reflexao: "Deus começou com o caos e fez ordem. Começou com o vazio e fez abundância. Começou com as trevas e disse: 'Haja luz.' Esse é o padrão de Deus: Ele não precisa de matéria-prima perfeita para criar algo magnífico. Suas circunstâncias, por mais caóticas que pareçam, são o tipo de terra sobre a qual o Espírito de Deus ainda paira.",
+    perguntas: ["Que área da sua vida parece 'sem forma e vazia' hoje?", "Como você pode convidar Deus a ser o Criador nessa situação específica?"],
+  },
+  {
+    titulo: "Salmos de Louvor — Cante ao Senhor",
+    referencia: "Salmos 100:1-4",
+    texto: "Celebrai o Senhor com alegria, todas as terras! Servi ao Senhor com prazer! Entrai na sua presença com cânticos! Sabei que o Senhor é Deus; foi ele quem nos fez, e não nós a nós mesmos; somos seu povo e ovelhas do seu pasto. Entrai pelas suas portas com ações de graças, pelos seus átrios com hinos de louvor.",
+    reflexao: "O louvor não é opcional na vida espiritual — é o estado natural de quem reconheceu quem Deus é. 'Sabei que o Senhor é Deus' — o louvor começa pelo conhecimento, não pela emoção. Quando você sabe de verdade quem é Deus, a gratidão flui naturalmente. O louvor não muda Deus; ele te muda.",
+    perguntas: ["Por que razões específicas você pode louvara Deus hoje, mesmo que as circunstâncias sejam difíceis?", "Como o louvor tem impactado sua perspectiva em momentos de crise?"],
+  },
+  {
+    titulo: "Chamado de Moisés — Deus da Indigno",
+    referencia: "Êxodo 3:10-12",
+    texto: "Agora pois, vai; porque eu te mando a Faraó, para que tires o meu povo, os filhos de Israel, do Egito. Moisés, porém, disse a Deus: Quem sou eu, para que vá a Faraó, e para que tire os filhos de Israel do Egito? E Deus disse: Certamente eu serei contigo.",
+    reflexao: "Moisés perguntou 'Quem sou eu?' — a pergunta errada. Deus respondeu 'Eu serei contigo' — a resposta certa. A questão nunca é quem você é. A questão é quem está com você. Moisés era um fugitivo com dificuldade de falar. Deus o escolheu. A qualificação que Deus dá é Sua presença, não o seu currículo.",
+    perguntas: ["Em que chamado ou responsabilidade você está sentindo que não é qualificado o suficiente?", "Como a promessa 'Eu serei contigo' muda sua resposta a esse chamado?"],
+  },
+  {
+    titulo: "A Parábola do Semeador",
+    referencia: "Marcos 4:14-20",
+    texto: "O semeador semeia a palavra. Estes são os que estão junto do caminho, onde a palavra é semeada, e quando a ouvem, logo vem Satanás e tira a palavra que foi semeada neles. Da mesma forma, estes são os que foram semeados em lugares pedregosos: quando ouvem a palavra, imediatamente a recebem com alegria. Mas os que foram semeados em boa terra são os que ouvem a palavra, e a recebem, e dão fruto.",
+    reflexao: "Jesus explica Sua própria parábola — algo que Ele raramente faz. O foco não é o semeador nem a semente. O foco é o solo. A mesma Palavra, ao cair em solos diferentes, produz resultados completamente diferentes. A pergunta não é 'você está ouvindo a Palavra?' mas 'que tipo de solo você está sendo?'",
+    perguntas: ["Que tipo de solo você mais tem sido ultimamente em relação à Palavra de Deus?", "O que pode estar impedindo a Palavra de dar fruto na sua vida?"],
+  },
+  {
+    titulo: "Isaías — O Sofredor Victorioso",
+    referencia: "Isaías 53:4-5",
+    texto: "Certamente ele tomou sobre si as nossas enfermidades e as nossas dores ele as carregou; e nós o reputávamos por aflito, ferido de Deus e oprimido. Mas ele foi ferido pelas nossas transgressões e moído pelas nossas iniquidades; o castigo que nos traz a paz estava sobre ele, e pelas suas pisaduras fomos sarados.",
+    reflexao: "Escrito 700 anos antes da crucificação, Isaías 53 é uma das profecias mais precisas da Bíblia. 'Pelas suas pisaduras fomos sarados' — a cura foi comprada através da dor d'Ele. Isso não significa que você não vai sofrer. Significa que nenhum sofrimento seu é sem sentido, porque Deus mesmo entrou no sofrimento para redimi-lo.",
+    perguntas: ["Como o sofrimento de Jesus muda a forma como você enxerga o seu próprio sofrimento?", "Pelo que você precisa de cura hoje — física, emocional ou espiritual?"],
+  },
+  {
+    titulo: "A Grande Comissão",
+    referencia: "Mateus 28:19-20",
+    texto: "Portanto ide, fazei discípulos de todas as nações, batizando-os em nome do Pai, e do Filho, e do Espírito Santo; ensinando-os a guardar todas as coisas que eu vos tenho mandado; e eis que eu estou convosco todos os dias, até à consumação dos séculos.",
+    reflexao: "A última palavra de Jesus antes de ascender não é uma sugestão — é uma comissão. 'Ide' é o verbo que inaugura uma nova era. Mas repare: a Grande Comissão termina com uma promessa, não com uma pressão. 'Eu estou convosco todos os dias.' O poder para cumprir a missão vem da presença constante d'Aquele que deu a missão.",
+    perguntas: ["Quem na sua vida você pode discipular, mesmo que de forma simples?", "Como a promessa 'estou convosco todos os dias' te encoraja a viver diferente?"],
+  },
+  {
+    titulo: "O Dom do Espírito Santo",
+    referencia: "João 14:16-17",
+    texto: "E eu rogarei ao Pai, e ele vos dará outro Consolador para ficar convosco para sempre; o Espírito da verdade, que o mundo não pode receber, porque não o vê nem o conhece; vós o conheceis, porque permanece convosco e estará em vós.",
+    reflexao: "Jesus prometeu que não nos deixaria sozinhos — e essa promessa foi cumprida na Pentecostes. O Espírito Santo não é uma força abstrata. É uma Pessoa — o Consolador — que habita em todo crente. Ele ora por você quando você não tem palavras. Ele te guia quando você está perdido. Ele te convence quando você erra. Você não está sozinho.",
+    perguntas: ["Como você tem buscado a orientação do Espírito Santo em sua vida diária?", "Existe uma situação em que você precisa especificamente da consolação ou direção do Espírito hoje?"],
+  },
+  {
+    titulo: "A Cruz — Centro de Tudo",
+    referencia: "Gálatas 2:20",
+    texto: "Já estou crucificado com Cristo; e vivo, não mais eu, mas Cristo vive em mim; e a vida que agora vivo na carne, vivo-a na fé do Filho de Deus, o qual me amou, e se entregou a si mesmo por mim.",
+    reflexao: "Paulo não diz 'Cristo morreu por mim' — embora seja verdade. Ele diz 'estou crucificado com Cristo'. Isso é mais profundo: a identidade velha foi co-crucificada. Você não tenta melhorar o velho eu — você vive do novo eu que Cristo habita. A vida cristã não é uma reforma; é uma substituição de identidade.",
+    perguntas: ["Quem é o 'eu' que precisa ser crucificado na sua vida hoje?", "O que significa para você que 'Cristo vive em mim' de forma prática?"],
+  },
+  {
+    titulo: "Salmo 91 — Refúgio Seguro",
+    referencia: "Salmos 91:1-4",
+    texto: "Quem habita no esconderijo do Altíssimo, e descansa à sombra do Onipotente, diz ao Senhor: Tu és o meu refúgio e o meu castelo, o meu Deus em quem confio. Porque ele te livrará do laço do passarinheiro, e da peste perniciosa. Ele te cobrirá com as suas penas, e debaixo das suas asas te abrigarás.",
+    reflexao: "O Salmo 91 é um escudo de proteção para a alma. Mas repare na condição do versículo 1: 'quem habita'. Não quem visita. Não quem passa. Quem habita — quem faz da presença de Deus seu lar permanente. A proteção descrita aqui não é para quem corre para Deus apenas em emergências, mas para quem vive com Ele.",
+    perguntas: ["A sua relação com Deus é de visita ocasional ou de habitação permanente?", "O que te impede de 'habitar' mais profundamente na presença de Deus?"],
+  },
+  {
+    titulo: "Daniel — Fé Inabalável",
+    referencia: "Daniel 3:17-18",
+    texto: "Eis que o nosso Deus, a quem servimos, pode livrar-nos da fornalha ardente, e da tua mão nos livrará, ó rei. E, se não, fica sabendo, ó rei, que não serviremos aos teus deuses, nem adoraremos a estátua de ouro que erigiste.",
+    reflexao: "Os três jovens hebreus disseram algo extraordinário: 'Deus pode nos livrar. E mesmo que não livre...' Essa é a fé madura. Não é a fé que espera livramento para então confiar — é a fé que confia independentemente do resultado. Eles não sabiam o que aconteceria, mas sabiam em quem criam. Esse é o tipo de confiança que o fogo não consegue destruir.",
+    perguntas: ["Você está confiando em Deus apenas enquanto as coisas vão bem, ou também quando não vão?", "Que 'fornalha' na sua vida está testando a autenticidade da sua fé?"],
+  },
+  {
+    titulo: "Josué — Coragem para o Novo",
+    referencia: "Josué 1:9",
+    texto: "Não to mandei eu? Sê forte e corajoso; não te atemorizes, nem te espantes, porque o Senhor teu Deus é contigo por onde quer que andares.",
+    reflexao: "Moisés havia morrido e Josué assumiu uma missão impossível: liderar o povo de Israel para a Terra Prometida. Deus não começou dando a ele um plano estratégico — começou com um comando de postura: 'Sê forte e corajoso.' A coragem não é a ausência do medo. É o avanço apesar do medo, baseado na promessa de que Deus está contigo.",
+    perguntas: ["Que novo território Deus está chamando você a avançar que você tem evitado por medo?", "Como a promessa 'o Senhor teu Deus é contigo' muda sua disposição para agir?"],
+  },
+  {
+    titulo: "Tiago — Fé e Obras",
+    referencia: "Tiago 2:17-18",
+    texto: "Assim também a fé, se não tiver obras, é morta em si mesma. Mas alguém dirá: Tu tens a fé, e eu tenho as obras. Mostra-me a tua fé sem obras, e eu te mostrarei a minha fé pelas minhas obras.",
+    reflexao: "Tiago não contradiz Paulo — eles abordam o problema de ângulos diferentes. Paulo diz que você é salvo pela fé, não pelas obras. Tiago diz que a fé genuína sempre produz obras. Uma árvore é salva por sua natureza, não pelos frutos que produz. Mas uma árvore saudável inevitavelmente dá frutos. A fé viva se move.",
+    perguntas: ["Quais 'frutos' na sua vida evidenciam que sua fé é viva e não apenas intelectual?", "Existe alguém ao seu redor que precisa ver sua fé em ação esta semana?"],
+  },
+  {
+    titulo: "Pedro Caminhando sobre as Águas",
+    referencia: "Mateus 14:28-31",
+    texto: "Senhor, se és tu, manda-me ir ter contigo, sobre as águas. E ele disse: Vem. E Pedro, descendo do barco, andou sobre as águas para ir ter com Jesus. Mas, vendo o vento, teve medo; e começando a afundar, clamou: Senhor, salva-me! E Jesus imediatamente estendeu a mão, e o segurou.",
+    reflexao: "Pedro é criticado por ter afundado. Mas Pedro foi o único que saiu do barco. Os outros ficaram olhando. Afundar com os olhos em Jesus ainda é melhor do que nunca ter tentado. E quando Pedro clamou 'Salva-me', a resposta foi imediata: Jesus estendeu a mão. Você não precisa estar perfeito para clamar — você precisa clamar.",
+    perguntas: ["Em que área você está no 'barco', olhando Jesus de longe, com medo de sair?", "Quando você começa a afundar, qual é sua resposta instintiva — clamar ou se calar?"],
+  },
+  {
+    titulo: "A Ressurreição — Tudo Mudou",
+    referencia: "1 Coríntios 15:55-57",
+    texto: "Onde está, ó morte, o teu aguilhão? Onde está, ó sepultura, a tua vitória? O aguilhão da morte é o pecado; e a força do pecado é a lei. Mas graças a Deus que nos dá a vitória por nosso Senhor Jesus Cristo.",
+    reflexao: "Paulo zomba da morte. Não com arrogância, mas com certeza. A morte perdeu seu poder não porque foi eliminada, mas porque foi vencida. A ressurreição de Jesus é o evento que muda todo o significado da existência humana. A morte já não é o fim — é um portal. E quem está em Cristo já tem a vitória garantida.",
+    perguntas: ["Como a certeza da ressurreição muda a forma como você enfrenta seus medos hoje?", "Existe um 'aguilhão' em sua vida — um vício, medo ou fracasso — que você precisa ver como já vencido pela ressurreição?"],
+  },
+  {
+    titulo: "Efésios — Amor que Excede o Conhecimento",
+    referencia: "Efésios 3:17-19",
+    texto: "Para que Cristo habite, pela fé, no coração de vocês. E peço que, sendo enraizados e alicerçados no amor, vocês possam ter capacidade, juntamente com todos os santos, para compreender a largura e o comprimento, a altura e a profundidade, e assim conhecer o amor de Cristo que excede todo o conhecimento.",
+    reflexao: "Paulo ora para que os efésios compreendam o incompreensível — o amor de Cristo. Não é um paradoxo — é uma realidade que ultrapassa a capacidade intelectual mas pode ser experimentada pessoalmente. Você pode conhecer o amor de Deus mais pelo coração do que pela mente. E quando esse amor se enraíza, ele se torna o alicerce de toda a sua identidade.",
+    perguntas: ["Você busca mais conhecer Deus intelectualmente ou experimentar Seu amor pessoalmente?", "Qual parte das quatro dimensões do amor de Cristo (largura, comprimento, altura, profundidade) você mais precisa experimentar hoje?"],
+  },
+  {
+    titulo: "O Espírito Faz Intercessão",
+    referencia: "Romanos 8:26-27",
+    texto: "Da mesma forma, o Espírito nos ajuda em nossa fraqueza. Não sabemos orar como convém, mas o próprio Espírito intercede por nós com gemidos inexprimíveis. E aquele que sonda os corações sabe qual é a intenção do Espírito, pois ele intercede pelos santos de acordo com a vontade de Deus.",
+    reflexao: "Às vezes você não tem palavras. Você está tão exausto, confuso ou ferido que nem sabe como orar. Esta passagem diz algo que deveria trazer um alívio profundo: mesmo quando você não sabe o que pedir, o Espírito intercede por você. Com 'gemidos inexprimíveis' — profundos demais para palavras. Você não precisa ter as palavras certas para ser ouvido.",
+    perguntas: ["Existe algo em sua vida que você não consegue nem colocar em palavras para Deus?", "Como essa promessa de que o Espírito intercede por você muda a forma como você se aproxima de Deus nos momentos difíceis?"],
+  },
+  {
+    titulo: "Habitação de Deus — A Nova Criação",
+    referencia: "Apocalipse 21:3-5",
+    texto: "E ouvi uma grande voz do trono, dizendo: Eis aqui o tabernáculo de Deus com os homens, pois ele habitará com eles. Eles serão o seu povo, e o próprio Deus estará com eles. Ele enxugará dos seus olhos toda lágrima; e não haverá mais morte, nem pranto, nem clamor, nem dor.",
+    reflexao: "O livro mais misterioso da Bíblia termina com uma promessa de intimidade. Não com poder ou julgamento, mas com Deus habitando com Seu povo e enxugando cada lágrima. Esta visão do fim é um chamado para o presente: as dores atuais são reais, mas temporárias. Há um dia em que Deus mesmo dirá: 'Eis que faço novas todas as coisas.'",
+    perguntas: ["Como a esperança do futuro que Deus prometeu muda a forma como você enfrenta o sofrimento presente?", "Que lágrima você precisa trazer diante de Deus hoje?"],
+  },
+];
+&nbsp;
+/** Seleciona a passagem do dia com offset para não coincidir com o versículo */
+export function <span class="fstat-no" title="function not covered" >getPassagemDoDia(): PassagemDiaria {</span>
+  const now = <span class="cstat-no" title="statement not covered" >new Date();</span>
+  const start = <span class="cstat-no" title="statement not covered" >new Date(now.getFullYear(), 0, 1);</span>
+  const dayOfYear = <span class="cstat-no" title="statement not covered" >Math.floor((now.getTime() - start.getTime()) / 86400000);</span>
+  // Offset de 15 para não repetir padrão do versículo
+<span class="cstat-no" title="statement not covered" >  return PASSAGENS_DIARIAS[(dayOfYear + 15) % PASSAGENS_DIARIAS.length];</span>
+}
+&nbsp;</pre></td></tr></table></pre>
+
+                <div class='push'></div><!-- for sticky footer -->
+            </div><!-- /wrapper -->
+            <div class='footer quiet pad2 space-top1 center small'>
+                Code coverage generated by
+                <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
+                at 2026-02-20T18:17:12.620Z
+            </div>
+        <script src="../../prettify.js"></script>
+        <script>
+            window.onload = function () {
+                prettyPrint();
+            };
+        </script>
+        <script src="../../sorter.js"></script>
+        <script src="../../block-navigation.js"></script>
+    </body>
+</html>
+    

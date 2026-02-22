@@ -1,0 +1,20 @@
+{
+  "node": {
+    "60b995dc61c0a872e632b546bb183e20521cac620d": {
+      "workers": {
+        "app/register/page": {
+          "moduleId": 37973,
+          "async": false,
+          "exportedName": "registerUser",
+          "filename": "jornada-com-deus/src/app/actions/register.ts"
+        }
+      },
+      "layer": {
+        "app/register/page": "action-browser"
+      },
+      "exportedName": "registerUser",
+      "filename": "jornada-com-deus/src/app/actions/register.ts"
+    }
+  },
+  "edge": {}
+}

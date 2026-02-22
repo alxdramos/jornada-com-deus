@@ -1,0 +1,511 @@
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Code coverage report for src/data/oracoes-diarias.ts</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+    
+<body>
+<div class='wrapper'>
+    <div class='pad1'>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">src/data</a> oracoes-diarias.ts</h1>
+        <div class='clearfix'>
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">0% </span>
+                <span class="quiet">Statements</span>
+                <span class='fraction'>0/5</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">100% </span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>0/0</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">0% </span>
+                <span class="quiet">Functions</span>
+                <span class='fraction'>0/1</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">0% </span>
+                <span class="quiet">Lines</span>
+                <span class='fraction'>0/5</span>
+            </div>
+        
+            
+        </div>
+        <p class="quiet">
+            Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
+        </p>
+        <template id="filterTemplate">
+            <div class="quiet">
+                Filter:
+                <input type="search" id="fileSearch">
+            </div>
+        </template>
+    </div>
+    <div class='status-line low'></div>
+    <pre><table class="coverage">
+<tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
+<a name='L2'></a><a href='#L2'>2</a>
+<a name='L3'></a><a href='#L3'>3</a>
+<a name='L4'></a><a href='#L4'>4</a>
+<a name='L5'></a><a href='#L5'>5</a>
+<a name='L6'></a><a href='#L6'>6</a>
+<a name='L7'></a><a href='#L7'>7</a>
+<a name='L8'></a><a href='#L8'>8</a>
+<a name='L9'></a><a href='#L9'>9</a>
+<a name='L10'></a><a href='#L10'>10</a>
+<a name='L11'></a><a href='#L11'>11</a>
+<a name='L12'></a><a href='#L12'>12</a>
+<a name='L13'></a><a href='#L13'>13</a>
+<a name='L14'></a><a href='#L14'>14</a>
+<a name='L15'></a><a href='#L15'>15</a>
+<a name='L16'></a><a href='#L16'>16</a>
+<a name='L17'></a><a href='#L17'>17</a>
+<a name='L18'></a><a href='#L18'>18</a>
+<a name='L19'></a><a href='#L19'>19</a>
+<a name='L20'></a><a href='#L20'>20</a>
+<a name='L21'></a><a href='#L21'>21</a>
+<a name='L22'></a><a href='#L22'>22</a>
+<a name='L23'></a><a href='#L23'>23</a>
+<a name='L24'></a><a href='#L24'>24</a>
+<a name='L25'></a><a href='#L25'>25</a>
+<a name='L26'></a><a href='#L26'>26</a>
+<a name='L27'></a><a href='#L27'>27</a>
+<a name='L28'></a><a href='#L28'>28</a>
+<a name='L29'></a><a href='#L29'>29</a>
+<a name='L30'></a><a href='#L30'>30</a>
+<a name='L31'></a><a href='#L31'>31</a>
+<a name='L32'></a><a href='#L32'>32</a>
+<a name='L33'></a><a href='#L33'>33</a>
+<a name='L34'></a><a href='#L34'>34</a>
+<a name='L35'></a><a href='#L35'>35</a>
+<a name='L36'></a><a href='#L36'>36</a>
+<a name='L37'></a><a href='#L37'>37</a>
+<a name='L38'></a><a href='#L38'>38</a>
+<a name='L39'></a><a href='#L39'>39</a>
+<a name='L40'></a><a href='#L40'>40</a>
+<a name='L41'></a><a href='#L41'>41</a>
+<a name='L42'></a><a href='#L42'>42</a>
+<a name='L43'></a><a href='#L43'>43</a>
+<a name='L44'></a><a href='#L44'>44</a>
+<a name='L45'></a><a href='#L45'>45</a>
+<a name='L46'></a><a href='#L46'>46</a>
+<a name='L47'></a><a href='#L47'>47</a>
+<a name='L48'></a><a href='#L48'>48</a>
+<a name='L49'></a><a href='#L49'>49</a>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a>
+<a name='L60'></a><a href='#L60'>60</a>
+<a name='L61'></a><a href='#L61'>61</a>
+<a name='L62'></a><a href='#L62'>62</a>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a>
+<a name='L72'></a><a href='#L72'>72</a>
+<a name='L73'></a><a href='#L73'>73</a>
+<a name='L74'></a><a href='#L74'>74</a>
+<a name='L75'></a><a href='#L75'>75</a>
+<a name='L76'></a><a href='#L76'>76</a>
+<a name='L77'></a><a href='#L77'>77</a>
+<a name='L78'></a><a href='#L78'>78</a>
+<a name='L79'></a><a href='#L79'>79</a>
+<a name='L80'></a><a href='#L80'>80</a>
+<a name='L81'></a><a href='#L81'>81</a>
+<a name='L82'></a><a href='#L82'>82</a>
+<a name='L83'></a><a href='#L83'>83</a>
+<a name='L84'></a><a href='#L84'>84</a>
+<a name='L85'></a><a href='#L85'>85</a>
+<a name='L86'></a><a href='#L86'>86</a>
+<a name='L87'></a><a href='#L87'>87</a>
+<a name='L88'></a><a href='#L88'>88</a>
+<a name='L89'></a><a href='#L89'>89</a>
+<a name='L90'></a><a href='#L90'>90</a>
+<a name='L91'></a><a href='#L91'>91</a>
+<a name='L92'></a><a href='#L92'>92</a>
+<a name='L93'></a><a href='#L93'>93</a>
+<a name='L94'></a><a href='#L94'>94</a>
+<a name='L95'></a><a href='#L95'>95</a>
+<a name='L96'></a><a href='#L96'>96</a>
+<a name='L97'></a><a href='#L97'>97</a>
+<a name='L98'></a><a href='#L98'>98</a>
+<a name='L99'></a><a href='#L99'>99</a>
+<a name='L100'></a><a href='#L100'>100</a>
+<a name='L101'></a><a href='#L101'>101</a>
+<a name='L102'></a><a href='#L102'>102</a>
+<a name='L103'></a><a href='#L103'>103</a>
+<a name='L104'></a><a href='#L104'>104</a>
+<a name='L105'></a><a href='#L105'>105</a>
+<a name='L106'></a><a href='#L106'>106</a>
+<a name='L107'></a><a href='#L107'>107</a>
+<a name='L108'></a><a href='#L108'>108</a>
+<a name='L109'></a><a href='#L109'>109</a>
+<a name='L110'></a><a href='#L110'>110</a>
+<a name='L111'></a><a href='#L111'>111</a>
+<a name='L112'></a><a href='#L112'>112</a>
+<a name='L113'></a><a href='#L113'>113</a>
+<a name='L114'></a><a href='#L114'>114</a>
+<a name='L115'></a><a href='#L115'>115</a>
+<a name='L116'></a><a href='#L116'>116</a>
+<a name='L117'></a><a href='#L117'>117</a>
+<a name='L118'></a><a href='#L118'>118</a>
+<a name='L119'></a><a href='#L119'>119</a>
+<a name='L120'></a><a href='#L120'>120</a>
+<a name='L121'></a><a href='#L121'>121</a>
+<a name='L122'></a><a href='#L122'>122</a>
+<a name='L123'></a><a href='#L123'>123</a>
+<a name='L124'></a><a href='#L124'>124</a>
+<a name='L125'></a><a href='#L125'>125</a>
+<a name='L126'></a><a href='#L126'>126</a>
+<a name='L127'></a><a href='#L127'>127</a>
+<a name='L128'></a><a href='#L128'>128</a>
+<a name='L129'></a><a href='#L129'>129</a>
+<a name='L130'></a><a href='#L130'>130</a>
+<a name='L131'></a><a href='#L131'>131</a>
+<a name='L132'></a><a href='#L132'>132</a>
+<a name='L133'></a><a href='#L133'>133</a>
+<a name='L134'></a><a href='#L134'>134</a>
+<a name='L135'></a><a href='#L135'>135</a>
+<a name='L136'></a><a href='#L136'>136</a>
+<a name='L137'></a><a href='#L137'>137</a>
+<a name='L138'></a><a href='#L138'>138</a>
+<a name='L139'></a><a href='#L139'>139</a>
+<a name='L140'></a><a href='#L140'>140</a>
+<a name='L141'></a><a href='#L141'>141</a>
+<a name='L142'></a><a href='#L142'>142</a>
+<a name='L143'></a><a href='#L143'>143</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">export interface OracaoDiaria {
+  titulo: string;
+  tema: string;
+  texto: string;
+}
+&nbsp;
+export const ORACOES_DIARIAS: OracaoDiaria[] = <span class="cstat-no" title="statement not covered" >[</span>
+  {
+    titulo: "Gratidão pela Manhã",
+    tema: "Gratidão",
+    texto: "Senhor, obrigado por mais um dia de vida. Que eu não dê como garantida a respiração que Tu me concedes, o sol que nasce, a saúde que carrego. Antes mesmo que eu soubesse do que precisava, Tu já provestes. Que este dia seja um ato de adoração vivo — que cada palavra, cada decisão, cada encontro reflita a graça que recebi. Amém.",
+  },
+  {
+    titulo: "Rendição Completa",
+    tema: "Entrega",
+    texto: "Pai, admito que tenho tentado controlar o que só Tu podes segurar. Hoje, solto aquilo que apertei com medo. Entrego meus planos, meus relacionamentos, minha carreira, minha saúde — tudo coloco novamente nas Tuas mãos. Não porque desisto, mas porque confio que Tuas mãos são mais capazes do que as minhas. Faz a Tua vontade, Senhor. Amém.",
+  },
+  {
+    titulo: "Oração pela Família",
+    tema: "Família",
+    texto: "Deus, eu trago minha família diante de Ti. Cobre cada um com Tua proteção. Onde houver distância, aproxima. Onde houver mágoa, sana. Onde houver medo, traz paz. Dá aos pais sabedoria para amar bem. Dá aos filhos corações receptivos. Que o lar seja um reflexo do Teu amor — cheio de graça e verdade. Amém.",
+  },
+  {
+    titulo: "Perdão e Restauração",
+    tema: "Perdão",
+    texto: "Senhor, hoje venho com meu coração aberto. Reconheço que falhei — em palavras, em atitudes, em pensamentos que mantive longe de Ti. Mas confio na promessa de que onde abundou o pecado, superabundou a graça. Perdoa-me, restaura-me. E da mesma forma que fui perdoado, dá-me coragem para perdoar a quem me feriu. Amém.",
+  },
+  {
+    titulo: "Sabedoria para Decidir",
+    tema: "Direção",
+    texto: "Pai, estou diante de uma escolha que não sei fazer sozinho. Não peço que tornes o caminho mais fácil — peço que tornes meu coração mais sensível à Tua voz. Que a Tua Palavra seja lampada aos meus pés. Que o Espírito me guie com clareza. Guarda-me do orgulho de querer decidir sem Te consultar. Amém.",
+  },
+  {
+    titulo: "Força para o Trabalho",
+    tema: "Trabalho",
+    texto: "Senhor, ofereço a Ti este dia de trabalho. Que eu faça tudo como para Deus e não para os homens. Nas tarefas simples e nas desafiadoras, que minha excelência seja um ato de adoração. Guarda minha boca de reclamações e minha mente de comparações. Usa o meu trabalho para servir e abençoar outros. Amém.",
+  },
+  {
+    titulo: "Paz em Meio à Ansiedade",
+    tema: "Ansiedade",
+    texto: "Jesus, minha mente está agitada e meu coração, inquieto. Tu disseste 'não se turbe o vosso coração' — então hoje clamo por essa paz que excede meu entendimento. Não peço que as circunstâncias mudem agora, mas que o meu coração seja ancorado em Ti enquanto elas persistem. Tu és mais forte do que o que me preocupa. Amém.",
+  },
+  {
+    titulo: "Oração pelos que Sofrem",
+    tema: "Compaixão",
+    texto: "Pai, hoje lembro d'Aqueles que acordaram com dor — os enfermos, os enlutados, os solitários, os sem-teto. Eu não posso alcançar todos, mas Tu podes. Sê refúgio para quem não tem onde descansar. Sê médico para quem não tem acesso a cuidados. Usa as minhas mãos onde podes — e vai onde eu não consigo ir. Amém.",
+  },
+  {
+    titulo: "Fé para o Impossível",
+    tema: "Fé",
+    texto: "Deus do impossível, hoje trago diante de Ti aquilo que parece sem solução. Não sei como vai se resolver. Mas sei que Tu criaste do nada, abriste o mar, ressuscitaste mortos. Não há situação fora do Teu alcance. Aumenta minha fé para crer no que ainda não vejo, e me dá coragem para agir como se já fosse real. Amém.",
+  },
+  {
+    titulo: "Renovação Espiritual",
+    tema: "Renovação",
+    texto: "Espírito Santo, vem. Meu coração precisa de renovação. As rotinas me cansaram e o entusiasmo esfriou. Não me deixa viver só da memória do que Deus fez — quero experimentar o que Deus está fazendo agora. Sopra vida nova sobre mim. Que hoje seja o começo de uma temporada de avivamento pessoal. Amém.",
+  },
+  {
+    titulo: "Oração pelos Líderes",
+    tema: "Nação",
+    texto: "Senhor, Tu colocas e destituís reis e autoridades. Hoje oro pelos líderes desta nação — pelos governantes, juízes, pastores e educadores. Concede-lhes sabedoria superior à sua própria. Guarda-os da corrupção e do egoísmo. E nos dá como povo coração de oração, não só de crítica. Que sejamos sal e luz nesta geração. Amém.",
+  },
+  {
+    titulo: "Identidade em Cristo",
+    tema: "Identidade",
+    texto: "Pai, hoje me lembro de quem Tu disseste que eu sou: filho amado, escolhido, nova criação. Não o que o mundo diz sobre mim, não o que o fracasso de ontem sugere, não o que o medo sussurra. Ancoro minha identidade no que Tu declaras. Que eu viva hoje a partir desse lugar — não tentando provar quem sou, mas descansando em quem Tu és. Amém.",
+  },
+  {
+    titulo: "Graça para os Relacionamentos",
+    tema: "Relacionamentos",
+    texto: "Deus, os relacionamentos são bênçãos que também dói às vezes. Há pessoas que me machucaram, e há pessoas que eu machuquei. Dá-me graça para me aproximar das que se afastaram, para pedir desculpa onde devo, e para perdoar onde ainda está difícil. Que eu seja o tipo de pessoa que aponta para Ti através do amor que demonstro. Amém.",
+  },
+  {
+    titulo: "Humildade Diante de Deus",
+    tema: "Humildade",
+    texto: "Senhor, guarda meu coração do orgulho. Quando as coisas vão bem, me lembra que toda boa dádiva vem de Ti. Quando faço algo de valor, me guarda de roubar a Tua glória. Ensinai-me a ser o servo que serve sem precisar de reconhecimento, que lidera sem precisar de palcos, que ama sem esperar retribuição. Amém.",
+  },
+  {
+    titulo: "Propósito e Missão",
+    tema: "Propósito",
+    texto: "Deus, Tu me fizeste intencionalmente — com dons específicos, em um tempo específico, num lugar específico. Não foi acidente. Hoje peço que clareza sobre como minha vida pode servir ao Teu propósito maior. Não quero desperdiçar o que recebi. Mostra-me como meus talentos e oportunidades podem ser usados para o Reino. Amém.",
+  },
+  {
+    titulo: "Restauração das Forças",
+    tema: "Descanso",
+    texto: "Senhor, estou cansado. Não só o corpo — a alma. Clamo pela promessa: 'Vinde a mim todos os que estais cansados e sobrecarregados, e eu vos darei descanso.' Hoje não tenho força para resolver, consertar ou produzir. Quero apenas estar no Teu repouso. Ensina-me a descansar sem culpa, confiando que Tu trabalhas enquanto eu paro. Amém.",
+  },
+  {
+    titulo: "Cuidado com o Corpo",
+    tema: "Saúde",
+    texto: "Pai, meu corpo é templo do Teu Espírito. Hoje comprometo cuidar bem d'ele — na alimentação, no exercício, no sono, no descanso. Onde há doença, lembro que Tu és o Grande Médico. Onde há cansaço, clamo pela Tua restauração. Que eu honre a Ti com o corpo que me confiaste. Amém.",
+  },
+  {
+    titulo: "Oração por Quem Não Conhece a Deus",
+    tema: "Evangelismo",
+    texto: "Senhor Jesus, lembro hoje de pessoas que não Te conhecem. [Pense em um nome específico.] Que o Teu amor chegue a elas de formas que eu não posso imaginar. Abre portas para conversas. Suaviza corações endurecidos. E usa-me — que minha vida seja uma carta viva do Evangelho, mesmo sem palavras. Amém.",
+  },
+  {
+    titulo: "Fidelidade nos Pequenos",
+    tema: "Fidelidade",
+    texto: "Deus, ensina-me que fidelidade começa nos pequenos. Não espero uma grande missão para servir — quero servir bem agora, aqui, nessa responsabilidade que tenho. Que eu seja fiel no pouco para que Tu possas me confiar o muito. Guarda-me da distração do espetacular quando o fiel é o que me é pedido. Amém.",
+  },
+  {
+    titulo: "Gratidão pela Cruz",
+    tema: "Salvação",
+    texto: "Jesus, hoje paro para contemplar a Cruz. Não como símbolo — como ato de amor inexplicável. Tu, que eras igual a Deus, esvaziaste a Ti mesmo. Por mim. Que eu nunca perca o espanto com isso. Que a Cruz não vire familiar demais para me mover. Obrigado por morrer para que eu pudesse viver. Toda a honra e glória são Tuas. Amém.",
+  },
+  {
+    titulo: "Frutos do Espírito",
+    tema: "Caráter",
+    texto: "Espírito Santo, quero que os Teus frutos sejam visíveis na minha vida — não só quando está fácil, mas quando está difícil. Amor mesmo quando sinto raiva. Paciência mesmo quando estou com pressa. Mansidão mesmo quando me provam. Fidelidade mesmo quando é custosa. Trabalha em mim o que eu não consigo produzir sozinho. Amém.",
+  },
+  {
+    titulo: "O Senhor É o Meu Pastor",
+    tema: "Confiança",
+    texto: "Senhor, hoje declaro: Tu és meu Pastor. Nada me faltará. Mesmo quando ando pelo vale da sombra da morte, Tu estás comigo. Teu cajado me consola. Tu preparas mesa diante dos meus adversários. Bondade e misericórdia me seguirão todos os dias da minha vida. E habitarei na casa do Senhor para sempre. Amém.",
+  },
+  {
+    titulo: "Oração pela Igreja",
+    tema: "Igreja",
+    texto: "Pai, ora pelo Corpo de Cristo — a Igreja. Que ela seja uma antes de ser diversa. Que ela ame antes de julgar. Que ela sirva antes de ser servida. Guarda-a da hipocrisia e do orgulho institucional. Que ela seja o que Tu chamaste: sal e luz, abrigo para os feridos, casa para os solitários. Aviva a Igreja, Senhor. Amém.",
+  },
+  {
+    titulo: "Gratidão pela Criação",
+    tema: "Maravilha",
+    texto: "Deus Criador, que maravilha é a criação que fizeste. As estrelas que Tu pões no lugar, os campos que vestem, os pássaros que alimentas. E se cuidas de tudo isso, quanto mais cuidas de mim? Que eu recupere hoje o senso de maravilha — que não dê por garantido o sol nascendo, o ar nos pulmões, a beleza ao redor. Obrigado, Senhor. Amém.",
+  },
+  {
+    titulo: "Proteção e Segurança",
+    tema: "Proteção",
+    texto: "Senhor, Tu és minha torre forte. Hoje entrego minha saída e minha entrada. Guarda meu caminho. Protege minha família. Envia Teus anjos para cercar o que é Teu. E onde houver perigo que não vejo, que Tua presença seja escudo. Não andemos em medo, mas em confiança de que Tu guardas os que são Teus. Amém.",
+  },
+];
+&nbsp;
+/** Seleciona a oração do dia com offset diferente do versículo e passagem */
+export function <span class="fstat-no" title="function not covered" >getOracaoDoDia(): OracaoDiaria {</span>
+  const now = <span class="cstat-no" title="statement not covered" >new Date();</span>
+  const start = <span class="cstat-no" title="statement not covered" >new Date(now.getFullYear(), 0, 1);</span>
+  const dayOfYear = <span class="cstat-no" title="statement not covered" >Math.floor((now.getTime() - start.getTime()) / 86400000);</span>
+  // Offset de 7 para não coincidir com os outros
+<span class="cstat-no" title="statement not covered" >  return ORACOES_DIARIAS[(dayOfYear + 7) % ORACOES_DIARIAS.length];</span>
+}
+&nbsp;</pre></td></tr></table></pre>
+
+                <div class='push'></div><!-- for sticky footer -->
+            </div><!-- /wrapper -->
+            <div class='footer quiet pad2 space-top1 center small'>
+                Code coverage generated by
+                <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
+                at 2026-02-20T18:17:12.620Z
+            </div>
+        <script src="../../prettify.js"></script>
+        <script>
+            window.onload = function () {
+                prettyPrint();
+            };
+        </script>
+        <script src="../../sorter.js"></script>
+        <script src="../../block-navigation.js"></script>
+    </body>
+</html>
+    
