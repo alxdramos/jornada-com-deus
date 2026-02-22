@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-export type TabId = 'hoje' | 'explorar' | 'biblia' | 'meditacoes' | 'oracoes' | 'jornada' | 'diario';
+export type TabId = 'hoje' | 'explorar' | 'biblia' | 'meditacoes' | 'oracoes' | 'diario';
 
 interface TabStore {
   activeTab: TabId;

@@ -3,6 +3,7 @@
 import { GamificationCard } from "@/components/GamificationCard";
 import { HojeSteps } from "@/components/HojeSteps";
 import { CalendarioFavoritosModal } from "@/components/CalendarioFavoritosModal";
+import { JourneyDetailsModal } from "@/components/JourneyDetailsModal";
 import { UserHeader } from "@/components/layout/UserHeader";
 import { useUserStore } from "@/stores/userStore";
 import { useProgressStore } from "@/stores/progressStore";
@@ -12,6 +13,7 @@ import { Flame } from "lucide-react";
 
 export function TabHoje() {
   const [calendarioOpen, setCalendarioOpen] = useState(false);
+  const [journeyModalOpen, setJourneyModalOpen] = useState(false);
   const { data: session } = useSession();
   const user = useUserStore((s) => s.user);
   const { progress } = useProgressStore();
@@ -73,7 +75,12 @@ export function TabHoje() {
           <h3 className="text-sm font-semibold uppercase tracking-wide text-text-secondary">
             Essenciais da Fé
           </h3>
-          <button className="text-sm font-medium text-orange-500 hover:text-orange-600 transition-colors">VER TUDO &gt;</button>
+          <button
+            onClick={() => setJourneyModalOpen(true)}
+            className="text-sm font-medium text-orange-500 hover:text-orange-600 transition-colors"
+          >
+            VER TUDO &gt;
+          </button>
         </div>
 
         {/* Card resumo da jornada (streak, XP, árvore) */}
@@ -81,6 +88,7 @@ export function TabHoje() {
       </div>
 
       <CalendarioFavoritosModal isOpen={calendarioOpen} onClose={() => setCalendarioOpen(false)} />
+      <JourneyDetailsModal isOpen={journeyModalOpen} onClose={() => setJourneyModalOpen(false)} />
     </div>
   );
 }

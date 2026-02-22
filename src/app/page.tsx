@@ -7,7 +7,6 @@ import { TabExplorar } from "@/components/tabs/TabExplorar";
 import { TabBiblia } from "@/components/tabs/TabBiblia";
 import { TabOracoes } from "@/components/tabs/TabOracoes";
 import { TabMeditacoes } from "@/components/tabs/TabMeditacoes";
-import { TabJornada } from "@/components/tabs/TabJornada";
 import { TabDiario } from "@/components/tabs/TabDiario";
 import { BottomNav } from "@/components/BottomNav";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
@@ -32,9 +31,6 @@ export default function Home() {
       </ErrorBoundary>
       <ErrorBoundary fallbackLabel="Erro na aba Meditações">
         {activeTab === "meditacoes" && <TabMeditacoes />}
-      </ErrorBoundary>
-      <ErrorBoundary fallbackLabel="Erro na aba Jornada">
-        {activeTab === "jornada" && <TabJornada />}
       </ErrorBoundary>
       <ErrorBoundary fallbackLabel="Erro na aba Diário">
         {activeTab === "diario" && <TabDiario />}
