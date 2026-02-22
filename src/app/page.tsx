@@ -9,8 +9,8 @@ export default async function Home() {
   // Validar autenticação no server-side
   const session = await auth();
 
-  // Se não autenticado, redireciona para login
-  if (!session) {
+  // Se não autenticado (sem user na sessão), redireciona para login
+  if (!session?.user?.email) {
     redirect("/login");
   }
 
