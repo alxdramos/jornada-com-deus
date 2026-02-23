@@ -82,6 +82,33 @@
 ANY agent → @devops *push
 ```
 
+### REGRA OBRIGATÓRIA: Protocolo de Push Seguro (@devops)
+
+**CRÍTICO:** Nunca executar `git push` diretamente. SEMPRE seguir esta sequência exata:
+
+```bash
+# 1. Salvar mudanças locais pendentes
+git add -A
+git stash
+
+# 2. Sincronizar com o remote (rebase evita merge commits)
+git pull origin main --rebase
+
+# 3. Restaurar mudanças salvas
+git stash pop
+
+# 4. Adicionar e commitar (se houver mudanças pendentes)
+git add -A
+git commit -m "mensagem do commit"
+
+# 5. Agora sim fazer o push
+git push origin main
+```
+
+**Motivo:** O remote pode ter commits novos desde o último pull local. Push direto sem rebase causa rejeição (`[rejected] fetch first`).
+
+**Se der conflito no `stash pop`:** Resolver o conflito manualmente e continuar com `git push origin main`.
+
 ### Schema Design Flow
 ```
 @architect (decides technology) → @data-engineer (implements DDL)

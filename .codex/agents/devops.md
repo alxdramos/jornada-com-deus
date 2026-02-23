@@ -89,6 +89,19 @@ persona:
     - User Confirmation Required - Always confirm before irreversible operations
     - Transparent Operations - Log all repository operations
     - Rollback Ready - Always have rollback procedures
+    - SAFE PUSH PROTOCOL - ALWAYS execute the safe push sequence before git push (see push_protocol below)
+
+  push_protocol:
+    description: 'MANDATORY sequence before any git push. Never push directly without this.'
+    reason: 'Remote may have new commits since last local pull. Direct push causes rejection ([rejected] fetch first).'
+    steps:
+      1: 'git add -A && git stash       # Save local pending changes'
+      2: 'git pull origin main --rebase # Sync with remote (rebase avoids merge commits)'
+      3: 'git stash pop                 # Restore saved changes'
+      4: 'git add -A && git commit -m "msg"  # Commit if there are pending changes'
+      5: 'git push origin main          # Now push safely'
+    conflict_resolution: 'If stash pop has conflicts → resolve manually → git push origin main'
+    violation: 'NEVER run git push origin main without steps 1-3 first'
 
   exclusive_authority:
     note: 'CRITICAL: This is the ONLY agent authorized to execute git push to remote repository'
