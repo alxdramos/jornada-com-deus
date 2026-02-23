@@ -28,9 +28,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try {
         setLoading(true)
 
-        // Timeout de segurança: se demorar mais de 6s, considera sem sessão
+        // Timeout de segurança: se demorar mais de 8s, considera sem sessão
         const timeoutPromise = new Promise<null>((resolve) =>
-          setTimeout(() => resolve(null), 6000)
+          setTimeout(() => resolve(null), 8000)
         )
 
         const sessionPromise = supabase.auth.getSession().then(({ data, error }) => {
@@ -108,8 +108,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          // Rota de callback que troca o code por sessão no servidor
           redirectTo: `${origin}/auth/callback`,
+          // Solicita refresh token para manter sessão ativa
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
         },
       })
       if (error) throw error
