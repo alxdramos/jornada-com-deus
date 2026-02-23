@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  turbopack: {},
+  // turbopack: {}, // Desabilitado - usando SWC compiler
   images: {
     remotePatterns: [
       {

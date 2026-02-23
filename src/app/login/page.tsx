@@ -1,13 +1,11 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { Loader2 } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { CredentialsLoginForm } from '@/components/auth/CredentialsLoginForm'
 
 export default function LoginPage() {
-  const router = useRouter()
   const { signInWithGoogle, loading: authLoading } = useAuth()
   const [googleLoading, setGoogleLoading] = useState(false)
 
@@ -42,7 +40,7 @@ export default function LoginPage() {
         <div className="absolute bottom-12 left-10 right-10">
           <div className="bg-black/30 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
             <p className="text-white text-xl font-light italic leading-relaxed">
-              "Tudo posso naquele que me fortalece."
+              &quot;Tudo posso naquele que me fortalece.&quot;
             </p>
             <p className="text-white/70 text-sm mt-2 font-medium tracking-wide">
               Filipenses 4:13
@@ -151,7 +149,7 @@ export default function LoginPage() {
           {/* Versículo mobile */}
           <div className="md:hidden text-center space-y-1 px-2">
             <p className="text-sm text-[#6B7280] italic">
-              "Tudo posso naquele que me fortalece."
+              &quot;Tudo posso naquele que me fortalece.&quot;
             </p>
             <p className="text-xs text-[#9CA3AF]">Filipenses 4:13</p>
           </div>

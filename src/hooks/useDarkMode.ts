@@ -4,6 +4,15 @@ export const useDarkMode = () => {
   const [isDark, setIsDark] = useState(false);
   const [mounted, setMounted] = useState(false);
 
+  const applyDarkMode = (isDarkMode: boolean) => {
+    const html = document.documentElement;
+    if (isDarkMode) {
+      html.classList.add('dark');
+    } else {
+      html.classList.remove('dark');
+    }
+  };
+
   useEffect(() => {
     setMounted(true);
 
@@ -26,15 +35,6 @@ export const useDarkMode = () => {
     setIsDark(newValue);
     localStorage.setItem('dark-mode', newValue.toString());
     applyDarkMode(newValue);
-  };
-
-  const applyDarkMode = (isDarkMode: boolean) => {
-    const html = document.documentElement;
-    if (isDarkMode) {
-      html.classList.add('dark');
-    } else {
-      html.classList.remove('dark');
-    }
   };
 
   return { isDark, toggle, mounted };
