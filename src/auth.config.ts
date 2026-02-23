@@ -21,6 +21,17 @@ export const authConfig: NextAuthConfig = {
 
   trustHost: true,
 
+  // Session configuration with Supabase persistence
+  session: {
+    strategy: "jwt",
+    maxAge: 7 * 24 * 60 * 60, // 7 days
+    updateAge: 24 * 60 * 60, // Update every 24 hours
+  },
+
+  jwt: {
+    maxAge: 7 * 24 * 60 * 60, // 7 days
+  },
+
   callbacks: {
     async session({ session, token }) {
       if (token.sub) {
