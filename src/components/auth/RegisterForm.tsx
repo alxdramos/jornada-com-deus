@@ -1,73 +1,77 @@
 "use client";
 
-import { useActionState, useEffect, useState } from "react";
-import { signIn } from "next-auth/react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff, Loader2, AlertCircle, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
-import { registerUser, RegisterState } from "@/app/actions/register";
-
-const initialState: RegisterState = { success: false };
+import { supabase } from "@/lib/supabase";
 
 export function RegisterForm() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [isPending, setIsPending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-  const [state, action, isPending] = useActionState(registerUser, initialState);
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError(null);
+    setIsPending(true);
 
-  // Após cadastro bem-sucedido, faz login automático
-  useEffect(() => {
-    if (!state.success) return;
+    try {
+      if (password !== confirmPassword) {
+        throw new Error("Senhas não correspondem");
+      }
 
-    const formEl = document.getElementById("register-form") as HTMLFormElement | null;
-    const email = formEl?.querySelector<HTMLInputElement>('[name="email"]')?.value ?? "";
-    const password = formEl?.querySelector<HTMLInputElement>('[name="password"]')?.value ?? "";
+      if (password.length < 6) {
+        throw new Error("Senha deve ter mínimo 6 caracteres");
+      }
 
-    signIn("credentials", { email, password, redirect: false }).then(() => {
-      router.push("/");
-      router.refresh();
-    });
-  }, [state.success, router]);
+      const { error: signUpError } = await supabase.auth.signUp({
+        email,
+        password,
+      });
+
+      if (signUpError) throw signUpError;
+
+      setSuccess(true);
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
+
+      // Auto-login após cadastro
+      setTimeout(() => {
+        router.push("/");
+        router.refresh();
+      }, 1500);
+    } catch (err) {
+      setError((err as Error).message);
+    } finally {
+      setIsPending(false);
+    }
+  };
 
   return (
-    <form id="register-form" action={action} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4">
       {/* Erro geral */}
-      {state.error && (
+      {error && (
         <div className="flex items-start gap-2 p-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-700">
           <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
-          <span>{state.error}</span>
+          <span>{error}</span>
         </div>
       )}
 
       {/* Sucesso (brevíssimo — redireciona) */}
-      {state.success && (
+      {success && (
         <div className="flex items-center gap-2 p-3 bg-green-50 border border-green-200 rounded-xl text-sm text-green-700">
           <CheckCircle2 className="w-4 h-4 shrink-0" />
           <span>Conta criada! Entrando…</span>
         </div>
       )}
-
-      {/* Nome */}
-      <div className="space-y-1.5">
-        <label htmlFor="name" className="block text-sm font-medium text-[#1F2937]">
-          Seu nome
-        </label>
-        <input
-          id="name"
-          name="name"
-          type="text"
-          autoComplete="name"
-          required
-          placeholder="Como podemos te chamar?"
-          className="
-            w-full h-11 px-4 rounded-xl border border-gray-200
-            bg-white/80 text-[#1F2937] text-sm placeholder:text-gray-400
-            focus:outline-none focus:ring-2 focus:ring-[#FB923C]/40 focus:border-[#FB923C]
-            transition-colors duration-150
-          "
-        />
-      </div>
 
       {/* E-mail */}
       <div className="space-y-1.5">
@@ -76,16 +80,18 @@ export function RegisterForm() {
         </label>
         <input
           id="reg-email"
-          name="email"
           type="email"
           autoComplete="email"
           required
           placeholder="seu@email.com"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          disabled={isPending || success}
           className="
             w-full h-11 px-4 rounded-xl border border-gray-200
             bg-white/80 text-[#1F2937] text-sm placeholder:text-gray-400
             focus:outline-none focus:ring-2 focus:ring-[#FB923C]/40 focus:border-[#FB923C]
-            transition-colors duration-150
+            transition-colors duration-150 disabled:opacity-50
           "
         />
       </div>
@@ -98,23 +104,26 @@ export function RegisterForm() {
         <div className="relative">
           <input
             id="reg-password"
-            name="password"
             type={showPassword ? "text" : "password"}
             autoComplete="new-password"
             required
             minLength={6}
             placeholder="Mínimo 6 caracteres"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            disabled={isPending || success}
             className="
               w-full h-11 px-4 pr-11 rounded-xl border border-gray-200
               bg-white/80 text-[#1F2937] text-sm placeholder:text-gray-400
               focus:outline-none focus:ring-2 focus:ring-[#FB923C]/40 focus:border-[#FB923C]
-              transition-colors duration-150
+              transition-colors duration-150 disabled:opacity-50
             "
           />
           <button
             type="button"
             onClick={() => setShowPassword((v) => !v)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#FB923C] transition-colors"
+            disabled={isPending || success}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#FB923C] transition-colors disabled:opacity-50"
             aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
           >
             {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -130,22 +139,25 @@ export function RegisterForm() {
         <div className="relative">
           <input
             id="confirmPassword"
-            name="confirmPassword"
             type={showConfirm ? "text" : "password"}
             autoComplete="new-password"
             required
             placeholder="Repita a senha"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            disabled={isPending || success}
             className="
               w-full h-11 px-4 pr-11 rounded-xl border border-gray-200
               bg-white/80 text-[#1F2937] text-sm placeholder:text-gray-400
               focus:outline-none focus:ring-2 focus:ring-[#FB923C]/40 focus:border-[#FB923C]
-              transition-colors duration-150
+              transition-colors duration-150 disabled:opacity-50
             "
           />
           <button
             type="button"
             onClick={() => setShowConfirm((v) => !v)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#FB923C] transition-colors"
+            disabled={isPending || success}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#FB923C] transition-colors disabled:opacity-50"
             aria-label={showConfirm ? "Ocultar confirmação" : "Mostrar confirmação"}
           >
             {showConfirm ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -156,7 +168,7 @@ export function RegisterForm() {
       {/* Botão criar conta */}
       <button
         type="submit"
-        disabled={isPending || state.success}
+        disabled={isPending || success}
         className="
           w-full h-11 flex items-center justify-center gap-2
           bg-[#FB923C] hover:bg-[#F97316] disabled:bg-[#FB923C]/60
@@ -166,10 +178,10 @@ export function RegisterForm() {
           focus:outline-none focus:ring-2 focus:ring-[#FB923C]/40 focus:ring-offset-1
         "
       >
-        {isPending || state.success ? (
+        {isPending || success ? (
           <>
             <Loader2 className="w-4 h-4 animate-spin" />
-            {state.success ? "Entrando…" : "Criando conta…"}
+            {success ? "Entrando…" : "Criando conta…"}
           </>
         ) : (
           "Criar minha conta"

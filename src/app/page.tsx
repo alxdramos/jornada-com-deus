@@ -1,19 +1,37 @@
-import { auth } from "@/auth"; // Server-side auth
-import { redirect } from "next/navigation";
-import { HomeContent } from "./page-content";
+'use client'
 
-// Force dynamic rendering so middleware can validate auth
-export const dynamic = "force-dynamic";
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
+import { useAuth } from '@/contexts/AuthContext'
+import { HomeContent } from './page-content'
 
-export default async function Home() {
-  // Validar autenticação no server-side
-  const session = await auth();
+export default function Home() {
+  const router = useRouter()
+  const { user, loading } = useAuth()
 
-  // Se não autenticado (sem user na sessão), redireciona para login
-  if (!session?.user?.email) {
-    redirect("/login");
+  useEffect(() => {
+    // Redirect to login if not authenticated after loading is complete
+    if (!loading && !user) {
+      router.replace('/login')
+    }
+  }, [user, loading, router])
+
+  // Show loading state while checking auth
+  if (loading) {
+    return (
+      <div className="w-full h-screen flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FB923C] mx-auto" />
+          <p className="text-gray-600">Carregando...</p>
+        </div>
+      </div>
+    )
   }
 
-  // Se autenticado, renderiza a página home
-  return <HomeContent />;
+  // Only render content if user is authenticated
+  if (!user) {
+    return null
+  }
+
+  return <HomeContent />
 }
