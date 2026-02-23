@@ -110,42 +110,42 @@ export function useInstallPrompt(): UseInstallPromptReturn {
   useEffect(() => {
     const checkTriggers = () => {
       try {
-        // Get current values
+        // Don't show if already running as installed PWA
+        if (
+          window.matchMedia('(display-mode: standalone)').matches ||
+          (window.navigator as { standalone?: boolean }).standalone === true
+        ) {
+          return
+        }
+
         const visitCount = Number(localStorage.getItem(getStorageKey('visitCount')) || 0)
         const timeSpent = Number(localStorage.getItem(getStorageKey('timeSpent')) || 0)
         const pagesVisited = Number(localStorage.getItem(getStorageKey('pagesVisited')) || 0)
-        const promptDismissed = localStorage.getItem(getStorageKey('promptDismissed')) === 'true'
         const promptInstalled = localStorage.getItem(getStorageKey('promptInstalled')) === 'true'
+        const dismissedAt = Number(localStorage.getItem(getStorageKey('dismissedAt')) || 0)
         const lastPromptTime = Number(localStorage.getItem(getStorageKey('lastPromptTime')) || 0)
 
-        // Suppress conditions
-        if (promptDismissed) {
-          console.log('[INSTALL] Suppressed: promptDismissed = true')
-          return
-        }
-        if (promptInstalled) {
-          console.log('[INSTALL] Suppressed: promptInstalled = true')
-          return
-        }
+        if (promptInstalled) return
 
-        // Don't show more than once per hour
-        if (lastPromptTime && Date.now() - lastPromptTime < 3600000) {
-          return
-        }
+        // 7-day cooldown after dismiss
+        const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000
+        if (dismissedAt && Date.now() - dismissedAt < SEVEN_DAYS) return
 
-        // Check triggers
+        // Don't show more than once per hour in same session
+        if (lastPromptTime && Date.now() - lastPromptTime < 3600000) return
+
         const triggerMet = visitCount >= 2 || timeSpent >= 30 || pagesVisited >= 2
 
-        if (triggerMet && !state.isOpen) {
+        // Android/Desktop: only show if browser supports installation
+        // iOS: always show (no beforeinstallprompt support)
+        const canShowForPlatform = state.platform === 'ios' || state.canInstall
+
+        if (triggerMet && canShowForPlatform && !state.isOpen) {
           console.log(
-            `[INSTALL] Trigger evaluated: TRUE (visitCount=${visitCount}, timeSpent=${timeSpent}, pagesVisited=${pagesVisited})`
+            `[INSTALL] Trigger met (visitCount=${visitCount}, timeSpent=${timeSpent}s, pagesVisited=${pagesVisited})`
           )
-          console.log(`[INSTALL] Platform detected: ${state.platform}`)
-          console.log('[INSTALL] Modal shown')
-
-          // Update lastPromptTime
+          console.log(`[INSTALL] Platform: ${state.platform}`)
           localStorage.setItem(getStorageKey('lastPromptTime'), String(Date.now()))
-
           setState(prev => ({ ...prev, isOpen: true }))
         }
       } catch (e) {
@@ -155,13 +155,14 @@ export function useInstallPrompt(): UseInstallPromptReturn {
 
     const interval = setInterval(checkTriggers, 5000)
     return () => clearInterval(interval)
-  }, [state.isOpen, state.platform])
+  }, [state.isOpen, state.platform, state.canInstall])
 
   const handleDismiss = useCallback(() => {
     try {
-      localStorage.setItem(getStorageKey('promptDismissed'), 'true')
+      // Use timestamp instead of boolean — allows re-showing after 7 days
+      localStorage.setItem(getStorageKey('dismissedAt'), String(Date.now()))
       localStorage.setItem(getStorageKey('lastPromptTime'), String(Date.now()))
-      console.log('[INSTALL] User action: clicked_depois (dismissed)')
+      console.log('[INSTALL] Dismissed — will re-offer in 7 days')
       setState(prev => ({ ...prev, isOpen: false }))
     } catch (e) {
       console.error('[INSTALL] Failed to dismiss prompt:', e)

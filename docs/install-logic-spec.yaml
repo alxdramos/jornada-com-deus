@@ -1,0 +1,405 @@
+---
+title: Install Prompt - Arquitetura & Lógica
+project: Jornada com Deus PWA
+date: 2026-02-23
+
+# ============================================================================
+# 1. SCHEMA LOCALSTORAGE
+# ============================================================================
+
+localStorage_schema:
+  namespace: "jornada-pwa-install"
+
+  keys:
+    visitCount:
+      description: "Contador de vezes que usuário acessou o app"
+      type: number
+      default: 0
+      increment: "+1 a cada página carregada (exceto reloads imediatos)"
+
+    timeSpent:
+      description: "Tempo total gasto no app em segundos"
+      type: number
+      default: 0
+      increment: "Incrementado a cada 1 segundo (timer)"
+
+    pagesVisited:
+      description: "Contador de páginas únicas navegadas"
+      type: number
+      default: 0
+      increment: "+1 quando navega para nova página (pathname muda)"
+
+    promptDismissed:
+      description: "Se usuário rejeitou o prompt"
+      type: boolean
+      default: false
+      value: "true quando clica em 'Depois' ou fecha modal"
+
+    promptInstalled:
+      description: "Se usuário instalou o app"
+      type: boolean
+      default: false
+      value: "true quando instalação bem-sucedida"
+
+    sessionStarted:
+      description: "Timestamp do início da sessão (em ms)"
+      type: number
+      default: "Date.now() quando app inicia"
+
+    lastPromptTime:
+      description: "Timestamp da última vez que modal foi mostrado"
+      type: number
+      default: null
+      note: "Evita mostrar múltiplas vezes na mesma sessão"
+
+# ============================================================================
+# 2. LÓGICA DE TRIGGERS
+# ============================================================================
+
+trigger_logic:
+  should_show_prompt: |
+    Mostrar prompt quando:
+
+    (visitCount >= 2 OR timeSpent >= 30 OR pagesVisited >= 2)
+    AND
+    promptDismissed === false
+    AND
+    promptInstalled === false
+    AND
+    (lastPromptTime === null OR Date.now() - lastPromptTime > 3600000) // 1 hora
+
+  suppress_conditions:
+    - condition: "promptDismissed === true"
+      action: "NUNCA mostrar nessa sessão"
+      recovery: "Mostrar novamente em nova sessão após 24h"
+
+    - condition: "promptInstalled === true"
+      action: "NUNCA mostrar (app já instalado)"
+      recovery: "Remover chave se desinstalar"
+
+    - condition: "lastPromptTime existir e < 1h"
+      action: "Não mostrar novamente (já mostrou há menos de 1h)"
+      recovery: "Aguardar 1 hora"
+
+# ============================================================================
+# 3. RASTREAMENTO DE TRIGGERS
+# ============================================================================
+
+tracking_system:
+
+  visit_counter:
+    where: "Em App.tsx ou root layout"
+    trigger: "useEffect que roda 1x no mount"
+    logic: |
+      const current = localStorage.getItem('jornada-pwa-install:visitCount') || 0
+      localStorage.setItem('jornada-pwa-install:visitCount', Number(current) + 1)
+    type: "1x por sessão"
+
+  time_tracker:
+    where: "Em App.tsx ou useInstallPrompt hook"
+    trigger: "setInterval que roda a cada 1 segundo"
+    logic: |
+      setInterval(() => {
+        const current = localStorage.getItem('jornada-pwa-install:timeSpent') || 0
+        localStorage.setItem('jornada-pwa-install:timeSpent', Number(current) + 1)
+      }, 1000)
+    type: "Contínuo enquanto app está aberto"
+
+  page_navigator:
+    where: "useRouter effect em App.tsx"
+    trigger: "Quando pathname muda"
+    logic: |
+      useEffect(() => {
+        const current = localStorage.getItem('jornada-pwa-install:pagesVisited') || 0
+        localStorage.setItem('jornada-pwa-install:pagesVisited', Number(current) + 1)
+      }, [pathname])
+    type: "1x por página nova"
+
+# ============================================================================
+# 4. DETECÇÃO DE PLATAFORMA
+# ============================================================================
+
+platform_detection:
+
+  iOS:
+    detector: |
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
+                    && !window.MSStream
+    behavior: |
+      - Mostrar modal com passo-a-passo manual
+      - beforeinstallprompt NÃO é disparado (limitação iOS)
+      - Renderizar iOSInstallGuide (3 slides)
+      - Botão "Instalar agora" leva para passo 1
+
+  Android:
+    detector: |
+      const isAndroid = /Android/.test(navigator.userAgent)
+    behavior: |
+      - Disparar beforeinstallprompt listener
+      - Capturar evento e armazenar em state
+      - Mostrar modal Android (CTA nativa)
+      - Botão "Instalar agora" chama event.prompt()
+
+  Desktop:
+    detector: |
+      const isDesktop = !isIOS && !isAndroid
+    behavior: |
+      - Mostrar ambas as opções em tabs/toggle
+      - Aba 1: Flow Android (se beforeinstallprompt existe)
+      - Aba 2: Flow iOS (passo-a-passo)
+      - Foco em PWA web + manual iOS
+
+  beforeinstallprompt:
+    type: "BeforeInstallPromptEvent"
+    listener: |
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault() // Previne popup padrão
+        setBeforeInstallPrompt(e)
+        setCanInstall(true)
+      })
+    usage: |
+      Quando usuário clica "Instalar agora":
+      beforeInstallPrompt.prompt()
+      const { outcome } = await beforeInstallPrompt.userChoice
+      if (outcome === 'accepted') {
+        localStorage.setItem('jornada-pwa-install:promptInstalled', 'true')
+        closeModal()
+      }
+
+# ============================================================================
+# 5. FLUXO DE ESTADO
+# ============================================================================
+
+state_flow:
+
+  initial_state:
+    description: "App carrega pela 1ª vez"
+    values:
+      visitCount: 1
+      timeSpent: 0
+      pagesVisited: 1
+      promptDismissed: false
+      promptInstalled: false
+      lastPromptTime: null
+    prompt_shown: false
+    reason: "visitCount (1) < 2 e timeSpent < 30"
+
+  after_30_seconds:
+    description: "Usuário está no app há 30s"
+    values:
+      visitCount: 1
+      timeSpent: 30
+      pagesVisited: 1
+      promptDismissed: false
+      promptInstalled: false
+    trigger_evaluation: "timeSpent >= 30 ✅ → MOSTRAR"
+    prompt_shown: true
+
+  user_clicks_instalar:
+    description: "Usuário clica 'Instalar agora'"
+    action: |
+      beforeInstallPrompt.prompt()
+      Espera userChoice
+    outcome: |
+      if (outcome === 'accepted') {
+        localStorage.promptInstalled = true
+        closeModal()
+      } else if (outcome === 'dismissed') {
+        localStorage.promptDismissed = true
+        closeModal()
+      }
+
+  user_clicks_depois:
+    description: "Usuário clica 'Depois'"
+    action: |
+      localStorage.promptDismissed = true
+      localStorage.lastPromptTime = Date.now()
+      closeModal()
+    suppression: "NÃO mostrar novamente hoje"
+    recovery: "Mostrar amanhã (24h depois)"
+
+# ============================================================================
+# 6. INTEGRAÇÃO PWA / BEFOREINSTALLPROMPT
+# ============================================================================
+
+pwa_integration:
+
+  manifest_json:
+    location: "public/manifest.json"
+    required_fields:
+      - name: "Jornada com Deus"
+      - short_name: "Jornada"
+      - start_url: "/"
+      - display: "standalone"
+      - icons: "[ { src, sizes, type } ]"
+      - theme_color: "#8B5CF6"
+      - background_color: "#FFFFFF"
+
+  service_worker:
+    location: "public/sw.js"
+    status: "Deve estar registrado"
+    check: |
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js')
+      }
+
+  beforeinstallprompt_listener:
+    where: "useInstallPrompt hook"
+    code: |
+      useEffect(() => {
+        const handleBeforeInstallPrompt = (e) => {
+          e.preventDefault()
+          setDeferredPrompt(e)
+          setCanInstall(true)
+        }
+
+        window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+
+        return () => {
+          window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+        }
+      }, [])
+
+    install_handler:
+      trigger: "Quando usuário clica 'Instalar'"
+      code: |
+        const handleInstall = async () => {
+          if (!deferredPrompt) return
+
+          deferredPrompt.prompt()
+          const { outcome } = await deferredPrompt.userChoice
+
+          if (outcome === 'accepted') {
+            setCanInstall(false)
+            localStorage.setItem(
+              'jornada-pwa-install:promptInstalled',
+              'true'
+            )
+          }
+
+          setDeferredPrompt(null)
+        }
+
+    success_tracking:
+      - "appinstalled event listener (opcional)"
+      - "localStorage.promptInstalled = true"
+      - "Remover modal definitivamente"
+
+# ============================================================================
+# 7. DIAGRAMA DE FLUXO (ASCII)
+# ============================================================================
+
+flow_diagram: |
+
+  START
+    ↓
+  [Carregar localStorage]
+    ↓
+  [Iniciar rastreadores: visitCount++, timeTimer, routerListener]
+    ↓
+  ┌─────────────────────────────────────────┐
+  │ Check Triggers a cada 5 segundos       │
+  │ (visitCount >= 2 OR timeSpent >= 30   │
+  │  OR pagesVisited >= 2)                 │
+  └─────────────────────────────────────────┘
+    ↓
+  [promptDismissed === true?] ──YES──→ [NÃO MOSTRAR]
+    ↓ NO
+  [promptInstalled === true?] ──YES──→ [NÃO MOSTRAR]
+    ↓ NO
+  [lastPromptTime < 1h?] ──YES──→ [NÃO MOSTRAR]
+    ↓ NO
+
+  [MOSTRAR MODAL] ← TRIGGER ATENDIDO
+    ↓
+  [Detectar plataforma]
+    ├─ iOS → [iOSInstallGuide: 3 slides]
+    ├─ Android → [AndroidFlow: beforeinstallprompt]
+    └─ Desktop → [Ambas opções]
+    ↓
+  [Usuário clica "Instalar"?]
+    ├─ YES → [beforeinstallPrompt.prompt()]
+    │         ├─ Aceito → [promptInstalled = true] → [CLOSE]
+    │         └─ Rejeitado → [promptDismissed = true] → [CLOSE]
+    │
+    └─ [Usuário clica "Depois"]
+              → [promptDismissed = true]
+              → [lastPromptTime = now]
+              → [CLOSE]
+    ↓
+  [FIM da sessão]
+    ↓
+  [Guardar localStorage para próxima sessão]
+
+# ============================================================================
+# 8. TIMING & PERFORMANCE
+# ============================================================================
+
+timing:
+
+  visitCount_increment:
+    when: "App load (1x)"
+    overhead: "< 1ms"
+
+  timeSpent_increment:
+    when: "A cada 1 segundo"
+    overhead: "< 1ms per tick"
+
+  pagesVisited_increment:
+    when: "Route change"
+    overhead: "< 1ms"
+
+  trigger_check:
+    when: "A cada 5 segundos (debounced)"
+    overhead: "< 5ms"
+
+  total_app_impact: "< 50ms overhead ao longo de 30 segundos"
+
+# ============================================================================
+# 9. RECOVERY & CLEANUP
+# ============================================================================
+
+cleanup_procedures:
+
+  user_uninstalls_app:
+    action: "Delete promptInstalled flag"
+    implementation: |
+      appuninstalled event listener (optional)
+      ou
+      localStorage.removeItem('jornada-pwa-install:promptInstalled')
+
+  user_clears_cache:
+    effect: "Todos os flags resetam"
+    behavior: "App recomeça do zero"
+
+  daily_reset_option:
+    description: "Resetejar promptDismissed após 24h"
+    implementation: |
+      if (Date.now() - lastDismiss > 86400000) {
+        localStorage.setItem('promptDismissed', 'false')
+      }
+
+# ============================================================================
+# 10. DEBUGGING & LOGGING
+# ============================================================================
+
+debugging:
+
+  console_logging: |
+    [INSTALL] visitCount: 2
+    [INSTALL] timeSpent: 30s
+    [INSTALL] pagesVisited: 1
+    [INSTALL] Trigger evaluated: TRUE
+    [INSTALL] Platform detected: iOS
+    [INSTALL] Modal shown
+    [INSTALL] User action: clicked_install
+
+  localStorage_inspection: |
+    localStorage.getItem('jornada-pwa-install:*')
+    Copy all keys and values to console
+
+  reset_command: |
+    // Para testar múltiplas vezes:
+    localStorage.removeItem('jornada-pwa-install:promptDismissed')
+    localStorage.removeItem('jornada-pwa-install:promptInstalled')
+

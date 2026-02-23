@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { InstallPrompt } from "@/components/install-prompt";
 import { OfflineIndicator } from "@/components/OfflineIndicator";
 import { Toaster } from "sonner";
 import { SessionProvider } from "@/components/providers/SessionProvider";
@@ -64,7 +63,6 @@ export default function RootLayout({
             <AuthSyncWrapper>
               <OfflineIndicator />
               {children}
-              <InstallPrompt />
               <Toaster position="top-center" richColors closeButton />
             </AuthSyncWrapper>
           </SessionProvider>
