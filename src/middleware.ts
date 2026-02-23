@@ -4,16 +4,19 @@ import { createServerClient } from '@supabase/ssr';
 
 const protectedRoutes = ['/', '/explorar', '/biblia', '/oracoes', '/meditacoes', '/diario', '/perfil'];
 const authRoutes = ['/login', '/cadastro'];
+// Rotas públicas que nunca devem ser bloqueadas pelo middleware
+const publicRoutes = ['/auth/callback'];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Ignorar assets estáticos, API routes e arquivos com extensão
+  // Ignorar assets estáticos, API routes, arquivos com extensão e rotas públicas
   if (
     pathname.startsWith('/_next') ||
     pathname.startsWith('/api') ||
     pathname.startsWith('/static') ||
-    pathname.includes('.')
+    pathname.includes('.') ||
+    publicRoutes.some((route) => pathname.startsWith(route))
   ) {
     return NextResponse.next();
   }
