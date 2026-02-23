@@ -1,52 +1,42 @@
 "use client";
 
 import { ReactNode, useState } from "react";
-import { useSession } from "next-auth/react";
+import { useAuth } from "@/contexts/AuthContext";
 import { useUserStore } from "@/stores/userStore";
 import { ProfileModal } from "@/components/ProfileModal";
 import { Skeleton } from "@/components/ui/Skeleton";
 
 interface UserHeaderProps {
-  /** Título principal exibido ao lado do avatar (ex: "Bíblia", "Orações") */
   title: string;
-  /** Elemento opcional abaixo do título (ex: link "VER CALENDÁRIO") */
   subtitleElement?: ReactNode;
-  /** Elemento opcional no lado direito do header (ícones, botões, streak) */
   rightElement?: ReactNode;
 }
 
-/**
- * Cabeçalho reutilizável para todas as abas.
- * Exibe o avatar do usuário (foto Google com fallbacks) clicável para abrir o ProfileModal,
- * o título da tela e um slot opcional para ações no lado direito.
- */
 export function UserHeader({ title, subtitleElement, rightElement }: UserHeaderProps) {
   const [profileOpen, setProfileOpen] = useState(false);
-  const { data: session, status } = useSession();
+  const { user: authUser, loading } = useAuth();
   const user = useUserStore((s) => s.user);
 
-  const isLoading = status === "loading";
-  const displayName = user?.name || session?.user?.name || "Visitante";
+  const displayName = user?.name || authUser?.user_metadata?.full_name || "Visitante";
+  const avatarUrl = authUser?.user_metadata?.avatar_url;
 
   return (
     <>
       <div className="flex items-center justify-between">
-        {/* Lado esquerdo: avatar + título */}
         <div className="flex items-center gap-3">
           <button
             onClick={() => setProfileOpen(true)}
             aria-label="Abrir perfil"
             className="w-10 h-10 rounded-full overflow-hidden shrink-0 border-2 border-white shadow-md focus:outline-none focus:ring-2 focus:ring-[#FB923C] focus:ring-offset-1"
           >
-            {isLoading ? (
+            {loading ? (
               <Skeleton className="w-full h-full rounded-full" />
-            ) : session?.user?.image ? (
+            ) : avatarUrl ? (
               <img
-                src={session.user.image}
+                src={avatarUrl}
                 alt={`Avatar de ${displayName}`}
                 className="w-full h-full object-cover"
                 onError={(e) => {
-                  // Fallback para inicial do nome se a imagem do Google falhar
                   const target = e.target as HTMLImageElement;
                   target.style.display = "none";
                   const parent = target.parentElement;
@@ -70,7 +60,6 @@ export function UserHeader({ title, subtitleElement, rightElement }: UserHeaderP
           </div>
         </div>
 
-        {/* Lado direito: slot customizável por aba */}
         {rightElement && (
           <div className="flex items-center gap-2">{rightElement}</div>
         )}

@@ -7,18 +7,18 @@ import { JourneyDetailsModal } from "@/components/JourneyDetailsModal";
 import { UserHeader } from "@/components/layout/UserHeader";
 import { useUserStore } from "@/stores/userStore";
 import { useProgressStore } from "@/stores/progressStore";
-import { useSession } from "next-auth/react";
+import { useAuth } from "@/contexts/AuthContext";
 import { useState } from "react";
 import { Flame } from "lucide-react";
 
 export function TabHoje() {
   const [calendarioOpen, setCalendarioOpen] = useState(false);
   const [journeyModalOpen, setJourneyModalOpen] = useState(false);
-  const { data: session } = useSession();
+  const { user: authUser } = useAuth();
   const user = useUserStore((s) => s.user);
   const { progress } = useProgressStore();
 
-  const displayName = user?.name || session?.user?.name || "Visitante";
+  const displayName = user?.name || authUser?.user_metadata?.full_name || "Visitante";
 
   return (
     <div className="min-h-screen bg-bg-primary p-6 pb-28">

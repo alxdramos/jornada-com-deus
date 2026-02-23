@@ -5,7 +5,8 @@ import { Crown, User, Mail, Calendar, Star, LogOut } from "lucide-react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useUserStore } from "@/stores/userStore";
 import { useProgressStore } from "@/stores/progressStore";
-import { useSession, signOut } from "next-auth/react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useRouter } from "next/navigation";
 import { AppButton } from "./AppButton";
 import { Skeleton } from "@/components/ui/Skeleton";
 
@@ -15,19 +16,22 @@ interface ProfileModalProps {
 }
 
 export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
-  const { data: session, status } = useSession();
+  const { user: authUser, loading, signOut } = useAuth();
   const { user, togglePlus } = useUserStore();
   const { progress } = useProgressStore();
+  const router = useRouter();
 
-  const isLoading = status === 'loading';
-  const displayName = user?.name || session?.user?.name || 'Usuário';
-  const displayEmail = user?.email || session?.user?.email;
+  const displayName = user?.name || authUser?.user_metadata?.full_name || "Usuário";
+  const displayEmail = user?.email || authUser?.email;
+  const avatarUrl = authUser?.user_metadata?.avatar_url;
 
   const handleSignOut = async () => {
-    await signOut({ callbackUrl: '/login' });
+    await signOut();
+    onClose();
+    router.replace("/login");
   };
 
-  if (!user && !session?.user) return null;
+  if (!authUser && !user) return null;
 
   return (
     <AnimatePresence>
@@ -48,25 +52,24 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                 transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
                 className="w-20 h-20 rounded-full overflow-hidden shadow-lg border-4 border-white"
               >
-                {isLoading ? (
+                {loading ? (
                   <Skeleton className="w-full h-full rounded-full" />
-                ) : session?.user?.image ? (
+                ) : avatarUrl ? (
                   <img
-                    src={session.user.image}
+                    src={avatarUrl}
                     alt={`Avatar de ${displayName}`}
                     className="w-full h-full object-cover"
                     onError={(e) => {
-                      // Fallback para ícone de usuário
                       const target = e.target as HTMLImageElement;
-                      target.style.display = 'none';
+                      target.style.display = "none";
                       const parent = target.parentElement;
                       if (parent) {
-                        parent.innerHTML = `<div class="w-full h-full bg-gradient-to-br from-primary to-accent flex items-center justify-center"><svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 1H5C3.89 1 3 1.89 3 3V21C3 22.11 3.89 23 5 23H19C20.11 23 21 22.11 21 21V9M19 9H14V4H19V9Z"/></svg></div>`;
+                        parent.innerHTML = `<div class="w-full h-full bg-gradient-to-br from-[#FB923C] to-[#10B981] flex items-center justify-center"><svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg></div>`;
                       }
                     }}
                   />
                 ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+                  <div className="w-full h-full bg-gradient-to-br from-[#FB923C] to-[#10B981] flex items-center justify-center">
                     <User className="w-10 h-10 text-white" />
                   </div>
                 )}
@@ -81,7 +84,7 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
               >
                 <div className="flex items-center justify-center gap-2">
                   <h2 className="text-2xl font-bold text-foreground">
-                    {isLoading ? <Skeleton className="h-8 w-32" /> : displayName}
+                    {loading ? <Skeleton className="h-8 w-32" /> : displayName}
                   </h2>
                   {user?.isPlus && (
                     <Crown className="w-5 h-5 text-yellow-500" />
@@ -91,7 +94,7 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                 {displayEmail && (
                   <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
                     <Mail className="w-4 h-4" />
-                    <span>{isLoading ? <Skeleton className="h-4 w-48" /> : displayEmail}</span>
+                    <span>{loading ? <Skeleton className="h-4 w-48" /> : displayEmail}</span>
                   </div>
                 )}
 
@@ -138,32 +141,29 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Crown className="w-5 h-5 text-yellow-600" />
-                    <span className="font-medium text-yellow-800">
-                      Jornada Plus
-                    </span>
+                    <span className="font-medium text-yellow-800">Jornada Plus</span>
                   </div>
                   <button
                     onClick={togglePlus}
                     className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                      user?.isPlus ? 'bg-yellow-500' : 'bg-gray-200'
+                      user?.isPlus ? "bg-yellow-500" : "bg-gray-200"
                     }`}
                   >
                     <span
                       className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                        user?.isPlus ? 'translate-x-6' : 'translate-x-1'
+                        user?.isPlus ? "translate-x-6" : "translate-x-1"
                       }`}
                     />
                   </button>
                 </div>
                 <p className="text-xs text-yellow-700 mt-2">
                   {user?.isPlus
-                    ? "Assinatura ativa - Aproveite todos os benefícios!"
-                    : "Desbloqueie áudios e recursos premium"
-                  }
+                    ? "Assinatura ativa — Aproveite todos os benefícios!"
+                    : "Desbloqueie áudios e recursos premium"}
                 </p>
               </motion.div>
 
-              {/* Botão sair da conta */}
+              {/* Botão sair */}
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -190,7 +190,6 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                   Fechar
                 </AppButton>
               </motion.div>
-
             </motion.div>
           </DialogContent>
         </Dialog>
