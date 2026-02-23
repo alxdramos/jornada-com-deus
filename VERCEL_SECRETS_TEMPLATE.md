@@ -32,7 +32,7 @@ openssl rand -base64 32
 ### 2. AUTH_GOOGLE_ID (Do Google Cloud)
 ```
 Nome: AUTH_GOOGLE_ID
-Valor: 1051426960448-2d9pbmdtebcbea5896577nkkdhu64jf5.apps.googleusercontent.com
+Valor: [SEU_GOOGLE_CLIENT_ID].apps.googleusercontent.com
 Tipo: Plain text (não é sensível, público)
 Ambientes: Production, Preview, Development
 ```
@@ -44,7 +44,7 @@ Ambientes: Production, Preview, Development
 ### 3. AUTH_GOOGLE_SECRET (SENSÍVEL)
 ```
 Nome: AUTH_GOOGLE_SECRET
-Valor: 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
+Valor: [SEU_GOOGLE_CLIENT_SECRET]
 Tipo: Secret (encriptado)
 Ambientes: Production, Preview, Development
 ```

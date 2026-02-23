@@ -48,8 +48,8 @@ Settings → API:
 
 ### 1.4 Configurar Google OAuth
 1. Authentication → Providers → Google
-2. Client ID: `1051426960448-2d9pbmdtebcbea5896577nkkdhu64jf5.apps.googleusercontent.com`
-3. Client Secret: `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`
+2. Client ID: `[SEU_GOOGLE_CLIENT_ID].apps.googleusercontent.com`
+3. Client Secret: `[SEU_GOOGLE_CLIENT_SECRET]`
 4. Salvar
 
 **IMPORTANTE**: Adicionar URL callback ao Google Cloud:

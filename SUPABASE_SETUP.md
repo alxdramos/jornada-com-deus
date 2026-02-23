@@ -36,8 +36,8 @@ SUPABASE_SERVICE_ROLE_KEY = eyJhbGc... (Service Role key)
 ### Passo 1.4: Configurar Google OAuth no Supabase
 1. Dashboard → Authentication → Providers
 2. Google → Enable
-3. Client ID: `1051426960448-2d9pbmdtebcbea5896577nkkdhu64jf5.apps.googleusercontent.com`
-4. Client Secret: `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`
+3. Client ID: `[SEU_GOOGLE_CLIENT_ID].apps.googleusercontent.com`
+4. Client Secret: `[SEU_GOOGLE_CLIENT_SECRET]`
 5. Authorized redirect URLs (Supabase fornece uma específica)
 6. Salvar
 
