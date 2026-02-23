@@ -9,7 +9,45 @@ const nextConfig: NextConfig = {
         port: "",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "pub-561f3fcecd8945ba90a5b9c1683fac22.r2.dev",
+        port: "",
+        pathname: "/**",
+      },
     ],
+  },
+
+  async headers() {
+    return [
+      {
+        // Service Worker deve ter escopo máximo e sem cache de arquivo
+        source: "/sw.js",
+        headers: [
+          { key: "Cache-Control",               value: "no-cache, no-store, must-revalidate" },
+          { key: "Service-Worker-Allowed",       value: "/" },
+          { key: "X-Content-Type-Options",       value: "nosniff" },
+        ],
+      },
+      {
+        // Manifest sem cache agressivo
+        source: "/manifest.json",
+        headers: [
+          { key: "Cache-Control",               value: "public, max-age=0, must-revalidate" },
+          { key: "Content-Type",                value: "application/manifest+json" },
+        ],
+      },
+      {
+        // Headers gerais de segurança para todas as rotas
+        source: "/(.*)",
+        headers: [
+          { key: "X-Frame-Options",             value: "SAMEORIGIN" },
+          { key: "X-Content-Type-Options",       value: "nosniff" },
+          { key: "Referrer-Policy",              value: "strict-origin-when-cross-origin" },
+          { key: "Permissions-Policy",           value: "camera=(), microphone=(), geolocation=()" },
+        ],
+      },
+    ];
   },
 };
 

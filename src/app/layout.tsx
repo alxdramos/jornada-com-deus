@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { OfflineIndicator } from "@/components/OfflineIndicator";
+import { ServiceWorkerRegistration } from "@/components/ServiceWorkerRegistration";
 import { Toaster } from "sonner";
 import { SessionProvider } from "@/components/providers/SessionProvider";
 import { AuthSyncWrapper } from "@/components/AuthSyncWrapper";
@@ -61,6 +62,7 @@ export default function RootLayout({
         <Suspense fallback={<div className="w-screen h-screen flex items-center justify-center">Carregando...</div>}>
           <SessionProvider>
             <AuthSyncWrapper>
+              <ServiceWorkerRegistration />
               <OfflineIndicator />
               {children}
               <Toaster position="top-center" richColors closeButton />
