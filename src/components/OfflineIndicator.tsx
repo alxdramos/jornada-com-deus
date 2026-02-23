@@ -13,14 +13,13 @@ export function OfflineIndicator() {
   useEffect(() => {
     if (!isOnline) {
       showError(
-        "Você está offline. A leitura da Bíblia requer conexão com a internet.",
+        "Sem conexão com a internet. Conteúdo em cache disponível offline.",
         { duration: 6000 }
       );
     } else if (wasOffline) {
-      showSuccess(
-        "Conexão restaurada! Você pode continuar lendo a Bíblia.",
-        { duration: 4000 }
-      );
+      showSuccess("Conexão restaurada! Tudo funcionando normalmente.", {
+        duration: 4000,
+      });
     }
   }, [isOnline, wasOffline, showError, showSuccess]);
 
@@ -33,15 +32,17 @@ export function OfflineIndicator() {
           exit={{ y: -100, opacity: 0 }}
           className="fixed top-0 left-0 right-0 z-[1000] bg-red-500 text-white px-4 py-3 shadow-lg"
         >
-          <div className="flex items-center justify-center gap-2">
-            <WifiOff className="w-4 h-4" />
-            <span className="text-sm font-medium">Sem conexão - Bíblia indisponível</span>
+          <div className="flex items-center justify-between w-full max-w-md mx-auto">
+            <div className="flex items-center gap-2">
+              <WifiOff className="w-4 h-4 flex-shrink-0" />
+              <span className="text-sm font-medium">Você está offline – conteúdo limitado</span>
+            </div>
             <button
               onClick={() => window.location.reload()}
-              className="ml-2 p-1 rounded hover:bg-red-600 transition-colors"
-              title="Tentar novamente"
+              className="flex items-center gap-1 text-xs font-semibold bg-red-600 hover:bg-red-700 px-3 py-1 rounded-full transition-colors flex-shrink-0"
             >
-              <RefreshCw className="w-4 h-4" />
+              <RefreshCw className="w-3 h-3" />
+              Tentar novamente
             </button>
           </div>
         </motion.div>
@@ -57,7 +58,7 @@ export function OfflineIndicator() {
         >
           <div className="flex items-center justify-center gap-2">
             <Wifi className="w-4 h-4" />
-            <span className="text-sm font-medium">Conexão restaurada - Bíblia disponível</span>
+            <span className="text-sm font-medium">Conexão restaurada – tudo disponível</span>
           </div>
         </motion.div>
       )}
