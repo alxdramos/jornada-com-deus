@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useTabStore } from "@/stores/tabStore";
 import { Header } from "@/components/layout";
 import { TabHoje } from "@/components/tabs/TabHoje";
@@ -10,9 +11,22 @@ import { TabMeditacoes } from "@/components/tabs/TabMeditacoes";
 import { TabDiario } from "@/components/tabs/TabDiario";
 import { BottomNav } from "@/components/BottomNav";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { InstallPromptModal } from "@/components/InstallPromptModal";
+import { useInstallPrompt } from "@/hooks/useInstallPrompt";
 
 export function HomeContent() {
   const activeTab = useTabStore((s) => s.activeTab);
+  const [isLoadingInstall, setIsLoadingInstall] = useState(false);
+  const { isOpen, platform, handleInstall, handleDismiss, closeModal } = useInstallPrompt();
+
+  const handleInstallClick = async () => {
+    setIsLoadingInstall(true);
+    try {
+      await handleInstall();
+    } finally {
+      setIsLoadingInstall(false);
+    }
+  };
 
   return (
     <>
@@ -36,6 +50,15 @@ export function HomeContent() {
         {activeTab === "diario" && <TabDiario />}
       </ErrorBoundary>
       <BottomNav />
+
+      {/* PWA Install Prompt */}
+      <InstallPromptModal
+        isOpen={isOpen}
+        platform={platform}
+        onInstall={handleInstallClick}
+        onDismiss={handleDismiss}
+        isLoading={isLoadingInstall}
+      />
     </>
   );
 }
