@@ -53,11 +53,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     initializeAuth()
 
-    // Listen for auth changes
+    // Escuta mudanças de auth (login, logout, refresh de token)
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, newSession) => {
+        console.log('[Auth] Evento:', event, '| Usuário:', newSession?.user?.email ?? 'nenhum')
         setSession(newSession)
         setUser(newSession?.user ?? null)
+        // Garante que loading é false após qualquer mudança de auth
+        setLoading(false)
       }
     )
 
