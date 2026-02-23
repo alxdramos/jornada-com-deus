@@ -1,0 +1,264 @@
+================================================================================
+  ARQUITETURA FINAL: Sincronizar Meditações do Google Sheets - Aba Explorar
+================================================================================
+
+Data: 22 de Fevereiro de 2026
+Arquiteto: Aria (@architect)
+Status: ✅ PRONTO PARA IMPLEMENTAÇÃO
+
+================================================================================
+  1. ESCOPO CORRIGIDO
+================================================================================
+
+ANTES (Interpretação Errada):
+  ❌ Adicionar 17 meditações na aba "Orações"
+  ❌ Manter orações e meditações misturadas
+
+AGORA (Interpretação Correta):
+  ✅ Sincronizar TODAS as meditações do Google Sheets
+  ✅ Deletar meditações hardcoded (exemplos)
+  ✅ Popular 100% de dados do Sheets na aba "Explorar"
+  ✅ Orações (Orações.tsx) = somente orações (intacta)
+  ✅ Explorar (Explorar.tsx) = meditações + escrituras + novo (expandido)
+
+================================================================================
+  2. O QUE FAZER (RESUMIDO)
+================================================================================
+
+FASE 1: Sincronização de Dados (1-2h, XS)
+────────────────────────────────────────
+  Arquivo: scripts/sync-meditacoes.ts (NOVO)
+  
+  1. Conectar ao Google Sheets (SheetsClient existente)
+  2. Buscar aba "Meditacoes" (confirmar nome)
+  3. Extrair TODAS as meditações
+  4. Mapear para interface MeditationCard
+  5. Deletar meditações hardcoded antigas
+  6. Regenerar src/data/meditacoes.ts
+
+  Comando: npm run sync:meditacoes
+
+FASE 2: Validação de Estrutura (1h, XS)
+────────────────────────────────────────
+  Testar que:
+  - TODAS as meditações carregam sem erro
+  - Filtros funcionam
+  - Paginação OK
+  - Áudio toca (CORS OK)
+
+FASE 3: QA E2E (2h, S)
+────────────────────────────────────────
+  - Teste manual completo
+  - Performance (<3s, <200KB)
+  - Responsividade
+  - Sem erros (console, lint, typecheck)
+
+TOTAL: 4-5 horas | Esforço: S (Small)
+
+================================================================================
+  3. INFRAESTRUTURA (100% Reutilizável - Sem Novos Componentes)
+================================================================================
+
+✅ TabExplorar.tsx          (container principal)
+✅ ExploreFilters.tsx       (filtros)
+✅ MeditationCard.tsx       (card visual)
+✅ AllContentModal.tsx      (modal "VER TUDO")
+✅ MeditationPlayer.tsx     (player de áudio)
+✅ ContentSection.tsx       (seção)
+✅ useFavorites hook        (sistema de favoritos)
+✅ /api/audio proxy         (CORS para R2)
+
+NENHUM NOVO COMPONENTE NECESSÁRIO.
+
+================================================================================
+  4. ARQUIVO PRINCIPAL A MODIFICAR
+================================================================================
+
+src/data/meditacoes.ts
+
+ANTES (Com exemplos hardcoded):
+──────────────────────────────
+export const MEDITACOES: MeditationCard[] = [
+  { id: "renovacao-ceu-infinito", title: "Renovação...", ... },
+  { id: "paz-aguas-tranquilas", title: "A Paz...", ... },
+  // 4-6 items mais (TEMPORÁRIOS)
+];
+
+DEPOIS (100% Google Sheets):
+────────────────────────────
+// AUTO-GERADO por scripts/sync-meditacoes.ts
+
+export const MEDITACOES: MeditationCard[] = [
+  { id: "medit-001", title: "...", audioUrl: "...", ... },
+  { id: "medit-002", title: "...", audioUrl: "...", ... },
+  // N items (TODOS do Google Sheets)
+];
+
+export const MEDITACOES_COUNT = N;
+
+================================================================================
+  5. FLUXO DE DADOS
+================================================================================
+
+Google Sheets ("Meditacoes" aba)
+         ↓
+scripts/sync-meditacoes.ts
+  ├─ Extrai TODAS as meditações
+  ├─ Mapeia campos (titulo → title)
+  ├─ Valida URLs de áudio
+  └─ Regenera meditacoes.ts
+         ↓
+src/data/meditacoes.ts
+  ├─ export const MEDITACOES
+  ├─ export const MEDITACOES_COUNT
+  └─ [100% dados do Sheets]
+         ↓
+TabExplorar.tsx (sem mudanças)
+  ├─ Carrega MEDITACOES
+  ├─ Exibe 4 cards iniciais
+  ├─ "VER TUDO" → modal com TODAS
+  └─ Paginação funciona
+         ↓
+Usuário vê:
+  • Explorar tab com todas as meditações do Sheets
+  • Filtros funcionam
+  • Áudio toca (sem CORS)
+  • Responsivo e rápido
+
+================================================================================
+  6. CHECKLIST DE ACEITAÇÃO
+================================================================================
+
+PRÉ-IMPLEMENTAÇÃO:
+─────────────────
+[ ] Confirmar nome exato da aba no Google Sheets ("Meditacoes"?)
+[ ] Confirmar nomes das colunas (titulo, descricao, audioUrl, etc)
+[ ] Confirmar quantas meditações no total (N = ?)
+[ ] Validar que URLs de áudio existem (HTTP 200)
+
+FASE 1:
+───────
+[ ] scripts/sync-meditacoes.ts criado
+[ ] npm run sync:meditacoes executa sem erros
+[ ] Todas as meditações do Sheets carregadas
+[ ] Meditações hardcoded deletadas
+[ ] npm run typecheck = 0 erros
+
+FASE 2:
+───────
+[ ] Meditações aparecem em Explorar (4 iniciais)
+[ ] "VER TUDO" modal exibe TODAS
+[ ] Filtro MENTE funciona
+[ ] Filtro CORPO funciona
+[ ] Filtro ESPÍRITO funciona
+[ ] Chip PAZ funciona
+[ ] Áudio toca sem CORS error
+[ ] Paginação OK (20/página)
+
+FASE 3:
+───────
+[ ] E2E completo: navegar → tocar → favoritar
+[ ] Nenhum erro no console
+[ ] Mobile (375px) responsivo
+[ ] Desktop (1920px) responsivo
+[ ] npm run lint = 0 erros
+[ ] npm run build = sucesso
+[ ] Bundle size delta < 200KB
+[ ] Carregamento < 3s
+
+================================================================================
+  7. ESTRUTURA DE DADOS
+================================================================================
+
+Interface MeditationCard:
+
+export interface MeditationCard {
+  id: string;              // "medit-001"
+  title: string;           // "Meditação 1"
+  duration: string;        // "12 min"
+  category: string;        // "MENTE" | "CORPO" | "ESPÍRITO"
+  plus: boolean;           // Requer Plus?
+  description?: string;    // Primeiras 200 chars
+  tags: string[];          // ["PAZ", "DORMIR"]
+  image?: string;          // URL imagem
+  audioUrl?: string;       // URL R2
+}
+
+Mapeamento de Colunas (Excel → TypeScript):
+
+  titulo           →  title
+  descricao        →  description (substring 200)
+  audioUrl         →  audioUrl (validar HTTP 200)
+  duracao_min      →  duration (`${min} min`)
+  categoria        →  category (mente→MENTE, corpo→CORPO, etc)
+  tags             →  tags (split(","), uppercase)
+  imagem_url       →  image (Unsplash default se vazio)
+
+================================================================================
+  8. RISCO & MITIGAÇÃO
+================================================================================
+
+Risco                           | Probabilidade | Impacto | Mitigação
+─────────────────────────────── | ───────────── | ─────── | ──────────
+Sheets vazio/mal estruturado    | MÉDIA         | CRÍTICO | Validar ANTES
+URLs de áudio inválidas         | BAIXA         | MÉDIO   | Validar HTTP 200
+Filtros/tags não mapeiam        | BAIXA         | MÉDIO   | Testar cada um
+Performance com muitas items    | BAIXA         | BAIXO   | Paginação (20/pág)
+Perda de dados (delete)         | BAIXA         | BAIXO   | Backup se necessário
+
+================================================================================
+  9. ESFORÇO ESTIMADO
+================================================================================
+
+Fase | Tarefa                    | Duração | Esforço
+──── | ─────────────────────────── | ─────── | ────────
+1    | Criar sync script          | 45 min  | XS
+1    | Sincronizar dados          | 15 min  | XS
+2    | Validar estrutura          | 1h      | XS
+3    | Testes E2E + QA            | 2h      | S
+─    | Overhead/fixes             | 30 min  | XS
+──── | ─────────────────────────── | ─────── | ────────
+     | TOTAL                       | 4-5h    | S
+
+================================================================================
+  10. PRÓXIMOS PASSOS IMEDIATOS
+================================================================================
+
+1. VALIDAR Google Sheets com usuário:
+   ✓ Nome da aba exato
+   ✓ Nomes das colunas exatos
+   ✓ Número total de meditações (N)
+
+2. Criar scripts/sync-meditacoes.ts
+   
+3. Executar npm run sync:meditacoes
+
+4. Testar FASES 2 & 3
+
+5. Commit + PR
+
+================================================================================
+  11. ARQUIVOS DE REFERÊNCIA
+================================================================================
+
+Documentação Completa:
+  ├─ PLANO_MEDITACOES_EXPLORAR.md (detalhado)
+  ├─ RESUMO_ARQUITETURA_EXPLORAR.md (executivo)
+  └─ ARQUITETURA_FINAL_MEDITACOES.txt (este arquivo)
+
+Código Existente (modelo):
+  ├─ scripts/sync-oracoes.ts (usar como base)
+  ├─ src/lib/sheets-client.ts (usar para conexão)
+  ├─ src/components/tabs/explorar/ (componentes)
+  └─ src/data/meditacoes.ts (será regenerado)
+
+================================================================================
+  STATUS: ✅ PRONTO PARA IMPLEMENTAÇÃO
+================================================================================
+
+Aprovado por: Aria (@architect)
+Data: 22 de Fevereiro de 2026
+Complexidade: MEDIUM (M)
+Risco Geral: BAIXO-MÉDIO (padrão bem estabelecido, reutilização 100%)
+
+================================================================================

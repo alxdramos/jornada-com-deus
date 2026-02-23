@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+@theme {
+  /* ─── Paleta Minha Jornada Diária ─── */
+  --color-background:     #FAF9F6;
+  --color-surface:        #FFFFFF;
+  --color-surface-2:      #F5F3EF;
+
+  --color-primary:        #FB923C;
+  --color-primary-hover:  #F97316;
+  --color-primary-light:  #FEF3E2;
+
+  --color-secondary:      #10B981;
+  --color-secondary-light:#3FDFB8;
+  --color-secondary-pale: #ECFDF5;
+
+  --color-accent:         #C98989;
+  --color-accent-light:   #FDF2F2;
+  --color-blue-pale:      #E0F2FE;
+
+  --color-text:           #1F2937;
+  --color-text-muted:     #6B7280;
+  --color-text-light:     #9CA3AF;
+
+  --color-border:         #E5E7EB;
+  --color-border-subtle:  #F3F4F6;
+
+  /* ─── Tipografia ─── */
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+
+  /* ─── Radius ─── */
+  --radius-sm:   8px;
+  --radius-md:   12px;
+  --radius-lg:   16px;
+  --radius-xl:   24px;
+  --radius-2xl:  32px;
+  --radius-full: 9999px;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar sutil */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #D1D5DB; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #9CA3AF; }
+
+/* Seleção com cor primária */
+::selection {
+  background-color: #FEF3E2;
+  color: #FB923C;
+}
+
+/* Gradientes utilitários */
+.gradient-hero {
+  background: radial-gradient(ellipse 80% 60% at 60% 40%, #FEF3E2 0%, transparent 60%),
+              radial-gradient(ellipse 60% 50% at 30% 80%, #ECFDF5 0%, transparent 55%),
+              #FAF9F6;
+}
+
+.gradient-mission {
+  background: linear-gradient(135deg, #E0F2FE 0%, #ECFDF5 50%, #FEF3E2 100%);
+}
+
+.gradient-cta {
+  background: linear-gradient(135deg, #3FDFB8 0%, #10B981 40%, #FB923C 100%);
+}
