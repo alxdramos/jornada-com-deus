@@ -1,22 +1,32 @@
 /**
  * Supabase client configuration
  *
- * IMPORTANT: This uses the ANON KEY for browser/client-side operations.
- * For server-side operations, use the SERVICE_ROLE_KEY via environment variables.
+ * Variáveis com NEXT_PUBLIC_ são expostas ao browser.
+ * Variáveis sem prefixo são server-only (nunca chegam ao cliente).
  */
 
 import { createClient } from "@supabase/supabase-js";
 
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
+// Variáveis públicas (browser + server)
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error("Missing Supabase environment variables");
+  throw new Error(
+    "Variáveis NEXT_PUBLIC_SUPABASE_URL e NEXT_PUBLIC_SUPABASE_ANON_KEY são obrigatórias"
+  );
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Cliente público — usado em componentes client-side e server-side
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+    detectSessionInUrl: true,
+  },
+});
 
-// For server-side operations with elevated permissions
+// Cliente admin — server-side only, nunca expor ao browser
 export const supabaseAdmin = createClient(
   supabaseUrl,
   process.env.SUPABASE_SERVICE_ROLE_KEY || supabaseAnonKey,

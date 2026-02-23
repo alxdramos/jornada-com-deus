@@ -1,18 +1,14 @@
 "use client"
 
-
-
 import { useState } from "react"
-
 import { useRouter } from "next/navigation"
-
 import { Eye, EyeOff, Loader2, AlertCircle } from "lucide-react"
-
 import Link from "next/link"
-
 import { useAuth } from "@/contexts/AuthContext"
+
 export function CredentialsLoginForm() {
   const router = useRouter();
+  const { signIn } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -25,22 +21,11 @@ export function CredentialsLoginForm() {
     setLoading(true);
 
     try {
-      const result = await signIn("credentials", {
-        email: email.trim(),
-        password,
-        redirect: false, // Tratamos o redirect manualmente para exibir erros
-      });
-
-      if (result?.error) {
-        setError("E-mail ou senha incorretos. Verifique seus dados.");
-        return;
-      }
-
-      // Login bem-sucedido — redirecionar para a home
+      await signIn(email.trim(), password);
       router.push("/");
       router.refresh();
     } catch {
-      setError("Ocorreu um erro inesperado. Tente novamente.");
+      setError("E-mail ou senha incorretos. Verifique seus dados.");
     } finally {
       setLoading(false);
     }

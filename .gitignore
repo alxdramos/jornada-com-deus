@@ -17,6 +17,16 @@ build/
 *.log
 logs/
 
+# Next.js
+.next/
+out/
+next-env.d.ts
+*.tsbuildinfo
+
+# PWA generated files
+public/sw.js
+public/workbox-*.js
+
 # IDE & OS (AIOS)
 .DS_Store
 Thumbs.db

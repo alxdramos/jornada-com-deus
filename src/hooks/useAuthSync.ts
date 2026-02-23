@@ -1,81 +1,72 @@
 import { useEffect } from 'react';
-import { useSession } from 'next-auth/react';
+import { useAuth } from '@/contexts/AuthContext';
 import { useUserStore } from '@/stores/userStore';
 import { useProgressStore } from '@/stores/progressStore';
 import { db } from '@/lib/db';
-import type { User as DexieUser, Progress as DexieProgress } from '@/lib/db';
 
 export function useAuthSync() {
-  const { data: session, status } = useSession();
-  const { user: zustandUser, setUser, updateUser, clearUser } = useUserStore();
-  const { progress: zustandProgress } = useProgressStore();
+  const { user: supabaseUser, loading } = useAuth();
+  const { user: zustandUser, setUser, clearUser } = useUserStore();
 
   useEffect(() => {
     const syncUserData = async () => {
-      if (status === 'loading') return;
+      if (loading) return;
 
-      if (session?.user && status === 'authenticated') {
+      if (supabaseUser) {
         try {
+          const email = supabaseUser.email!;
+          const name = supabaseUser.user_metadata?.full_name
+            || supabaseUser.user_metadata?.name
+            || email.split('@')[0];
+          const avatar = supabaseUser.user_metadata?.avatar_url
+            || supabaseUser.user_metadata?.picture
+            || undefined;
+
           // Buscar usuário existente no Dexie pelo email
-          const existingDexieUser = await db.users.where('email').equals(session.user.email!).first();
+          const existingDexieUser = await db.users.where('email').equals(email).first();
 
           if (existingDexieUser) {
-            // Usuário existe - atualizar dados básicos e carregar progresso
-            console.log('🔄 Usuário existente encontrado, sincronizando dados...');
+            await db.users.update(existingDexieUser.id!, { name, avatar });
 
-            // Atualizar dados básicos no Dexie (preservando progresso)
-            await db.users.update(existingDexieUser.id!, {
-              name: session.user.name!,
-              avatar: session.user.image || undefined,
-            });
+            const userProgress = await db.progress
+              .where('userId')
+              .equals(existingDexieUser.id!)
+              .first();
 
-            // Buscar progresso associado ao usuário
-            const userProgress = await db.progress.where('userId').equals(existingDexieUser.id!).first();
-
-            // Atualizar Zustand com dados do Dexie
             setUser({
               id: existingDexieUser.id!,
-              name: session.user.name!,
-              email: session.user.email!,
+              name,
+              email,
               isPlus: existingDexieUser.isPlus,
-              avatar: session.user.image || undefined,
+              avatar,
               createdAt: existingDexieUser.createdAt,
             });
 
-            // Se há progresso no Dexie, sincronizar com Zustand
             if (userProgress) {
-              // Sincronizar progresso do Dexie com Zustand
               const progressStore = useProgressStore.getState();
-              const syncedProgress = {
-                currentStreak: userProgress.streak,
-                maxStreak: Math.max(progressStore.progress.maxStreak, userProgress.streak),
-                totalXp: userProgress.xp,
-                level: userProgress.level,
-                treeLevel: userProgress.treeLevel,
-                lastCompletedDate: userProgress.lastCompletedDate || null,
-                completedDays: Math.floor(userProgress.xp / 75), // Estimativa baseada no XP
-                completedDates: [], // TODO: Implementar sync de datas específicas se necessário
-              };
-
-              // Atualizar Zustand com progresso sincronizado
-              useProgressStore.setState({ progress: syncedProgress });
-              console.log('📊 Progresso sincronizado para usuário:', syncedProgress);
+              useProgressStore.setState({
+                progress: {
+                  currentStreak: userProgress.streak,
+                  maxStreak: Math.max(progressStore.progress.maxStreak, userProgress.streak),
+                  totalXp: userProgress.xp,
+                  level: userProgress.level,
+                  treeLevel: userProgress.treeLevel,
+                  lastCompletedDate: userProgress.lastCompletedDate || null,
+                  completedDays: Math.floor(userProgress.xp / 75),
+                  completedDates: [],
+                },
+              });
             }
-
           } else {
-            // Usuário não existe - criar novo perfil
-            console.log('🆕 Criando novo perfil para usuário autenticado...');
-
-            // Criar usuário no Dexie
+            // Novo usuário — criar perfil local
             const newUserId = await db.users.add({
-              name: session.user.name!,
-              email: session.user.email!,
-              isPlus: false, // Novos usuários começam como free
-              avatar: session.user.image || undefined,
+              name,
+              email,
+              isPlus: false,
+              avatar,
               createdAt: new Date(),
             });
 
-            // Criar progresso inicial para o novo usuário
             await db.progress.add({
               streak: 0,
               xp: 0,
@@ -85,55 +76,44 @@ export function useAuthSync() {
               lastCompletedDate: undefined,
             });
 
-            // Atualizar Zustand com o novo usuário
             setUser({
               id: newUserId,
-              name: session.user.name!,
-              email: session.user.email!,
+              name,
+              email,
               isPlus: false,
-              avatar: session.user.image || undefined,
+              avatar,
               createdAt: new Date(),
             });
-
-            console.log('✅ Novo perfil criado com sucesso!');
           }
-
         } catch (error) {
-          console.error('❌ Erro ao sincronizar dados do usuário:', error);
+          console.error('[AuthSync] Erro ao sincronizar dados do usuário:', error);
         }
-
-      } else if (status === 'unauthenticated') {
-        // Usuário não está autenticado - limpar dados sensíveis do Zustand
-        // mas manter dados locais no Dexie para uso offline
-        console.log('🚪 Usuário deslogado, limpando sessão...');
+      } else {
+        // Sem sessão Supabase — limpar estado Zustand (mantém Dexie para offline)
         clearUser();
       }
     };
 
     syncUserData();
-  }, [session, status, setUser, clearUser]);
+  }, [supabaseUser, loading, setUser, clearUser]);
 
-  // Função auxiliar para obter dados do usuário atual (útil para outras partes do app)
   const getCurrentUserData = async () => {
     if (!zustandUser?.email) return null;
-
     try {
       const dexieUser = await db.users.where('email').equals(zustandUser.email).first();
-      const userProgress = dexieUser ? await db.progress.where('userId').equals(dexieUser.id!).first() : null;
-
-      return {
-        user: dexieUser,
-        progress: userProgress,
-      };
+      const userProgress = dexieUser
+        ? await db.progress.where('userId').equals(dexieUser.id!).first()
+        : null;
+      return { user: dexieUser, progress: userProgress };
     } catch (error) {
-      console.error('❌ Erro ao buscar dados do usuário atual:', error);
+      console.error('[AuthSync] Erro ao buscar dados do usuário:', error);
       return null;
     }
   };
 
   return {
-    isAuthenticated: status === 'authenticated',
-    isLoading: status === 'loading',
+    isAuthenticated: !!supabaseUser,
+    isLoading: loading,
     user: zustandUser,
     getCurrentUserData,
   };
