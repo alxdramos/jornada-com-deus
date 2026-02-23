@@ -28,20 +28,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try {
         setLoading(true)
 
-        // Get initial session
-        const { data: { session: initialSession }, error: sessionError } =
-          await supabase.auth.getSession()
+        // Timeout de segurança: se demorar mais de 6s, considera sem sessão
+        const timeoutPromise = new Promise<null>((resolve) =>
+          setTimeout(() => resolve(null), 6000)
+        )
 
-        if (sessionError) {
-          console.error('[Auth] Session error:', sessionError)
-          setError(sessionError.message)
-        } else {
-          setSession(initialSession)
-          setUser(initialSession?.user ?? null)
-        }
+        const sessionPromise = supabase.auth.getSession().then(({ data, error }) => {
+          if (error) throw error
+          return data.session
+        })
+
+        const initialSession = await Promise.race([sessionPromise, timeoutPromise])
+
+        setSession(initialSession)
+        setUser(initialSession?.user ?? null)
       } catch (err) {
         console.error('[Auth] Initialization error:', err)
-        const message = err instanceof Error ? err.message : 'Authentication initialization failed'
+        const message = err instanceof Error ? err.message : 'Erro ao inicializar autenticação'
         setError(message)
       } finally {
         setLoading(false)
@@ -102,12 +105,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${origin}/`,
+          // Rota de callback que troca o code por sessão no servidor
+          redirectTo: `${origin}/auth/callback`,
         },
       })
       if (error) throw error
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Google sign in failed'
+      const message = err instanceof Error ? err.message : 'Erro ao entrar com Google'
       console.error('[Auth] Google sign in error:', err)
       setError(message)
       throw err

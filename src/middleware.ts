@@ -2,16 +2,13 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 
-// Rotas que exigem autenticação
 const protectedRoutes = ['/', '/explorar', '/biblia', '/oracoes', '/meditacoes', '/diario', '/perfil'];
-
-// Rotas públicas (redirecionar para / se já autenticado)
 const authRoutes = ['/login', '/cadastro'];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Ignorar assets estáticos e rotas internas do Next.js
+  // Ignorar assets estáticos, API routes e arquivos com extensão
   if (
     pathname.startsWith('/_next') ||
     pathname.startsWith('/api') ||
@@ -21,17 +18,23 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  // Se as variáveis não estiverem configuradas, deixar passar sem bloquear
+  if (!supabaseUrl || !supabaseAnonKey) {
+    console.warn('[Middleware] Variáveis Supabase não configuradas — ignorando proteção de rota');
+    return NextResponse.next();
+  }
+
   const response = NextResponse.next({
-    request: {
-      headers: request.headers,
-    },
+    request: { headers: request.headers },
   });
 
-  // Criar cliente Supabase para o Edge Runtime
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
+  let user = null;
+
+  try {
+    const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
       cookies: {
         getAll() {
           return request.cookies.getAll();
@@ -45,27 +48,28 @@ export async function middleware(request: NextRequest) {
           );
         },
       },
-    }
-  );
+    });
 
-  // Validar sessão (atualiza cookies se necessário)
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+    const { data } = await supabase.auth.getUser();
+    user = data.user;
+  } catch (err) {
+    // Se o Supabase não responder, deixar a página carregar normalmente
+    // A proteção client-side ainda funciona via AuthContext
+    console.error('[Middleware] Erro ao verificar sessão:', err);
+    return NextResponse.next();
+  }
 
   const isProtected = protectedRoutes.some(
     (route) => pathname === route || pathname.startsWith(route + '/')
   );
   const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route));
 
-  // Sem sessão tentando acessar rota protegida → redirecionar para /login
   if (!user && isProtected) {
     const loginUrl = new URL('/login', request.url);
     loginUrl.searchParams.set('redirect', pathname);
     return NextResponse.redirect(loginUrl);
   }
 
-  // Com sessão tentando acessar /login ou /cadastro → redirecionar para /
   if (user && isAuthRoute) {
     return NextResponse.redirect(new URL('/', request.url));
   }
@@ -74,13 +78,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    /*
-     * Rodar em todas as rotas exceto:
-     * - _next/static (arquivos estáticos)
-     * - _next/image (otimização de imagens)
-     * - favicon.ico
-     */
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
-  ],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)'],
 };
