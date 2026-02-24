@@ -1,0 +1,78 @@
+'use client';
+
+import { useState } from 'react';
+import { ESTUDOS, EstudoBiblico, CATEGORIAS_ESTUDOS } from '@/data/estudos';
+import { UserHeader } from '@/components/layout/UserHeader';
+import { Chip } from '@/components/atoms/Chip';
+import { ContentSection } from './explorar/ContentSection';
+import { EstudoCard } from './estudos/EstudoCard';
+import { EstudoDetailModalWithPlayer } from './estudos/EstudoDetailModalWithPlayer';
+import { useFavorites } from '@/hooks/useFavorites';
+import { BookOpen } from 'lucide-react';
+
+export function TabEstudos() {
+  const { toggleFavorite, isFavorite } = useFavorites();
+  const [selectedEstudo, setSelectedEstudo] = useState<EstudoBiblico | null>(null);
+  const [chipAtivo, setChipAtivo] = useState("TUDO");
+
+  const categorias = Array.from(CATEGORIAS_ESTUDOS).filter(cat => {
+    if (cat === "TUDO") return true;
+    return ESTUDOS.some(e => e.category === cat);
+  });
+
+  const estudosFiltrados = ESTUDOS.filter(estudo => {
+    return chipAtivo === "TUDO" || estudo.category === chipAtivo;
+  });
+
+  return (
+    <>
+      <div className="min-h-screen bg-bg-primary p-6 pb-28">
+        <div className="max-w-4xl mx-auto space-y-6">
+          <UserHeader
+            title="Estudos Bíblicos"
+            rightElement={
+              <div className="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center">
+                <BookOpen className="w-5 h-5 text-amber-600" />
+              </div>
+            }
+          />
+
+          <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+            {categorias.map((cat) => (
+              <Chip
+                key={cat}
+                label={cat}
+                selected={chipAtivo === cat}
+                onClick={() => setChipAtivo(cat)}
+              />
+            ))}
+          </div>
+
+          <ContentSection
+            title="Estudos Bíblicos"
+            emptyState="Nenhum estudo encontrado com esses filtros"
+          >
+            {estudosFiltrados.map((estudo) => (
+              <EstudoCard
+                key={estudo.id}
+                estudo={estudo}
+                isFavorite={isFavorite(estudo.id)}
+                onPlay={setSelectedEstudo}
+                onFavorite={toggleFavorite}
+              />
+            ))}
+          </ContentSection>
+        </div>
+      </div>
+
+      {selectedEstudo && (
+        <EstudoDetailModalWithPlayer
+          estudo={selectedEstudo}
+          isFavorite={isFavorite(selectedEstudo.id)}
+          onClose={() => setSelectedEstudo(null)}
+          onToggleFavorite={toggleFavorite}
+        />
+      )}
+    </>
+  );
+}
