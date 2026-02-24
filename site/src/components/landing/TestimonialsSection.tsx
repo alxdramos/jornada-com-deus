@@ -55,26 +55,34 @@ export function TestimonialsSection() {
   const inView = useInView(ref, { once: true, margin: '-60px' });
 
   return (
-    <section id="depoimentos" className="py-20 sm:py-28 bg-[#FAF9F6]">
+    <section id="depoimentos" className="py-24 sm:py-32 bg-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
 
         {/* Header */}
-        <div className="text-center mb-14" ref={ref}>
+        <div className="text-center mb-16" ref={ref}>
           <motion.span
             initial={{ opacity: 0 }}
             animate={inView ? { opacity: 1 } : {}}
             className="text-xs font-semibold tracking-widest text-[#10B981] uppercase"
           >
-            Depoimentos
+            Depoimentos reais
           </motion.span>
           <motion.h2
             initial={{ opacity: 0, y: 16 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.1, duration: 0.6 }}
-            className="mt-3 text-3xl sm:text-4xl font-bold text-[#1F2937]"
+            className="mt-3 text-3xl sm:text-4xl lg:text-5xl font-bold text-[#1F2937] leading-tight"
           >
             Vidas transformadas dia a dia
           </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 12 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ delay: 0.2, duration: 0.5 }}
+            className="mt-4 text-[#6B7280] text-lg max-w-lg mx-auto"
+          >
+            Histórias de quem fez da Jornada um hábito diário de fé.
+          </motion.p>
         </div>
 
         {/* Cards */}
@@ -82,7 +90,7 @@ export function TestimonialsSection() {
           variants={containerVariants}
           initial="hidden"
           animate={inView ? 'show' : 'hidden'}
-          className="grid sm:grid-cols-2 gap-5"
+          className="grid sm:grid-cols-2 gap-6"
         >
           {testimonials.map((t) => (
             <motion.div

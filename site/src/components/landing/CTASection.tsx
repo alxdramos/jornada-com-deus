@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
+import Image from 'next/image';
 import { Download, Wifi, Gift, Heart } from 'lucide-react';
 
 const APP_URL = 'https://app.minhajornadadiaria.com.br';
@@ -18,8 +19,22 @@ export function CTASection() {
   const inView = useInView(ref, { once: true, margin: '-80px' });
 
   return (
-    <section id="comecar" className="py-20 sm:py-28 gradient-cta overflow-hidden" ref={ref}>
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center relative">
+    <section id="comecar" className="relative py-24 sm:py-32 overflow-hidden" ref={ref}>
+      {/* Background image */}
+      <div className="absolute inset-0">
+        <Image
+          src="/images/site-cta-bg.png"
+          alt=""
+          fill
+          className="object-cover"
+          sizes="100vw"
+          priority={false}
+        />
+        {/* gradient-cta overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#3FDFB8]/85 via-[#10B981]/80 to-[#FB923C]/85" />
+      </div>
+
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center relative z-10">
 
         {/* Círculos decorativos de fundo */}
         <div className="absolute -top-24 -left-24 w-72 h-72 rounded-full bg-white/10 blur-3xl pointer-events-none" />

@@ -9,7 +9,7 @@ export function MissionSection() {
   const inView = useInView(ref, { once: true, margin: '-80px' });
 
   return (
-    <section id="missao" className="py-20 sm:py-28 gradient-mission" ref={ref}>
+    <section id="missao" className="py-24 sm:py-32 gradient-mission" ref={ref}>
       <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
 
         {/* Ícone decorativo */}
@@ -17,9 +17,9 @@ export function MissionSection() {
           initial={{ opacity: 0, scale: 0.8 }}
           animate={inView ? { opacity: 1, scale: 1 } : {}}
           transition={{ duration: 0.5 }}
-          className="flex justify-center mb-8"
+          className="flex justify-center mb-10"
         >
-          <div className="w-14 h-14 rounded-2xl bg-white shadow-md flex items-center justify-center">
+          <div className="w-16 h-16 rounded-2xl bg-white shadow-lg flex items-center justify-center">
             <SproutIcon />
           </div>
         </motion.div>
@@ -29,13 +29,13 @@ export function MissionSection() {
           initial={{ opacity: 0, y: 24 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7, delay: 0.1 }}
-          className="mb-6"
+          className="mb-8"
         >
-          <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#1F2937] leading-snug italic">
+          <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#1F2937] leading-snug italic max-w-3xl mx-auto">
             "Portanto, ide, fazei discípulos de todas as nações,
             batizando-os em nome do Pai, do Filho e do Espírito Santo."
           </p>
-          <footer className="mt-4 text-[#FB923C] font-semibold text-lg">
+          <footer className="mt-5 text-[#FB923C] font-semibold text-xl">
             Mateus 28:19
           </footer>
         </motion.blockquote>
@@ -45,7 +45,7 @@ export function MissionSection() {
           initial={{ scaleX: 0 }}
           animate={inView ? { scaleX: 1 } : {}}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="w-16 h-0.5 bg-gradient-to-r from-[#3FDFB8] to-[#FB923C] mx-auto my-8 rounded-full origin-left"
+          className="w-20 h-0.5 bg-gradient-to-r from-[#3FDFB8] to-[#FB923C] mx-auto my-10 rounded-full origin-left"
         />
 
         {/* Missão */}
@@ -53,7 +53,7 @@ export function MissionSection() {
           initial={{ opacity: 0, y: 16 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-lg sm:text-xl text-[#6B7280] leading-relaxed max-w-2xl mx-auto"
+          className="text-lg sm:text-xl text-[#4B5563] leading-relaxed max-w-2xl mx-auto"
         >
           Nossa missão é ajudar você a crescer como discípulo todos os dias,
           onde quer que esteja. Uma jornada simples, bonita e transformadora —
@@ -65,16 +65,16 @@ export function MissionSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.55 }}
-          className="grid grid-cols-3 gap-6 mt-12 max-w-lg mx-auto"
+          className="grid grid-cols-3 gap-8 mt-16 max-w-lg mx-auto"
         >
           {[
-            { value: '66', label: 'Livros da Bíblia' },
-            { value: '30+', label: 'Meditações guiadas' },
+            { value: '66',   label: 'Livros da Bíblia' },
+            { value: '30+',  label: 'Meditações guiadas' },
             { value: '100%', label: 'Gratuito e offline' },
           ].map((stat) => (
             <div key={stat.label} className="text-center">
-              <p className="text-3xl font-bold text-[#FB923C]">{stat.value}</p>
-              <p className="text-xs text-[#9CA3AF] mt-1">{stat.label}</p>
+              <p className="text-4xl font-bold text-[#FB923C]">{stat.value}</p>
+              <p className="text-sm text-[#6B7280] mt-2 font-medium">{stat.label}</p>
             </div>
           ))}
         </motion.div>
