@@ -1,3 +1,8 @@
+---
+description: 
+alwaysApply: true
+---
+
 # AGENTS.md - Synkra AIOS (Codex CLI)
 
 Este arquivo define as instrucoes do projeto para o Codex CLI.

@@ -172,17 +172,14 @@ export function useAuthSync() {
   useEffect(() => {
     if (!zustandUser?.id) return;
 
-    const unsubscribe = useProgressStore.subscribe(
-      (state) => state.progress,
-      async (progress) => {
-        try {
-          const normalized = normalizeStoreProgress(progress);
-          await persistProgressToDexie(zustandUser.id!, normalized);
-        } catch (error) {
-          console.error('[AuthSync] Erro ao persistir progresso:', error);
-        }
+    const unsubscribe = useProgressStore.subscribe((state) => {
+      try {
+        const normalized = normalizeStoreProgress(state.progress);
+        void persistProgressToDexie(zustandUser.id!, normalized);
+      } catch (error) {
+        console.error('[AuthSync] Erro ao persistir progresso:', error);
       }
-    );
+    });
 
     return () => unsubscribe();
   }, [zustandUser?.id]);

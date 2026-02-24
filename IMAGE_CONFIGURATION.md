@@ -1,4 +1,4 @@
-# Configuração de Imagens para Orações
+  # Configuração de Imagens para Orações
 
 ## Status Atual
 As imagens estão usando **placeholders de fallback** do Unsplash enquanto você adiciona suas imagens personalizadas.

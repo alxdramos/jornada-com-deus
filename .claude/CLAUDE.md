@@ -1,3 +1,8 @@
+---
+description: 
+alwaysApply: true
+---
+
 # Synkra AIOS Development Rules for Claude Code
 
 You are working with Synkra AIOS, an AI-Orchestrated System for Full Stack Development.

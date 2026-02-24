@@ -244,6 +244,125 @@
         "background": "creation_2422241888.png",
         "icon": "creation_2422241888.png"
       }
+    },
+    {
+      "titulo": "",
+      "imagem": {
+        "background": "creation_2422201850.png",
+        "icon": "creation_2422201850.png"
+      }
+    },
+    {
+      "titulo": "\"A Rocha Firme: Descanso e Renovação\"",
+      "imagem": {
+        "background": "creation_2422241905.png",
+        "icon": "creation_2422241905.png"
+      }
+    },
+    {
+      "titulo": "\"Na Clareira da Paz: Acalmando a Tempestade com Jesus\"",
+      "imagem": {
+        "background": "creation_2422222827.png",
+        "icon": "creation_2422222827.png"
+      }
+    },
+    {
+      "titulo": "A Rocha Firme: Um Refúgio na Calmaria do Jardim",
+      "imagem": {
+        "background": "creation_2422201837.png",
+        "icon": "creation_2422201837.png"
+      }
+    },
+    {
+      "titulo": "Sob a Luz do Getsêmani: Um Chamado à Plenitude",
+      "imagem": {
+        "background": "creation_2422213064.png",
+        "icon": "creation_2422213064.png"
+      }
+    },
+    {
+      "titulo": "Confiança quando não entendo (Salmo 37:4-5)",
+      "imagem": {
+        "background": "creation_2422219488.png",
+        "icon": "creation_2422219488.png"
+      }
+    },
+    {
+      "titulo": "Força quando eu me sinto fraco (no fim do dia) (2 Coríntios 12:9)",
+      "imagem": {
+        "background": "creation_2422213093.png",
+        "icon": "creation_2422213093.png"
+      }
+    },
+    {
+      "titulo": "Aceitação e autoimagem saudável (no fim do dia) (Salmo 147:3)",
+      "imagem": {
+        "background": "creation_2422247597.png",
+        "icon": "creation_2422247597.png"
+      }
+    },
+    {
+      "titulo": "Silenciando a autocrítica na madrugada (para iniciantes) (Salmo 94:19)",
+      "imagem": {
+        "background": "creation_2422250569.png",
+        "icon": "creation_2422250569.png"
+      }
+    },
+    {
+      "titulo": "Disciplina sem dureza (de manhã) (Eclesiastes 4:6)",
+      "imagem": {
+        "background": "creation_2422244308.png",
+        "icon": "creation_2422244308.png"
+      }
+    },
+    {
+      "titulo": "Ciúme e insegurança: paz interior (de manhã) (Lucas 6:31)",
+      "imagem": {
+        "background": "creation_2422247647.png",
+        "icon": "creation_2422247647.png"
+      }
+    },
+    {
+      "titulo": "Curando a culpa e a vergonha (no fim do dia) (Salmo 34:18)",
+      "imagem": {
+        "background": "creation_2422209762.png",
+        "icon": "creation_2422209762.png"
+      }
+    },
+    {
+      "titulo": "Deus abre e fecha portas (Efésios 2:10)",
+      "imagem": {
+        "background": "creation_2422246510.png",
+        "icon": "creation_2422246510.png"
+      }
+    },
+    {
+      "titulo": "Ansiedade no peito: respiração e confiança (Salmo 56:3-4)",
+      "imagem": {
+        "background": "creation_2422241940.png",
+        "icon": "creation_2422241940.png"
+      }
+    },
+    {
+      "titulo": "Construindo um lar de gentileza (Colossenses 3:12-14)",
+      "imagem": {
+        "background": "creation_2422206406.png",
+        "icon": "creation_2422206406.png"
+      }
+    },
+    {
+      "titulo": "Cura da vergonha e da culpa (no fim do dia) (2 Coríntios 12:9)",
+      "imagem": {
+        "background": "creation_2422201815.png",
+        "icon": "creation_2422201815.png"
+      }
+    },
+    {
+      "titulo": "Guardando o coração (curta) (1 Tessalonicenses 5:16-18)",
+      "imagem": {
+        "background": "creation_2422248383.png",
+        "icon": "creation_2422248383.png"
+      }
     }
   ],
   "usedImages": [
@@ -281,8 +400,25 @@
     "creation_2422201804.png",
     "creation_2422225702.png",
     "creation_2422229092.png",
-    "creation_2422241888.png"
+    "creation_2422241888.png",
+    "creation_2422201850.png",
+    "creation_2422241905.png",
+    "creation_2422222827.png",
+    "creation_2422201837.png",
+    "creation_2422213064.png",
+    "creation_2422219488.png",
+    "creation_2422213093.png",
+    "creation_2422247597.png",
+    "creation_2422250569.png",
+    "creation_2422244308.png",
+    "creation_2422247647.png",
+    "creation_2422209762.png",
+    "creation_2422246510.png",
+    "creation_2422241940.png",
+    "creation_2422206406.png",
+    "creation_2422201815.png",
+    "creation_2422248383.png"
   ],
   "availableImages": [],
-  "lastUpdated": "2026-02-20T19:20:23.619Z"
+  "lastUpdated": "2026-02-22T16:41:00.771Z"
 }
