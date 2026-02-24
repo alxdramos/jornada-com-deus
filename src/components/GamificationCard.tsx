@@ -1,9 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Flame, Star, TreePine } from "lucide-react";
+import { Flame, Star } from "lucide-react";
 import { useProgressStore } from "@/stores/progressStore";
 import { AppCard } from "./AppCard";
+import { TreeGrowthVisual } from "./TreeGrowthVisual";
 
 export function GamificationCard() {
   const { progress, getXpForNextLevel, getTreeProgress } = useProgressStore();
@@ -78,30 +79,15 @@ export function GamificationCard() {
           </div>
         </div>
 
-        {/* Árvore da Vida */}
+        {/* Árvore da Vida — visualização por estágio */}
         <div className="space-y-2">
-          <div className="flex items-center justify-between text-sm">
-            <span className="flex items-center gap-1">
-              <TreePine className="w-4 h-4 text-green-600" />
-              Árvore da Vida
-            </span>
-            <span className="text-muted-foreground">
-              {progress.treeLevel} / 10
-            </span>
-          </div>
-
-          <div className="w-full bg-muted rounded-full h-3 overflow-hidden">
-            <motion.div
-              className="h-full bg-gradient-to-r from-green-400 to-green-600 rounded-full"
-              initial={{ width: 0 }}
-              animate={{ width: `${Math.min(treeProgress, 100)}%` }}
-              transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
-            />
-          </div>
-
-          <div className="text-xs text-muted-foreground text-center">
-            {progress.completedDays} dias completados
-          </div>
+          <div className="text-sm font-medium text-text-primary">Árvore da Vida</div>
+          <TreeGrowthVisual
+            treeLevel={progress.treeLevel}
+            completedDays={progress.completedDays}
+            treeProgress={treeProgress}
+            compact
+          />
         </div>
 
       </div>

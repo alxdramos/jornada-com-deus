@@ -51,7 +51,9 @@ export function useAuthSync() {
                   totalXp: userProgress.xp,
                   level: userProgress.level,
                   treeLevel: userProgress.treeLevel,
-                  lastCompletedDate: userProgress.lastCompletedDate || null,
+                  lastCompletedDate: userProgress.lastCompletedDate
+                    ? String(userProgress.lastCompletedDate).slice(0, 10)
+                    : null,
                   completedDays: Math.floor(userProgress.xp / 75),
                   completedDates: [],
                 },

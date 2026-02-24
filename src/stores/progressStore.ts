@@ -1,20 +1,40 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+// Helper: retorna hoje no formato 'YYYY-MM-DD' (local timezone)
+function getTodayStr(): string {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = String(now.getMonth() + 1).padStart(2, '0');
+  const d = String(now.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
+
+// Helper: retorna ontem no formato 'YYYY-MM-DD'
+function getYesterdayStr(): string {
+  const d = new Date();
+  d.setDate(d.getDate() - 1);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
 interface Progress {
   currentStreak: number;
   maxStreak: number;
   totalXp: number;
   level: number;
   treeLevel: number; // 0-10
-  lastCompletedDate: Date | null;
-  completedDays: number; // Total de dias completados
+  lastCompletedDate: string | null; // 'YYYY-MM-DD' — evita bug de serialização Date→JSON
+  completedDays: number;
   completedDates: string[]; // Array de datas 'YYYY-MM-DD' para o calendário
 }
 
 interface ProgressStore {
   progress: Progress;
   completeDay: () => void;
+  isTodayCompleted: () => boolean;
   getXpForNextLevel: () => number;
   getTreeProgress: () => number; // 0-100 para barra de progresso da árvore
   resetProgress: () => void;
@@ -36,69 +56,51 @@ export const useProgressStore = create<ProgressStore>()(
     (set, get) => ({
       progress: INITIAL_PROGRESS,
 
+      isTodayCompleted: () => {
+        const { progress } = get();
+        return progress.lastCompletedDate === getTodayStr();
+      },
+
       completeDay: () => {
-        const now = new Date();
-        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const todayStr = getTodayStr();
         const { progress } = get();
 
-        // Verificar se já completou hoje
-        if (progress.lastCompletedDate) {
-          const lastCompleted = new Date(progress.lastCompletedDate);
-          const lastCompletedDate = new Date(lastCompleted.getFullYear(), lastCompleted.getMonth(), lastCompleted.getDate());
+        // Idempotente: já completou hoje, não faz nada
+        if (progress.lastCompletedDate === todayStr) return;
 
-          if (lastCompletedDate.getTime() === today.getTime()) {
-            // Já completou hoje, não fazer nada
-            return;
-          }
+        // Calcular streak
+        let newStreak = 1;
+        if (progress.lastCompletedDate === getYesterdayStr()) {
+          newStreak = progress.currentStreak + 1;
         }
 
-        // Calcular se mantém o streak
-        let newStreak = 1; // Começa com 1
-        if (progress.lastCompletedDate) {
-          const lastCompleted = new Date(progress.lastCompletedDate);
-          const yesterday = new Date(today);
-          yesterday.setDate(yesterday.getDate() - 1);
-
-          const lastCompletedDate = new Date(lastCompleted.getFullYear(), lastCompleted.getMonth(), lastCompleted.getDate());
-
-          if (lastCompletedDate.getTime() === yesterday.getTime()) {
-            // Completou ontem, mantém streak +1
-            newStreak = progress.currentStreak + 1;
-          }
-          // Senão, streak reseta para 1
-        }
-
-        // Calcular novo XP e level
-        const xpGained = 75; // XP por dia completado
+        const xpGained = 75;
         const newTotalXp = progress.totalXp + xpGained;
         const newLevel = Math.floor(newTotalXp / 100) + 1;
 
-        // Calcular novo treeLevel (árvore da vida)
         const newCompletedDays = progress.completedDays + 1;
         const newTreeLevel = Math.min(Math.floor(newCompletedDays / 5), 10);
 
-        const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
         const newCompletedDates = progress.completedDates.includes(todayStr)
           ? progress.completedDates
           : [...(progress.completedDates ?? []), todayStr];
 
-        const newProgress: Progress = {
-          currentStreak: newStreak,
-          maxStreak: Math.max(progress.maxStreak, newStreak),
-          totalXp: newTotalXp,
-          level: newLevel,
-          treeLevel: newTreeLevel,
-          lastCompletedDate: today,
-          completedDays: newCompletedDays,
-          completedDates: newCompletedDates,
-        };
-
-        set({ progress: newProgress });
+        set({
+          progress: {
+            currentStreak: newStreak,
+            maxStreak: Math.max(progress.maxStreak, newStreak),
+            totalXp: newTotalXp,
+            level: newLevel,
+            treeLevel: newTreeLevel,
+            lastCompletedDate: todayStr,
+            completedDays: newCompletedDays,
+            completedDates: newCompletedDates,
+          },
+        });
       },
 
       getXpForNextLevel: () => {
         const { progress } = get();
-        const xpForCurrentLevel = (progress.level - 1) * 100;
         const xpForNextLevel = progress.level * 100;
         return xpForNextLevel - progress.totalXp;
       },
@@ -108,7 +110,6 @@ export const useProgressStore = create<ProgressStore>()(
         const daysForCurrentLevel = progress.treeLevel * 5;
         const daysForNextLevel = (progress.treeLevel + 1) * 5;
         const progressInCurrentLevel = progress.completedDays - daysForCurrentLevel;
-
         return (progressInCurrentLevel / (daysForNextLevel - daysForCurrentLevel)) * 100;
       },
 

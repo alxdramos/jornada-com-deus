@@ -20,6 +20,7 @@ export function HojeSteps() {
     expandido,
     playerAberto,
     lerAberto,
+    todayDone,
     toggleEtapa,
     toggleExpandido,
     setPlayerAberto,
@@ -176,17 +177,32 @@ export function HojeSteps() {
         </ExpandableStepCard>
       </div>
 
-      <motion.button
-        onClick={handleConcluirDia}
-        className={cn(
-          "w-full py-4 px-6 rounded-2xl font-semibold text-lg text-white",
-          "bg-gradient-to-r from-[#FB923C] to-[#10B981]",
-          "hover:opacity-95 active:scale-[0.98] transition-all",
-          "shadow-lg mt-8"
-        )}
-      >
-        Concluir meu dia hoje
-      </motion.button>
+      {todayDone ? (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className={cn(
+            "w-full py-4 px-6 rounded-2xl font-semibold text-lg text-center",
+            "bg-gradient-to-r from-[#10B981]/20 to-[#059669]/20",
+            "border-2 border-[#10B981] text-[#059669]",
+            "mt-8"
+          )}
+        >
+          ✅ Dia concluído! Volte amanhã.
+        </motion.div>
+      ) : (
+        <motion.button
+          onClick={handleConcluirDia}
+          className={cn(
+            "w-full py-4 px-6 rounded-2xl font-semibold text-lg text-white",
+            "bg-gradient-to-r from-[#FB923C] to-[#10B981]",
+            "hover:opacity-95 active:scale-[0.98] transition-all",
+            "shadow-lg mt-8"
+          )}
+        >
+          Concluir meu dia hoje
+        </motion.button>
+      )}
 
       <ImmersiveAudioPlayer
         isOpen={playerAberto}
