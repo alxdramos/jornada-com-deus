@@ -1,12 +1,14 @@
 "use client";
 
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 
 export interface TreeStage {
   level: number;
   name: string;
   description: string;
-  visual: string; // SVG/emoji representation
+  visual: string; // emoji fallback
+  image: string;  // caminho da imagem gerada
   bgFrom: string;
   bgTo: string;
   daysRequired: number;
@@ -18,6 +20,7 @@ export const TREE_STAGES: TreeStage[] = [
     name: "Semente",
     description: "Sua jornada começa aqui",
     visual: "🌰",
+    image: "/images/tree-stages/stage-0-semente.jpg",
     bgFrom: "#78350F",
     bgTo: "#92400E",
     daysRequired: 0,
@@ -27,6 +30,7 @@ export const TREE_STAGES: TreeStage[] = [
     name: "Broto",
     description: "Primeiros passos na fé",
     visual: "🌱",
+    image: "/images/tree-stages/stage-1-broto.jpg",
     bgFrom: "#14532D",
     bgTo: "#166534",
     daysRequired: 5,
@@ -36,6 +40,7 @@ export const TREE_STAGES: TreeStage[] = [
     name: "Muda",
     description: "Raízes se aprofundando",
     visual: "🌿",
+    image: "/images/tree-stages/stage-2-muda.jpg",
     bgFrom: "#15803D",
     bgTo: "#16A34A",
     daysRequired: 10,
@@ -45,6 +50,7 @@ export const TREE_STAGES: TreeStage[] = [
     name: "Planta Jovem",
     description: "Crescendo com constância",
     visual: "🪴",
+    image: "/images/tree-stages/stage-3-planta-jovem.jpg",
     bgFrom: "#065F46",
     bgTo: "#047857",
     daysRequired: 15,
@@ -54,6 +60,7 @@ export const TREE_STAGES: TreeStage[] = [
     name: "Árvore Jovem",
     description: "Fé florescendo",
     visual: "🌲",
+    image: "/images/tree-stages/stage-4-arvore-jovem.jpg",
     bgFrom: "#166534",
     bgTo: "#15803D",
     daysRequired: 20,
@@ -63,6 +70,7 @@ export const TREE_STAGES: TreeStage[] = [
     name: "Árvore Adulta",
     description: "Plantado em Cristo",
     visual: "🌳",
+    image: "/images/tree-stages/stage-5-arvore-adulta.jpg",
     bgFrom: "#14532D",
     bgTo: "#166534",
     daysRequired: 25,
@@ -72,6 +80,7 @@ export const TREE_STAGES: TreeStage[] = [
     name: "Bananeira Jovem",
     description: "Primeiros frutos aparecem",
     visual: "🌴",
+    image: "/images/tree-stages/stage-6-bananeira-jovem.jpg",
     bgFrom: "#365314",
     bgTo: "#3F6212",
     daysRequired: 30,
@@ -81,6 +90,7 @@ export const TREE_STAGES: TreeStage[] = [
     name: "Bananeira Florida",
     description: "Floração em abundância",
     visual: "🌸🌴",
+    image: "/images/tree-stages/stage-7-bananeira-florida.jpg",
     bgFrom: "#713F12",
     bgTo: "#92400E",
     daysRequired: 35,
@@ -90,6 +100,7 @@ export const TREE_STAGES: TreeStage[] = [
     name: "Primeiros Cachos",
     description: "Frutos da perseverança",
     visual: "🌴🍌",
+    image: "/images/tree-stages/stage-8-primeiros-cachos.jpg",
     bgFrom: "#92400E",
     bgTo: "#B45309",
     daysRequired: 40,
@@ -99,6 +110,7 @@ export const TREE_STAGES: TreeStage[] = [
     name: "Bananeira Plena",
     description: "Colheita de frutos espirituais",
     visual: "🍌🌴",
+    image: "/images/tree-stages/stage-9-bananeira-plena.jpg",
     bgFrom: "#B45309",
     bgTo: "#D97706",
     daysRequired: 45,
@@ -108,6 +120,7 @@ export const TREE_STAGES: TreeStage[] = [
     name: "Bananeira Gloriosa",
     description: "50 dias! Jornada completa! 🎉",
     visual: "✨🍌✨",
+    image: "/images/tree-stages/stage-10-bananeira-gloriosa.jpg",
     bgFrom: "#D97706",
     bgTo: "#FBBF24",
     daysRequired: 50,
@@ -136,25 +149,32 @@ export function TreeGrowthVisual({
       <div className="space-y-3">
         {/* Stage indicator */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <AnimatePresence mode="wait">
-              <motion.span
+              <motion.div
                 key={treeLevel}
                 initial={{ scale: 0, rotate: -20 }}
                 animate={{ scale: 1, rotate: 0 }}
                 exit={{ scale: 0, rotate: 20 }}
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                className={compact ? "text-2xl" : "text-4xl"}
+                className="relative w-14 h-14 rounded-xl overflow-hidden shrink-0 shadow-md"
+                style={{ border: `2px solid ${stage.bgFrom}66` }}
               >
-                {stage.visual}
-              </motion.span>
+                <Image
+                  src={stage.image}
+                  alt={stage.name}
+                  fill
+                  className="object-cover"
+                  sizes="56px"
+                />
+              </motion.div>
             </AnimatePresence>
             <div>
               <div className="font-semibold text-sm text-text-primary">{stage.name}</div>
               <div className="text-xs text-muted-foreground">{stage.description}</div>
             </div>
           </div>
-          <div className="text-right">
+          <div className="text-right shrink-0">
             <div className="text-sm font-bold text-green-600">{treeLevel}/10</div>
             <div className="text-xs text-muted-foreground">{completedDays} dias</div>
           </div>
@@ -198,7 +218,7 @@ export function TreeGrowthVisual({
     <div className="space-y-6">
       {/* Visual central da árvore */}
       <div
-        className="relative rounded-3xl p-8 flex flex-col items-center justify-center gap-4 overflow-hidden"
+        className="relative rounded-3xl p-6 flex flex-col items-center justify-center gap-4 overflow-hidden"
         style={{
           background: `linear-gradient(135deg, ${stage.bgFrom}22, ${stage.bgTo}33)`,
           border: `1px solid ${stage.bgFrom}44`,
@@ -216,7 +236,7 @@ export function TreeGrowthVisual({
           ))}
         </div>
 
-        {/* Emoji principal */}
+        {/* Imagem principal do estágio */}
         <AnimatePresence mode="wait">
           <motion.div
             key={treeLevel}
@@ -224,9 +244,21 @@ export function TreeGrowthVisual({
             animate={{ scale: 1, y: 0 }}
             exit={{ scale: 0, y: -30 }}
             transition={{ type: "spring", stiffness: 200, damping: 20 }}
-            className="text-7xl"
+            className="relative w-44 h-44 rounded-2xl overflow-hidden shadow-xl"
+            style={{ border: `3px solid ${stage.bgTo}88` }}
           >
-            {stage.visual}
+            <Image
+              src={stage.image}
+              alt={stage.name}
+              fill
+              className="object-cover"
+              sizes="176px"
+            />
+            {/* Overlay sutil com gradiente da cor do estágio */}
+            <div
+              className="absolute inset-0 opacity-10"
+              style={{ background: `linear-gradient(to top, ${stage.bgFrom}, transparent)` }}
+            />
           </motion.div>
         </AnimatePresence>
 
@@ -295,7 +327,19 @@ export function TreeGrowthVisual({
                     : "opacity-40"
                 }`}
               >
-                <span className="text-lg w-8 text-center">{s.visual}</span>
+                {/* Miniatura da imagem */}
+                <div
+                  className="relative w-8 h-8 rounded-lg overflow-hidden shrink-0"
+                  style={{ border: `1px solid ${s.bgFrom}55` }}
+                >
+                  <Image
+                    src={s.image}
+                    alt={s.name}
+                    fill
+                    className="object-cover"
+                    sizes="32px"
+                  />
+                </div>
                 <div className="flex-1 min-w-0">
                   <div
                     className={`text-xs font-semibold ${
