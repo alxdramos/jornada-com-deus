@@ -10,6 +10,8 @@ import { TabOracoes } from "@/components/tabs/TabOracoes";
 import { TabMeditacoes } from "@/components/tabs/TabMeditacoes";
 import { TabEstudos } from "@/components/tabs/TabEstudos";
 import { TabDiario } from "@/components/tabs/TabDiario";
+import { TabDevocional } from "@/components/tabs/TabDevocional";
+import { TabKids } from "@/components/tabs/TabKids";
 import { BottomNav } from "@/components/BottomNav";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { InstallPromptModal } from "@/components/InstallPromptModal";
@@ -56,6 +58,12 @@ export function HomeContent() {
       </ErrorBoundary>
       <ErrorBoundary fallbackLabel="Erro na aba Diário">
         {activeTab === "diario" && <TabDiario />}
+      </ErrorBoundary>
+      <ErrorBoundary fallbackLabel="Erro na aba Devocional">
+        {activeTab === "devocional" && <TabDevocional />}
+      </ErrorBoundary>
+      <ErrorBoundary fallbackLabel="Erro na aba Kids">
+        {activeTab === "kids" && <TabKids />}
       </ErrorBoundary>
       <BottomNav />
 
