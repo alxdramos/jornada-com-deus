@@ -13,11 +13,15 @@ import { BottomNav } from "@/components/BottomNav";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { InstallPromptModal } from "@/components/InstallPromptModal";
 import { useInstallPrompt } from "@/hooks/useInstallPrompt";
+import { useSyncManager } from "@/hooks/useSyncManager";
 
 export function HomeContent() {
   const activeTab = useTabStore((s) => s.activeTab);
   const [isLoadingInstall, setIsLoadingInstall] = useState(false);
   const { isOpen, platform, handleInstall, handleDismiss, closeModal } = useInstallPrompt();
+
+  // Sincronização offline→online: envia dados pendentes do Dexie ao Supabase
+  useSyncManager();
 
   const handleInstallClick = async () => {
     setIsLoadingInstall(true);

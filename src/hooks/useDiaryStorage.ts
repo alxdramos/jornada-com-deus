@@ -1,5 +1,14 @@
 import { useState, useEffect } from "react";
 import { DiaryEntry, DiaryTabType, ENTRIES_EXEMPLO } from "@/data/diario";
+import { db, JournalEntry } from "@/lib/db";
+
+// Mapeamento de tipos DiaryEntry → JournalEntry (Dexie)
+const DIARY_TYPE_MAP: Record<string, JournalEntry['type']> = {
+  note:      'anotacao',
+  highlight: 'destaque',
+  quote:     'citacao',
+  verse:     'reflexao',
+};
 
 export function useDiaryStorage() {
   const [entries, setEntries] = useState<DiaryEntry[]>(ENTRIES_EXEMPLO);
@@ -36,6 +45,19 @@ export function useDiaryStorage() {
     const newEntries = [...entries, entry];
     setEntries(newEntries);
     saveToLocalStorage(newEntries);
+
+    // Também grava no Dexie com syncStatus='pending' para sync offline→online
+    db.journalEntries.add({
+      type: DIARY_TYPE_MAP[entry.type] ?? 'anotacao',
+      content: entry.content,
+      date: entry.createdAt,
+      favorite: entry.isFavorite ?? false,
+      userId: 0, // atualizado pelo useAuthSync quando autenticado
+      syncStatus: 'pending',
+      localId: entry.id,
+    }).catch((err) =>
+      console.warn('[DiaryStorage] Falha ao gravar no Dexie (não crítico):', err)
+    );
   };
 
   const updateEntry = (id: string, updates: Partial<DiaryEntry>) => {

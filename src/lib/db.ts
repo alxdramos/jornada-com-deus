@@ -41,6 +41,8 @@ export interface Prayer {
   answered: boolean;
   createdAt: Date;
   userId: number;
+  syncStatus?: 'pending' | 'synced'; // offline-first sync flag
+  localId?: string; // original string ID (e.g., 'custom-1234567890')
 }
 
 export interface JournalEntry {
@@ -50,6 +52,8 @@ export interface JournalEntry {
   date: Date;
   favorite: boolean;
   userId: number;
+  syncStatus?: 'pending' | 'synced'; // offline-first sync flag
+  localId?: string; // original string ID from localStorage
 }
 
 export interface Favorite {
@@ -76,6 +80,15 @@ export class JornadaComDeusDB extends Dexie {
       devotionals: '++id, title, duration, category, isPlus, audioUrl, imageUrl, description, createdAt',
       prayers: '++id, title, text, audioUrl, isPersonal, answered, createdAt, userId',
       journalEntries: '++id, type, content, date, favorite, userId',
+      favorites: '++id, contentId, type, userId, createdAt',
+    });
+    // v2: adds syncStatus + localId indexes for offline-first sync
+    this.version(2).stores({
+      users: '++id, name, email, isPlus, avatar, createdAt',
+      progress: '++id, streak, xp, level, treeLevel, lastCompletedDate, userId',
+      devotionals: '++id, title, duration, category, isPlus, audioUrl, imageUrl, description, createdAt',
+      prayers: '++id, title, text, audioUrl, isPersonal, answered, createdAt, userId, syncStatus, localId',
+      journalEntries: '++id, type, content, date, favorite, userId, syncStatus, localId',
       favorites: '++id, contentId, type, userId, createdAt',
     });
 

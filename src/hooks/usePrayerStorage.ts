@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Prayer, PRAYERS_PREDEFINIDAS, ORACOES } from "@/data/oracoes";
+import { db } from "@/lib/db";
 
 export function usePrayerStorage() {
   const [prayers, setPrayers] = useState<Prayer[]>([]);
@@ -90,6 +91,20 @@ export function usePrayerStorage() {
 
     const customPrayers = updatedPrayers.filter(p => p.isCustom);
     localStorage.setItem('custom-prayers', JSON.stringify(customPrayers));
+
+    // Também grava no Dexie com syncStatus='pending' para sync offline→online
+    db.prayers.add({
+      title: newPrayer.title,
+      text: newPrayer.content,
+      isPersonal: true,
+      answered: false,
+      createdAt: newPrayer.createdAt,
+      userId: 0, // atualizado pelo useAuthSync quando autenticado
+      syncStatus: 'pending',
+      localId: newPrayer.id,
+    }).catch((err) =>
+      console.warn('[PrayerStorage] Falha ao gravar no Dexie (não crítico):', err)
+    );
   };
 
   const deletePrayer = (prayerId: string) => {
