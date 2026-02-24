@@ -30,7 +30,7 @@ export function BibleChapterNavigation({
         Voltar
       </button>
       <span>•</span>
-      <span className="font-medium">Bíblia ACF</span>
+      <span className="font-medium">Bíblia NVI</span>
       {book && (
         <>
           <span>•</span>

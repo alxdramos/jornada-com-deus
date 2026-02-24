@@ -3,8 +3,11 @@
 import { motion } from "framer-motion";
 import { ArrowLeft, BookOpen, Heart, Info, WifiOff, Search } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function SobreBiblia() {
+  const router = useRouter();
+
   return (
     <div className="min-h-screen bg-[#FAF9F6] p-6 pb-28">
       <div className="max-w-4xl mx-auto space-y-6">
@@ -14,12 +17,12 @@ export default function SobreBiblia() {
           animate={{ opacity: 1, y: 0 }}
           className="flex items-center gap-4"
         >
-          <Link
-            href="/biblia"
+          <button
+            onClick={() => router.back()}
             className="p-2 rounded-lg hover:bg-white transition-colors"
           >
             <ArrowLeft className="w-5 h-5 text-[#1F2937]" />
-          </Link>
+          </button>
           <h1 className="text-xl font-bold text-[#1F2937]">Sobre a Bíblia</h1>
         </motion.div>
 
@@ -108,12 +111,12 @@ export default function SobreBiblia() {
           {/* Links de navegação */}
           <div className="mt-8 pt-6 border-t border-[#E5E7EB]">
             <div className="flex gap-3">
-              <Link
-                href="/biblia"
+              <button
+                onClick={() => router.back()}
                 className="flex-1 bg-[#1F2937] text-white py-3 px-4 rounded-xl font-medium text-center hover:bg-[#2D3748] transition-colors"
               >
                 Voltar à Bíblia
-              </Link>
+              </button>
               <Link
                 href="/"
                 className="flex-1 bg-[#FB923C] text-white py-3 px-4 rounded-xl font-medium text-center hover:bg-[#EA580C] transition-colors"
