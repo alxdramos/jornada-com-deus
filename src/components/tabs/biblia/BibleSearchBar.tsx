@@ -5,6 +5,7 @@ interface BibleSearchBarProps {
   onChange: (value: string) => void;
   onSearch: (query: string) => void;
   loading: boolean;
+  placeholder?: string;
 }
 
 export function BibleSearchBar({
@@ -12,6 +13,7 @@ export function BibleSearchBar({
   onChange,
   onSearch,
   loading,
+  placeholder = 'Buscar referência (ex: "João 3:16")',
 }: BibleSearchBarProps) {
   return (
     <div className="bg-white rounded-xl p-4 shadow-sm">
@@ -20,7 +22,7 @@ export function BibleSearchBar({
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#9CA3AF]" />
           <input
             type="text"
-            placeholder='Buscar referência (ex: "João 3:16")'
+            placeholder={placeholder}
             value={value}
             onChange={(e) => onChange(e.target.value)}
             onKeyPress={(e) => {

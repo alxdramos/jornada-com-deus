@@ -7,7 +7,7 @@ import { UserHeader } from "@/components/layout/UserHeader";
 import { Info, BookOpen, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
-import { useBible } from "@/hooks/useBible";
+import { useBibleLocal } from "@/hooks/useBibleLocal";
 
 // Sub-componentes
 import { BibleTestamentToggle } from "./biblia/BibleTestamentToggle";
@@ -26,11 +26,12 @@ export function TabBiblia() {
     BIBLE_BOOKS,
     fetchChapter,
     fetchByReference,
+    searchByTerm,
     loading,
     error,
     data,
     clearData,
-  } = useBible();
+  } = useBibleLocal();
 
   // Estados
   const [testamento, setTestamento] = useState<Testamento>("AT");
@@ -40,6 +41,7 @@ export function TabBiblia() {
   const [searchQuery, setSearchQuery] = useState("");
   const [showSearch, setShowSearch] = useState(false);
   const [accessedChapters, setAccessedChapters] = useState<Set<string>>(new Set());
+  const [searchMode, setSearchMode] = useState<"reference" | "word">("reference");
 
   // Livros por testamento
   const livros = getBooksByTestament(testamento);
@@ -78,17 +80,26 @@ export function TabBiblia() {
   const handleSearch = async (query: string) => {
     if (!query.trim()) return;
 
-    const result = await fetchByReference(query.trim());
+    if (searchMode === "word") {
+      // Busca por palavra/frase — exibe resultados direto no viewState "verses"
+      const result = await searchByTerm(query.trim());
+      if (result?.verses && result.verses.length > 0) {
+        setViewState("verses");
+        setSelectedBook(`Busca: "${query.trim()}"`);
+        setSelectedChapter(0);
+      }
+      return;
+    }
 
+    // Busca por referência (ex: "João 3:16")
+    const result = await fetchByReference(query.trim());
     if (result?.verses && result.verses.length > 0) {
       const firstVerse = result.verses[0];
-      // Comparar book_name da API (inglês) com apiName dos livros
       const bookData = BIBLE_BOOKS.find(
         (book) =>
           book.apiName.toLowerCase() === firstVerse.book_name.toLowerCase() ||
           firstVerse.book_name.toLowerCase().includes(book.apiName.toLowerCase())
       );
-
       if (bookData) {
         setSelectedBook(bookData.name);
         setSelectedChapter(firstVerse.chapter);
@@ -154,11 +165,40 @@ export function TabBiblia() {
                 onChange={setTestamento}
               />
 
+              {/* Modo de busca */}
+              <div className="flex gap-2 text-xs">
+                <button
+                  onClick={() => setSearchMode("reference")}
+                  className={`px-3 py-1 rounded-full border transition-colors ${
+                    searchMode === "reference"
+                      ? "bg-[#FB923C] text-white border-[#FB923C]"
+                      : "bg-white text-[#6B7280] border-[#E5E7EB]"
+                  }`}
+                >
+                  Por referência
+                </button>
+                <button
+                  onClick={() => setSearchMode("word")}
+                  className={`px-3 py-1 rounded-full border transition-colors ${
+                    searchMode === "word"
+                      ? "bg-[#FB923C] text-white border-[#FB923C]"
+                      : "bg-white text-[#6B7280] border-[#E5E7EB]"
+                  }`}
+                >
+                  Por palavra
+                </button>
+              </div>
+
               <BibleSearchBar
                 value={searchQuery}
                 onChange={setSearchQuery}
                 onSearch={handleSearch}
                 loading={loading}
+                placeholder={
+                  searchMode === "reference"
+                    ? 'Ex: "João 3:16" ou "João 3"'
+                    : 'Ex: "amor", "fé", "paz"'
+                }
               />
 
               <BibleBooksList books={livros} onSelectBook={selectBook} />

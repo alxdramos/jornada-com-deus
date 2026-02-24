@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowLeft, BookOpen, Heart, Info } from "lucide-react";
+import { ArrowLeft, BookOpen, Heart, Info, WifiOff, Search } from "lucide-react";
 import Link from "next/link";
 
 export default function SobreBiblia() {
@@ -36,46 +36,34 @@ export default function SobreBiblia() {
               <BookOpen className="w-8 h-8 text-[#FB923C]" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-[#1F2937]">Almeida Revista e Corrigida</h2>
-              <p className="text-sm text-[#6B7280]">Tradução Clássica Portuguesa</p>
+              <h2 className="text-lg font-bold text-[#1F2937]">Nova Versão Internacional</h2>
+              <p className="text-sm text-[#6B7280]">NVI — Português Brasileiro</p>
             </div>
           </div>
 
-          {/* Aviso legal */}
-          <div className="bg-[#F9FAFB] rounded-xl p-4 mb-6 border-l-4 border-[#FB923C]">
+          {/* Atribuição de direitos — CC BY-NC OBRIGATÓRIA */}
+          <div className="bg-[#FFF7ED] rounded-xl p-4 mb-6 border-l-4 border-[#FB923C]">
             <div className="flex items-start gap-3">
               <Info className="w-5 h-5 text-[#FB923C] mt-0.5 flex-shrink-0" />
               <div>
-                <h3 className="font-medium text-[#1F2937] mb-2">Aviso Legal</h3>
-                <p className="text-sm text-[#6B7280] leading-relaxed">
-                  O texto bíblico apresentado é da <strong>Almeida Revista e Corrigida</strong>,
-                  uma tradução clássica da Bíblia para o português que se encontra em domínio público.
-                  Esta versão foi originalmente traduzida por João Ferreira de Almeida no século XVII
-                  e revisada ao longo dos anos.
+                <h3 className="font-medium text-[#1F2937] mb-2">Atribuição de Direitos</h3>
+                <p className="text-sm text-[#6B7280] leading-relaxed mb-2">
+                  O texto bíblico na tradução <strong>Nova Versão Internacional (NVI)</strong> é
+                  propriedade de seus respectivos detentores de direitos. Todos os direitos reservados.
                 </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Fonte da API */}
-          <div className="bg-[#F0F9FF] rounded-xl p-4 mb-6 border-l-4 border-[#0EA5E9]">
-            <div className="flex items-start gap-3">
-              <div className="w-8 h-8 bg-[#0EA5E9]/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                <span className="text-sm font-bold text-[#0EA5E9]">API</span>
-              </div>
-              <div>
-                <h3 className="font-medium text-[#1F2937] mb-1">Fonte dos Dados</h3>
-                <p className="text-sm text-[#6B7280]">
-                  Os textos bíblicos são fornecidos pela API pública{' '}
+                <p className="text-sm text-[#6B7280] leading-relaxed">
+                  Os dados utilizados neste aplicativo são provenientes do repositório{" "}
                   <a
-                    href="https://bible-api.com"
+                    href="https://github.com/thiagobodruk/bible"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-[#0EA5E9] hover:underline font-medium"
+                    className="text-[#FB923C] hover:underline font-medium"
                   >
-                    bible-api.com
+                    github.com/thiagobodruk/bible
                   </a>
-                  {' '}através do endpoint de tradução ACF (Almeida Corrigida Fiel).
+                  , distribuído sob a licença{" "}
+                  <strong>Creative Commons BY-NC</strong>{" "}
+                  (uso não-comercial com atribuição). Este aplicativo não tem fins lucrativos.
                 </p>
               </div>
             </div>
@@ -90,17 +78,29 @@ export default function SobreBiblia() {
               Nossa missão é facilitar o acesso à Bíblia em qualquer lugar e momento.
             </p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+            <div className="grid grid-cols-2 gap-3 mt-4">
               <div className="bg-[#FEF7F0] rounded-lg p-4 text-center">
                 <Heart className="w-6 h-6 text-[#FB923C] mx-auto mb-2" />
                 <p className="text-sm font-medium text-[#1F2937]">100% Gratuito</p>
-                <p className="text-xs text-[#6B7280]">Sem anúncios ou custos ocultos</p>
+                <p className="text-xs text-[#6B7280]">Sem anúncios ou custos</p>
               </div>
 
               <div className="bg-[#F0FDF4] rounded-lg p-4 text-center">
                 <BookOpen className="w-6 h-6 text-[#10B981] mx-auto mb-2" />
                 <p className="text-sm font-medium text-[#1F2937]">Texto Completo</p>
                 <p className="text-xs text-[#6B7280]">66 livros, 31.000+ versículos</p>
+              </div>
+
+              <div className="bg-[#EFF6FF] rounded-lg p-4 text-center">
+                <WifiOff className="w-6 h-6 text-[#3B82F6] mx-auto mb-2" />
+                <p className="text-sm font-medium text-[#1F2937]">Funciona Offline</p>
+                <p className="text-xs text-[#6B7280]">Sem necessidade de internet</p>
+              </div>
+
+              <div className="bg-[#F5F3FF] rounded-lg p-4 text-center">
+                <Search className="w-6 h-6 text-[#8B5CF6] mx-auto mb-2" />
+                <p className="text-sm font-medium text-[#1F2937]">Busca por Palavra</p>
+                <p className="text-xs text-[#6B7280]">Encontre versículos por tema</p>
               </div>
             </div>
           </div>
@@ -124,7 +124,7 @@ export default function SobreBiblia() {
           </div>
         </motion.div>
 
-        {/* Card adicional com informações técnicas */}
+        {/* Card de informações técnicas */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -133,11 +133,12 @@ export default function SobreBiblia() {
         >
           <h3 className="font-medium text-[#1F2937] mb-3">Informações Técnicas</h3>
           <div className="space-y-2 text-sm text-[#6B7280]">
-            <p>• <strong>Tradução:</strong> Almeida Corrigida Fiel (ACF)</p>
+            <p>• <strong>Tradução:</strong> Nova Versão Internacional (NVI)</p>
             <p>• <strong>Idioma:</strong> Português Brasileiro</p>
-            <p>• <strong>API:</strong> bible-api.com (gratuita e pública)</p>
-            <p>• <strong>Compatibilidade:</strong> Todos os dispositivos modernos</p>
-            <p>• <strong>Atualização:</strong> Textos sempre atualizados via API</p>
+            <p>• <strong>Fonte:</strong> github.com/thiagobodruk/bible</p>
+            <p>• <strong>Licença:</strong> Creative Commons BY-NC</p>
+            <p>• <strong>Modo:</strong> Offline-first (dados locais)</p>
+            <p>• <strong>Busca:</strong> Por referência e por palavra-chave</p>
           </div>
         </motion.div>
       </div>
