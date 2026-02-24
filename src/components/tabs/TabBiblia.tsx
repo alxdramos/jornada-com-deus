@@ -82,10 +82,11 @@ export function TabBiblia() {
 
     if (result?.verses && result.verses.length > 0) {
       const firstVerse = result.verses[0];
+      // Comparar book_name da API (inglês) com apiName dos livros
       const bookData = BIBLE_BOOKS.find(
         (book) =>
-          book.name.toLowerCase().includes(firstVerse.book_name.toLowerCase()) ||
-          firstVerse.book_name.toLowerCase().includes(book.name.toLowerCase())
+          book.apiName.toLowerCase() === firstVerse.book_name.toLowerCase() ||
+          firstVerse.book_name.toLowerCase().includes(book.apiName.toLowerCase())
       );
 
       if (bookData) {
@@ -94,8 +95,6 @@ export function TabBiblia() {
         setViewState("verses");
         setSearchQuery("");
       }
-    } else {
-      setViewState("books");
     }
   };
 
@@ -197,6 +196,17 @@ export function TabBiblia() {
               {loading ? (
                 <div className="flex justify-center py-12">
                   <Loader2 className="w-8 h-8 text-[#FB923C] animate-spin" />
+                </div>
+              ) : error ? (
+                <div className="flex flex-col items-center py-12 gap-4 text-center">
+                  <BookOpen className="w-12 h-12 text-red-300" />
+                  <p className="text-red-500 text-sm px-4">{error}</p>
+                  <button
+                    onClick={() => selectChapter(selectedChapter)}
+                    className="px-4 py-2 bg-[#FB923C] text-white rounded-lg text-sm font-medium hover:bg-[#f97316] transition-colors"
+                  >
+                    Tentar novamente
+                  </button>
                 </div>
               ) : data?.verses ? (
                 <div className="space-y-4">

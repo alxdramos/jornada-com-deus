@@ -34,6 +34,32 @@ const BIBLE_API_BASE = 'https://bible-api.com';
 // Re-export books for backward compatibility
 export const BIBLE_BOOKS = ALL_BOOKS;
 
+// Converte nome/id de livro em português para o nome aceito pela API (inglês)
+function resolveApiName(bookNameOrId: string): string {
+  const normalized = bookNameOrId.trim().toLowerCase();
+  // Buscar por nome exato, abreviação ou id
+  const found = ALL_BOOKS.find(
+    (b) =>
+      b.name.toLowerCase() === normalized ||
+      b.id === normalized ||
+      b.abbrev.toLowerCase() === normalized ||
+      b.apiName === normalized
+  );
+  if (found) return found.apiName;
+  // Busca parcial por nome (ex: "jo" pode ser "João" ou "Jó")
+  const partial = ALL_BOOKS.find(
+    (b) =>
+      b.name.toLowerCase().startsWith(normalized) ||
+      b.id.startsWith(normalized)
+  );
+  return partial?.apiName ?? bookNameOrId;
+}
+
+// Constrói o segmento de livro para a URL, substituindo espaços por +
+function buildBookSegment(apiName: string): string {
+  return apiName.replace(/ /g, '+');
+}
+
 export function useBible() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -142,51 +168,55 @@ export function useBible() {
   };
 
   // Buscar um capítulo completo (ex: "João 3")
+  // book pode ser nome em português, id ou apiName em inglês
   const fetchChapter = async (book: string, chapter: number) => {
-    const endpoint = `/${book}+${chapter}`;
+    const apiName = resolveApiName(book);
+    const endpoint = `/${buildBookSegment(apiName)}+${chapter}`;
     return await fetchFromAPI(endpoint);
   };
 
   // Buscar um versículo específico (ex: "João 3:16")
   const fetchVerse = async (book: string, chapter: number, verse: number) => {
-    const endpoint = `/${book}+${chapter}:${verse}`;
+    const apiName = resolveApiName(book);
+    const endpoint = `/${buildBookSegment(apiName)}+${chapter}:${verse}`;
     return await fetchFromAPI(endpoint);
   };
 
   // Buscar múltiplos versículos (ex: "João 3:14-16")
   const fetchVerses = async (book: string, chapter: number, startVerse: number, endVerse?: number) => {
+    const apiName = resolveApiName(book);
     const verseRange = endVerse ? `${startVerse}-${endVerse}` : startVerse.toString();
-    const endpoint = `/${book}+${chapter}:${verseRange}`;
+    const endpoint = `/${buildBookSegment(apiName)}+${chapter}:${verseRange}`;
     return await fetchFromAPI(endpoint);
   };
 
   // Buscar por referência completa (ex: "João 3:16" ou "João 3")
+  // Suporta: "João 3", "João 3:16", "João 3:14-16", "1 Coríntios 13:4"
   const fetchByReference = async (reference: string) => {
     try {
-      // Tentar parse da referência (João 3:16 ou João 3)
-      const parts = reference.trim().split(/[ :\-]+/);
+      const ref = reference.trim();
 
-      if (parts.length >= 2) {
-        const book = parts[0];
-        const chapter = parseInt(parts[1]);
+      // Separar o nome do livro do restante (capítulo:versículo)
+      // Padrão: "Nome Livro 3:16" ou "1 Nome 3:16"
+      const match = ref.match(/^(.+?)\s+(\d+)(?::(\d+)(?:-(\d+))?)?$/);
 
-        if (parts.length === 3) {
-          // João 3:16
-          const verse = parseInt(parts[2]);
-          return await fetchVerse(book, chapter, verse);
-        } else if (parts.length === 2) {
-          // João 3
-          return await fetchChapter(book, chapter);
-        } else if (parts.length === 4 && parts[2] === '-') {
-          // João 3:14-16
-          const startVerse = parseInt(parts[1]);
-          const endVerse = parseInt(parts[3]);
-          return await fetchVerses(book, chapter, startVerse, endVerse);
+      if (match) {
+        const bookRaw = match[1].trim();
+        const chapter = parseInt(match[2]);
+        const startVerse = match[3] ? parseInt(match[3]) : undefined;
+        const endVerse = match[4] ? parseInt(match[4]) : undefined;
+
+        if (startVerse !== undefined && endVerse !== undefined) {
+          return await fetchVerses(bookRaw, chapter, startVerse, endVerse);
+        } else if (startVerse !== undefined) {
+          return await fetchVerse(bookRaw, chapter, startVerse);
+        } else {
+          return await fetchChapter(bookRaw, chapter);
         }
       }
 
-      // Se não conseguir parsear, tentar como referência direta
-      const endpoint = `/${reference}`;
+      // Fallback: tentar como referência direta
+      const endpoint = `/${ref.replace(/ /g, '+')}`;
       return await fetchFromAPI(endpoint);
 
     } catch (err) {
