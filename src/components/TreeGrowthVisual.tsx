@@ -53,7 +53,7 @@ export const TREE_STAGES: TreeStage[] = [
     image: "/images/tree-stages/stage-3-planta-jovem.png",
     bgFrom: "#065F46",
     bgTo: "#047857",
-    daysRequired: 15,
+    daysRequired: 18,
   },
   {
     level: 4,
@@ -63,7 +63,7 @@ export const TREE_STAGES: TreeStage[] = [
     image: "/images/tree-stages/stage-4-arvore-jovem.png",
     bgFrom: "#166534",
     bgTo: "#15803D",
-    daysRequired: 20,
+    daysRequired: 27,
   },
   {
     level: 5,
@@ -73,7 +73,7 @@ export const TREE_STAGES: TreeStage[] = [
     image: "/images/tree-stages/stage-5-arvore-adulta.png",
     bgFrom: "#14532D",
     bgTo: "#166534",
-    daysRequired: 25,
+    daysRequired: 37,
   },
   {
     level: 6,
@@ -83,7 +83,7 @@ export const TREE_STAGES: TreeStage[] = [
     image: "/images/tree-stages/stage-6-bananeira-jovem.png",
     bgFrom: "#365314",
     bgTo: "#3F6212",
-    daysRequired: 30,
+    daysRequired: 48,
   },
   {
     level: 7,
@@ -93,7 +93,7 @@ export const TREE_STAGES: TreeStage[] = [
     image: "/images/tree-stages/stage-7-bananeira-florida.png",
     bgFrom: "#713F12",
     bgTo: "#92400E",
-    daysRequired: 35,
+    daysRequired: 59,
   },
   {
     level: 8,
@@ -103,7 +103,7 @@ export const TREE_STAGES: TreeStage[] = [
     image: "/images/tree-stages/stage-8-primeiros-cachos.png",
     bgFrom: "#92400E",
     bgTo: "#B45309",
-    daysRequired: 40,
+    daysRequired: 70,
   },
   {
     level: 9,
@@ -113,17 +113,17 @@ export const TREE_STAGES: TreeStage[] = [
     image: "/images/tree-stages/stage-9-bananeira-plena.png",
     bgFrom: "#B45309",
     bgTo: "#D97706",
-    daysRequired: 45,
+    daysRequired: 80,
   },
   {
     level: 10,
     name: "Bananeira Gloriosa",
-    description: "50 dias! Jornada completa! 🎉",
+    description: "90 dias! Jornada completa! 🎉",
     visual: "✨🍌✨",
     image: "/images/tree-stages/stage-10-bananeira-gloriosa.png",
     bgFrom: "#D97706",
     bgTo: "#FBBF24",
-    daysRequired: 50,
+    daysRequired: 90,
   },
 ];
 
