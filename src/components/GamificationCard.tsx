@@ -2,19 +2,17 @@
 
 import { motion } from "framer-motion";
 import { Flame, Star } from "lucide-react";
-import { useProgressStore, TREE_XP_THRESHOLDS } from "@/stores/progressStore";
+import { LEVEL_XP_STEP, useProgressStore } from "@/stores/progressStore";
 import { AppCard } from "./AppCard";
 import { TreeGrowthVisual } from "./TreeGrowthVisual";
 
 export function GamificationCard() {
   const { progress, getXpForNextLevel, getTreeProgress } = useProgressStore();
+  const safeLevel = Math.max(1, progress.level);
+  const xpCurrentLevel = (safeLevel - 1) * LEVEL_XP_STEP;
+  const xpInLevel = Math.max(0, progress.totalXp - xpCurrentLevel);
+  const xpProgress = Math.min(100, (xpInLevel / LEVEL_XP_STEP) * 100);
   const treeProgress = getTreeProgress();
-  // XP dentro do nível atual da árvore (alinhado com TREE_XP_THRESHOLDS)
-  const xpCurrentLevel = TREE_XP_THRESHOLDS[progress.treeLevel] ?? 0;
-  const xpNextLevel = TREE_XP_THRESHOLDS[Math.min(progress.treeLevel + 1, 10)] ?? TREE_XP_THRESHOLDS[10];
-  const xpInLevel = progress.totalXp - xpCurrentLevel;
-  const xpToNextLevel = xpNextLevel - xpCurrentLevel;
-  const xpProgress = progress.treeLevel >= 10 ? 100 : treeProgress;
 
   return (
     <AppCard title="Sua Jornada" className="bg-gradient-to-br from-primary/5 to-accent/5 border-primary/20">
@@ -63,12 +61,10 @@ export function GamificationCard() {
           <div className="flex items-center justify-between text-sm">
             <span className="flex items-center gap-1">
               <Star className="w-4 h-4 text-yellow-500" />
-              Nível {progress.treeLevel}
+              Nível {progress.level}
             </span>
             <span className="text-muted-foreground">
-              {progress.treeLevel >= 10
-                ? `${progress.totalXp} XP — Máximo!`
-                : `${xpInLevel} / ${xpToNextLevel} XP`}
+              {xpInLevel} / {LEVEL_XP_STEP} XP
             </span>
           </div>
 

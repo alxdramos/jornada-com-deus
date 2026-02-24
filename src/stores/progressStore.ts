@@ -1,23 +1,9 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-// Thresholds de dias para cada nível da árvore (meta: 90 dias para nível 10)
-// Progressão natural: rápido no início, mais longa no fim (jornada espiritual)
-export const TREE_DAY_THRESHOLDS = [0, 5, 10, 18, 27, 37, 48, 59, 70, 80, 90];
-
-// Thresholds de XP correspondentes (1 dia completo = 100 XP)
-// [0, 500, 1000, 1800, 2700, 3700, 4800, 5900, 7000, 8000, 9000]
-export const TREE_XP_THRESHOLDS = TREE_DAY_THRESHOLDS.map(d => d * 100);
-
-// Helper: calcula o nível da árvore baseado nos dias completados
-function getTreeLevelForDays(days: number): number {
-  let level = 0;
-  for (let i = 1; i < TREE_DAY_THRESHOLDS.length; i++) {
-    if (days >= TREE_DAY_THRESHOLDS[i]) level = i;
-    else break;
-  }
-  return level;
-}
+export const XP_PER_DAY = 75;
+export const LEVEL_XP_STEP = 100;
+export const TREE_DAYS_STEP = 5;
 
 // Helper: retorna hoje no formato 'YYYY-MM-DD' (local timezone)
 function getTodayStr(): string {
@@ -58,11 +44,23 @@ interface ProgressStore {
   resetProgress: () => void;
 }
 
+export function getLevelFromXp(totalXp: number): number {
+  return Math.max(1, Math.floor(totalXp / LEVEL_XP_STEP) + 1);
+}
+
+export function getCompletedDaysFromXp(totalXp: number): number {
+  return Math.max(0, Math.floor(totalXp / XP_PER_DAY));
+}
+
+export function getTreeLevelFromDays(completedDays: number): number {
+  return Math.min(Math.max(0, Math.floor(completedDays / TREE_DAYS_STEP)), 10);
+}
+
 const INITIAL_PROGRESS: Progress = {
   currentStreak: 0,
   maxStreak: 0,
   totalXp: 0,
-  level: 0,
+  level: getLevelFromXp(0),
   treeLevel: 0,
   lastCompletedDate: null,
   completedDays: 0,
@@ -92,11 +90,13 @@ export const useProgressStore = create<ProgressStore>()(
           newStreak = progress.currentStreak + 1;
         }
 
-        const xpGained = 100; // 1 dia completo = 100 XP (alinhado à jornada de 90 dias)
+        const xpGained = XP_PER_DAY;
         const newTotalXp = progress.totalXp + xpGained;
-        const newCompletedDays = progress.completedDays + 1;
-        const newTreeLevel = getTreeLevelForDays(newCompletedDays);
-        const newLevel = newTreeLevel; // level e treeLevel falam a mesma língua
+        const newLevel = getLevelFromXp(newTotalXp);
+
+        const calculatedCompletedDays = getCompletedDaysFromXp(newTotalXp);
+        const newCompletedDays = Math.max(progress.completedDays + 1, calculatedCompletedDays);
+        const newTreeLevel = getTreeLevelFromDays(newCompletedDays);
 
         const newCompletedDates = progress.completedDates.includes(todayStr)
           ? progress.completedDates
@@ -118,18 +118,19 @@ export const useProgressStore = create<ProgressStore>()(
 
       getXpForNextLevel: () => {
         const { progress } = get();
-        if (progress.treeLevel >= 10) return 0;
-        const xpForNextLevel = TREE_XP_THRESHOLDS[progress.treeLevel + 1];
+        const safeLevel = Math.max(1, progress.level);
+        const xpForNextLevel = safeLevel * LEVEL_XP_STEP;
         return Math.max(0, xpForNextLevel - progress.totalXp);
       },
 
       getTreeProgress: () => {
         const { progress } = get();
         if (progress.treeLevel >= 10) return 100;
-        const xpCurrentLevel = TREE_XP_THRESHOLDS[progress.treeLevel];
-        const xpNextLevel = TREE_XP_THRESHOLDS[progress.treeLevel + 1];
-        const progressInCurrentLevel = progress.totalXp - xpCurrentLevel;
-        return (progressInCurrentLevel / (xpNextLevel - xpCurrentLevel)) * 100;
+        const daysForCurrentLevel = progress.treeLevel * TREE_DAYS_STEP;
+        const daysForNextLevel = (progress.treeLevel + 1) * TREE_DAYS_STEP;
+        const progressInCurrentLevel = progress.completedDays - daysForCurrentLevel;
+        const raw = (progressInCurrentLevel / (daysForNextLevel - daysForCurrentLevel)) * 100;
+        return Math.max(0, Math.min(100, raw));
       },
 
       resetProgress: () => set({ progress: INITIAL_PROGRESS }),

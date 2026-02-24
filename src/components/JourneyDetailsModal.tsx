@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Flame, Star } from "lucide-react";
-import { useProgressStore } from "@/stores/progressStore";
+import { LEVEL_XP_STEP, useProgressStore } from "@/stores/progressStore";
 import { TreeGrowthVisual } from "./TreeGrowthVisual";
 
 interface JourneyDetailsModalProps {
@@ -12,7 +12,10 @@ interface JourneyDetailsModalProps {
 
 export function JourneyDetailsModal({ isOpen, onClose }: JourneyDetailsModalProps) {
   const { progress, getXpForNextLevel, getTreeProgress } = useProgressStore();
-  const xpProgress = ((progress.totalXp % 100) / 100) * 100;
+  const safeLevel = Math.max(1, progress.level);
+  const xpCurrentLevel = (safeLevel - 1) * LEVEL_XP_STEP;
+  const xpInLevel = Math.max(0, progress.totalXp - xpCurrentLevel);
+  const xpProgress = Math.min(100, (xpInLevel / LEVEL_XP_STEP) * 100);
   const treeProgress = getTreeProgress();
 
   return (
@@ -80,7 +83,7 @@ export function JourneyDetailsModal({ isOpen, onClose }: JourneyDetailsModalProp
                       Nível {progress.level}
                     </span>
                     <span className="text-sm text-text-secondary">
-                      {progress.totalXp % 100} / 100 XP
+                      {xpInLevel} / {LEVEL_XP_STEP} XP
                     </span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
