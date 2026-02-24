@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
+import type { AuthChangeEvent, Session } from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabase'
 
 /**
@@ -18,7 +19,7 @@ export default function AuthCallbackPage() {
   useEffect(() => {
     // Escuta mudança de estado de auth — dispara quando o cliente
     // detecta o #access_token no hash (implicit flow) ou após exchangeCodeForSession (PKCE)
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event: AuthChangeEvent, session: Session | null) => {
       if ((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') && session && !redirected.current) {
         redirected.current = true
         router.replace('/')
