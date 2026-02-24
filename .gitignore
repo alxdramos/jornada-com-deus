@@ -40,3 +40,8 @@ Thumbs.db
 # Credentials & Sensitive Data
 data/credentials-users.json
 data/*.json
+
+# Design reference screenshots / MCP output at project root
+/*.png
+/*.jpg
+/*.jpeg
