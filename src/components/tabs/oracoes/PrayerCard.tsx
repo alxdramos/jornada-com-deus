@@ -2,6 +2,7 @@ import { Prayer } from "@/data/oracoes";
 import { Heart, Play } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import Image from "next/image";
 
 const THEME_COLORS: Record<string, string> = {
   "Perdão": "bg-red-100 text-red-700",
@@ -49,10 +50,12 @@ export function PrayerCard({
       {/* Imagem */}
       <div className="relative h-40 overflow-hidden bg-gray-200">
         {imageUrl && !imgError ? (
-          <img
+          <Image
+            fill
             src={imageUrl}
             alt={prayer.title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+            className="object-cover group-hover:scale-105 transition-transform"
+            sizes="(max-width: 768px) 50vw, 33vw"
             onError={() => setImgError(true)}
           />
         ) : (

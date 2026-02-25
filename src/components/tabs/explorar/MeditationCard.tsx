@@ -1,6 +1,7 @@
 import { MeditationCard as MeditationCardType } from "@/data/meditacoes";
 import { Heart, Play, Crown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 // Imagem única por meditação
 const MEDITATION_IMAGES: Record<string, string> = {
@@ -71,10 +72,12 @@ export function MeditationCard({
       {/* Imagem */}
       <div className="relative h-40 overflow-hidden bg-gray-200">
         {(meditation.image || MEDITATION_IMAGES[meditation.id]) ? (
-          <img
+          <Image
+            fill
             src={meditation.image || MEDITATION_IMAGES[meditation.id]}
             alt={meditation.title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+            className="object-cover group-hover:scale-105 transition-transform"
+            sizes="(max-width: 768px) 50vw, 33vw"
           />
         ) : (
           <div className="w-full h-full bg-gradient-to-br from-purple-400 to-blue-500" />

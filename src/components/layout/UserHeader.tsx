@@ -5,6 +5,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useUserStore } from "@/stores/userStore";
 import { ProfileModal } from "@/components/ProfileModal";
 import { Skeleton } from "@/components/ui/Skeleton";
+import Image from "next/image";
 
 interface UserHeaderProps {
   title: string;
@@ -14,6 +15,7 @@ interface UserHeaderProps {
 
 export function UserHeader({ title, subtitleElement, rightElement }: UserHeaderProps) {
   const [profileOpen, setProfileOpen] = useState(false);
+  const [avatarError, setAvatarError] = useState(false);
   const { user: authUser, loading } = useAuth();
   const user = useUserStore((s) => s.user);
 
@@ -31,19 +33,14 @@ export function UserHeader({ title, subtitleElement, rightElement }: UserHeaderP
           >
             {loading ? (
               <Skeleton className="w-full h-full rounded-full" />
-            ) : avatarUrl ? (
-              <img
+            ) : avatarUrl && !avatarError ? (
+              <Image
                 src={avatarUrl}
                 alt={`Avatar de ${displayName}`}
+                width={40}
+                height={40}
                 className="w-full h-full object-cover"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.style.display = "none";
-                  const parent = target.parentElement;
-                  if (parent) {
-                    parent.innerHTML = `<div class="w-full h-full bg-[#FB923C] flex items-center justify-center text-white font-bold text-base">${displayName.charAt(0).toUpperCase()}</div>`;
-                  }
-                }}
+                onError={() => setAvatarError(true)}
               />
             ) : (
               <div className="w-full h-full bg-[#FB923C] flex items-center justify-center text-white font-bold text-base">

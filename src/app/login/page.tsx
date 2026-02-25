@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { Loader2 } from 'lucide-react'
+import Image from 'next/image'
 import { useAuth } from '@/contexts/AuthContext'
 import { CredentialsLoginForm } from '@/components/auth/CredentialsLoginForm'
 
@@ -27,10 +28,13 @@ export default function LoginPage() {
       {/* ── Coluna esquerda: imagem (md+) ── */}
       <div className="hidden md:block md:w-1/2 lg:w-3/5 relative overflow-hidden">
         {/* Placeholder Unsplash — natureza serena */}
-        <img
+        <Image
           src="https://images.unsplash.com/photo-1501854140801-50d01698950b?w=1400&auto=format&fit=crop&q=80"
           alt="Paisagem natural serena"
-          className="absolute inset-0 w-full h-full object-cover"
+          fill
+          className="object-cover"
+          priority
+          sizes="(max-width: 768px) 0vw, 60vw"
         />
         {/* Overlay gradiente suave */}
         <div className="absolute inset-0 bg-gradient-to-br from-[#1F2937]/30 via-transparent to-[#FB923C]/20" />
@@ -55,11 +59,14 @@ export default function LoginPage() {
 
         {/* Fundo para mobile */}
         <div className="md:hidden absolute inset-0 z-0">
-          <img
+          <Image
             src="https://images.unsplash.com/photo-1501854140801-50d01698950b?w=800&auto=format&fit=crop&q=70"
             alt=""
             aria-hidden="true"
-            className="w-full h-full object-cover"
+            fill
+            className="object-cover"
+            priority
+            sizes="100vw"
           />
           <div className="absolute inset-0 bg-[#FAF9F6]/85 backdrop-blur-sm" />
         </div>

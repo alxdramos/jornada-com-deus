@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { RegisterForm } from "@/components/auth/RegisterForm";
 
 export const metadata = {
@@ -12,10 +13,13 @@ export default function RegisterPage() {
 
       {/* ── Coluna esquerda: imagem (md+) ── */}
       <div className="hidden md:block md:w-1/2 lg:w-3/5 relative overflow-hidden">
-        <img
+        <Image
           src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?w=1400&auto=format&fit=crop&q=80"
           alt="Natureza serena ao amanhecer"
-          className="absolute inset-0 w-full h-full object-cover"
+          fill
+          className="object-cover"
+          priority
+          sizes="(max-width: 768px) 0vw, 60vw"
         />
         <div className="absolute inset-0 bg-gradient-to-br from-[#10B981]/30 via-transparent to-[#FB923C]/20" />
         <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-[#FAF9F6] to-transparent" />
@@ -37,11 +41,14 @@ export default function RegisterPage() {
 
         {/* Fundo mobile */}
         <div className="md:hidden absolute inset-0 z-0">
-          <img
+          <Image
             src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?w=800&auto=format&fit=crop&q=70"
             alt=""
             aria-hidden="true"
-            className="w-full h-full object-cover"
+            fill
+            className="object-cover"
+            priority
+            sizes="100vw"
           />
           <div className="absolute inset-0 bg-[#FAF9F6]/85 backdrop-blur-sm" />
         </div>

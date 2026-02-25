@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
   serverExternalPackages: ['web-push'],
 
   images: {
+    formats: ["image/avif", "image/webp"],
     remotePatterns: [
       {
         protocol: "https",
@@ -15,6 +16,12 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "pub-561f3fcecd8945ba90a5b9c1683fac22.r2.dev",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
         port: "",
         pathname: "/**",
       },

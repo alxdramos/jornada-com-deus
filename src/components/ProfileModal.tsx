@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Crown, User, Mail, Calendar, Star, LogOut } from "lucide-react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
@@ -9,6 +10,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { AppButton } from "./AppButton";
 import { Skeleton } from "@/components/ui/Skeleton";
+import Image from "next/image";
 
 interface ProfileModalProps {
   isOpen: boolean;
@@ -20,6 +22,7 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
   const { user, togglePlus } = useUserStore();
   const { progress } = useProgressStore();
   const router = useRouter();
+  const [avatarError, setAvatarError] = useState(false);
 
   const displayName = user?.name || authUser?.user_metadata?.full_name || "Usuário";
   const displayEmail = user?.email || authUser?.email;
@@ -54,19 +57,14 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
               >
                 {loading ? (
                   <Skeleton className="w-full h-full rounded-full" />
-                ) : avatarUrl ? (
-                  <img
+                ) : avatarUrl && !avatarError ? (
+                  <Image
                     src={avatarUrl}
                     alt={`Avatar de ${displayName}`}
+                    width={80}
+                    height={80}
                     className="w-full h-full object-cover"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.style.display = "none";
-                      const parent = target.parentElement;
-                      if (parent) {
-                        parent.innerHTML = `<div class="w-full h-full bg-gradient-to-br from-[#FB923C] to-[#10B981] flex items-center justify-center"><svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg></div>`;
-                      }
-                    }}
+                    onError={() => setAvatarError(true)}
                   />
                 ) : (
                   <div className="w-full h-full bg-gradient-to-br from-[#FB923C] to-[#10B981] flex items-center justify-center">
