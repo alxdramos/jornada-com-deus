@@ -1,376 +1,413 @@
 # Jornada com Deus
 
-> **Aplicação devocional cristã PWA completa e funcional** — Uma jornada diária de intimidade com Deus através de tecnologia moderna e design sereno.
+> **PWA devocional cristã — completa e funcional em produção.** Cultivar um relacionamento mais profundo com Deus através de práticas espirituais diárias, conteúdo em áudio, gamificação e sincronização multi-device.
 
-[![Next.js](https://img.shields.io/badge/Next.js-16.1.6-black)](https://nextjs.org/)
-[![React](https://img.shields.io/badge/React-19.2.3-blue)](https://reactjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.0-38B2AC)](https://tailwindcss.com/)
-[![PWA](https://img.shields.io/badge/PWA-Ready-orange)](https://web.dev/progressive-web-apps/)
-[![Auth](https://img.shields.io/badge/Auth-Google%20%2B%20Credentials-blue)](https://authjs.dev/)
+[![Next.js](https://img.shields.io/badge/Next.js-15-black)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-19-blue)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-38B2AC)](https://tailwindcss.com/)
+[![Supabase](https://img.shields.io/badge/Auth-Supabase-green)](https://supabase.com/)
+[![PWA](https://img.shields.io/badge/PWA-Instalável-orange)](https://web.dev/progressive-web-apps/)
+
+**App em produção:** [app.minhajornadadiaria.com.br](https://app.minhajornadadiaria.com.br)
+**Site de apresentação:** [minhajornadadiaria.com.br](https://minhajornadadiaria.com.br)
 
 ---
 
 ## Visão do Produto
 
-**Jornada com Deus** é uma PWA para cristãos que desejam cultivar um relacionamento mais profundo com Deus através de práticas diárias espirituais.
+**Jornada com Deus** é uma PWA para cristãos que desejam cultivar hábito diário de intimidade com Deus.
 
-- **Foco:** hábito diário de intimidade com Deus
-- **Sensação visual:** paz, leveza, espaço em branco, minimalismo acolhedor
-- **Paleta:** fundo `#FAF9F6`, primary `#FB923C`, accent `#10B981`, texto `#1F2937`
-- **Design:** border-radius 16-20px, sombras suaves, muito espaço branco
-- **Todo texto em português brasileiro**
-- **Freemium:** conteúdo gratuito + áudio narrado = Plus
-- **Gamificação:** streak, XP (+75/dia), níveis, Árvore da Vida (0–10)
+- **Foco:** rotina espiritual diária — devocional, oração, meditação, Bíblia, diário
+- **Sensação visual:** paz, leveza, minimalismo acolhedor
+- **Paleta:** fundo `#FAF9F6`, primary `#FB923C` (laranja), accent `#10B981` (verde), texto `#1F2937`
+- **Dark mode:** disponível (paleta marrom-quente `#1A1714` — não azul frio)
+- **Freemium:** conteúdo base gratuito + áudio narrado = tier Plus
+- **Gamificação:** streak diário, XP (+75/dia), níveis, **Árvore da Vida** (11 estágios visuais)
+- **Offline-first:** funciona sem internet via IndexedDB + Service Worker
 
 ---
 
-## Stack Técnica Completa
+## Stack Técnica
 
 ### Core
 
-| Tecnologia | Versão | Uso |
-|---|---|---|
-| **Next.js** | 16.1.6 | Framework (App Router + Server Actions) |
-| **React** | 19.2.3 | UI + `useActionState` (React 19) |
-| **TypeScript** | 5.x (strict) | Tipagem obrigatória em tudo |
-| **Tailwind CSS** | 4.0 | Estilização utilitária |
+| Tecnologia | Uso |
+|---|---|
+| **Next.js 15** (App Router) | Framework principal — SSR, SSG, API routes, Server Actions |
+| **React 19** | UI com `useActionState` (React 19 nativo) |
+| **TypeScript 5** (strict) | Tipagem obrigatória em todo o projeto |
+| **Tailwind CSS 4** | Estilização utilitária |
 
 ### UI / Animações
 
-| Tecnologia | Versão | Uso |
-|---|---|---|
-| **shadcn/ui** | 3.8.5 | Componentes base (Button, Card, Dialog…) |
-| **Radix UI** | 1.4.3 | Primitivos acessíveis |
-| **Framer Motion** | 12.34.2 | Animações e transições suaves |
-| **Lucide React** | 0.574.0 | Ícones |
-| **Sonner** | 2.0.7 | Toast notifications |
+| Tecnologia | Uso |
+|---|---|
+| **shadcn/ui** | Componentes base (Button, Card, Dialog, etc.) |
+| **Radix UI** | Primitivos acessíveis |
+| **Framer Motion** | Animações e transições suaves em todo o app |
+| **Lucide React** | Ícones |
+| **Sonner** | Toast notifications |
+
+### Autenticação e Backend
+
+| Tecnologia | Uso |
+|---|---|
+| **Supabase Auth** | Google OAuth + E-mail/Senha + confirmação de e-mail |
+| **Supabase Database** | PostgreSQL com RLS + Realtime subscriptions |
+| **Supabase Client (browser)** | `src/lib/supabase.ts` — lazy init |
+| **Supabase Client (server)** | `src/lib/supabase-server.ts` — factory com cookies |
 
 ### Estado e Persistência
 
-| Tecnologia | Versão | Uso |
-|---|---|---|
-| **Zustand** | 5.0.11 | Estado global (com `persist` middleware) |
-| **Dexie (IndexedDB)** | 4.3.0 | Banco offline no browser |
-| **localStorage** | — | Persistência dos stores Zustand |
-
-### Autenticação
-
-| Tecnologia | Versão | Uso |
-|---|---|---|
-| **Auth.js (NextAuth v5)** | 5.0.0-beta.30 | Framework de autenticação |
-| **Google OAuth 2.0** | — | Login social |
-| **CredentialsProvider** | — | Login com e-mail + senha |
-| **bcryptjs** | 3.0.3 | Hash seguro de senhas (custo 12) |
+| Tecnologia | Uso |
+|---|---|
+| **Zustand 5** | Estado global (com `persist` middleware → localStorage) |
+| **Dexie 4** (IndexedDB) | Banco offline no browser — 6 tabelas |
+| **Supabase Realtime** | Sync multi-device em tempo real (progress, favorites) |
 
 ### PWA / Performance
 
-| Tecnologia | Versão | Uso |
-|---|---|---|
-| **next-pwa** | 5.6.0 | Service Worker + manifest |
-| **Workbox** | 7.4.0 | Cache offline avançado |
+| Tecnologia | Uso |
+|---|---|
+| **Service Worker customizado** | `public/sw.js` — estratégias CacheFirst/NetworkFirst/StaleWhileRevalidate |
+| **Background Sync API** | Sincronização de dados offline quando volta online |
+| **Web Push (VAPID)** | Notificações push nativas no navegador |
+| **web-push** | Biblioteca Node.js para envio de notificações |
+| **Vercel Cron Jobs** | Disparo automático 3× ao dia (7h, 12h, 20h Brasília) |
+| **next/image** | Otimização automática de imagens — WebP/AVIF |
 
-### APIs Externas
+### APIs Externas e CDN
 
 | Serviço | Uso |
 |---|---|
-| **bible-api.com** | Bíblia Almeida Corrigida Fiel (domínio público, online-only) |
-| **Cloudflare R2** | CDN para os 6 áudios de meditação |
-| **Unsplash** | Placeholder de imagens na tela de login/cadastro |
+| **Supabase Cloud** | Database, Auth, Realtime, Storage |
+| **Cloudflare R2** | CDN de áudios MP3 (meditações, orações, estudos) |
+| **bible-api.com** | Bíblia Almeida Corrigida Fiel (online-only) |
+| **Unsplash** | Imagens hero nas telas de login/cadastro |
+| **Google OAuth** | Login social |
+| **Vercel** | Deploy automático (push → produção) |
 
 ---
 
-## Estrutura de Arquivos (COMPLETA E ATUALIZADA)
+## Abas do App (9 tabs)
+
+| Tab | Componente | Conteúdo |
+|---|---|---|
+| **Hoje** | `TabHoje.tsx` | 4 etapas diárias + gamificação (XP/streak/árvore) |
+| **Explorar** | `TabExplorar.tsx` | Hub de navegação — cards para todas as seções |
+| **Meditações** | `TabMeditacoes.tsx` | 17 meditações com áudio + imagens espirituais únicas |
+| **Estudos Bíblicos** | `TabEstudos.tsx` | 21 estudos com áudio + imagens espirituais únicas |
+| **Bíblia** | `TabBiblia.tsx` | 66 livros, busca, navegação AT/NT via bible-api.com |
+| **Orações** | `TabOracoes.tsx` | 40+ orações com áudio + criação personalizada |
+| **Diário** | `TabDiario.tsx` | 4 tipos de entrada espiritual + busca + tags |
+| **Devocional** | `TabDevocional.tsx` | Devocionais diários com versículo e reflexão |
+| **Kids** | `TabKids.tsx` | Conteúdo adaptado para crianças |
+
+---
+
+## Features Implementadas
+
+### Autenticação (Supabase)
+- Google OAuth com foto real no avatar
+- Login e-mail + senha com confirmação de e-mail
+- Cadastro com campo nome completo obrigatório
+- Link de confirmação aponta para `app.minhajornadadiaria.com.br` (não localhost)
+- Mensagem específica para e-mail não confirmado
+- Middleware de proteção de rotas (SSR cookies)
+- `AuthContext` + `useAuthSync` (Supabase → Zustand → Dexie)
+- Callback `/auth/callback` para Google OAuth e e-mail confirm
+
+### Banco de Dados Supabase (Migrations aplicadas)
+- `001_create_auth_tables.sql` — users, accounts, sessions
+- `20260223_sync_offline_data.sql` — prayers, journal_entries (offline-first)
+- `20260224_bible_verses.sql` — bible_verses com full-text search
+- `20260224_user_progress_favorites.sql` — user_progress, user_favorites
+- `20260224_enable_realtime_rls_consolidation.sql` — RLS idempotente + Realtime
+- **RLS ativo** em todas as tabelas (`auth.uid() = user_id`)
+
+### Sync Multi-Device (Tempo Real)
+- **Prayers + Journal** — offline-first via `useSyncManager` (Dexie `pending` → Supabase upsert)
+- **Progress/XP/Streak/Árvore** — `useSupabaseSync`:
+  - Hydrate no login (remoto ganha se tiver mais XP)
+  - Push debounced 2s em cada mudança
+  - Realtime subscription `postgres_changes` UPDATE
+- **Favorites** — `useFavorites`:
+  - Hydrate no login (merge com localStorage)
+  - Toggle: localStorage imediato + upsert/delete Supabase em background
+  - Realtime subscription `postgres_changes` INSERT/DELETE
+
+### PWA Completa
+- Instalável em Android e iOS
+- Service Worker customizado com 5 estratégias de cache
+- **Background Sync** — dados offline sincronizados automaticamente quando volta online
+- **Meta tags iOS completas:** `apple-mobile-web-app-capable`, `apple-mobile-web-app-status-bar-style`, `apple-touch-icon`, 5 splash screens para todos os modelos de iPhone
+- **Manifest PWA otimizado** com screenshots (narrow + wide), shortcuts, display_override
+- Página offline com fallback
+
+### Push Notifications (Web Push VAPID)
+- **3× ao dia** via Vercel Cron: 7h, 12h, 20h (horário de Brasília)
+- Mensagens personalizadas por horário (manhã/tarde/noite)
+- Mensagens especiais por dia da semana (segunda-motivação, sexta-reflexão, fim de semana-paz)
+- **Deep links** nas notificações: `/?tab=hoje`, `/?tab=meditacoes`, `/?tab=oracoes`
+- Botão **"Testar"** no painel admin para disparar push para si mesmo
+- Subscription salva no Supabase com `user_id`
+
+### Painel Administrativo (`/admin`)
+- Acesso restrito a usuários com `role = 'admin'` via RLS
+- **Disparo manual de push** para todos os assinantes
+- **Botão de teste** para enviar push ao próprio admin
+- Lista de assinaturas ativas
+- Listagem de usuários
+
+### Conteúdo em Áudio (Cloudflare R2)
+- 17 meditações guiadas com áudio
+- 21 estudos bíblicos com áudio
+- 40+ orações com áudio
+- Proxy CORS em `/api/audio` para todas as URLs R2
+
+### Imagens Espirituais (geradas por IA)
+- **17 imagens únicas** para meditações (aquarela espiritual, luz dourada)
+- **21 imagens únicas** para estudos bíblicos (cenas temáticas sem texto)
+- **11 imagens** para os estágios da Árvore da Vida
+- **6 cards** da aba Explorar
+- Todas servidas via `next/image` com WebP/AVIF automático
+
+### Performance (next/image)
+- **Todos os `<img>` substituídos** por `next/image` em componentes críticos
+- `priority` nas imagens hero de login/register (LCP direto)
+- `fill + sizes` nos cards de grid (lazy load automático)
+- AVIF e WebP servidos automaticamente conforme suporte do browser
+- Avatares Google com `width/height` explícitos + fallback via state (sem manipulação de DOM)
+
+### Dark Mode
+- **Light é padrão** — dark mode opcional via botão
+- Paleta marrom-quente no dark: `#1A1714` (bg) / `#F0EDE8` (texto)
+- Não usa `prefers-color-scheme` automático (escolha explícita do usuário)
+- Cor primária laranja mantida igual em ambos os modos
+- Persistida em localStorage via `useDarkMode`
+
+### Gamificação
+- XP +75 por dia completo
+- Streak de dias consecutivos
+- Níveis calculados pelo XP total
+- **Árvore da Vida** — 11 estágios visuais (Semente → Bananeira Gloriosa)
+- Persistência: localStorage + Dexie + Supabase Realtime
+
+### Site de Apresentação (`site/`)
+- Landing page em `minhajornadadiaria.com.br`
+- 8 seções: Navbar, Hero, Missão, Problema/Solução, Recursos, Depoimentos, CTA, Footer
+- 3 mockups de telefone com imagens geradas por IA
+- Deploy independente via Vercel
+
+---
+
+## Estrutura de Arquivos
 
 ```
 jornada-com-deus/
 ├── src/
-│   ├── app/                            # Next.js App Router
-│   │   ├── layout.tsx                  # Layout raiz com providers
-│   │   ├── page.tsx                    # Página principal — renderiza as 5 tabs
-│   │   ├── globals.css                 # Estilos globais Tailwind
+│   ├── app/
+│   │   ├── layout.tsx                  # Layout raiz + meta tags iOS PWA completas
+│   │   ├── page.tsx                    # Entry point (auth guard)
+│   │   ├── page-content.tsx            # 9 tabs renderizadas condicionalmente
+│   │   ├── globals.css                 # Tailwind + variáveis CSS light/dark
 │   │   ├── actions/
-│   │   │   └── register.ts             # Server Action de cadastro (e-mail/senha)
-│   │   ├── biblia/
-│   │   │   └── sobre/page.tsx          # Aviso legal sobre a tradução bíblica
-│   │   ├── explorar/
-│   │   │   └── page.tsx                # Rota auxiliar /explorar (placeholder)
-│   │   ├── login/
-│   │   │   └── page.tsx                # Tela de login (Google + e-mail/senha)
-│   │   ├── privacidade/
-│   │   │   └── page.tsx                # Política de Privacidade (LGPD — SSG)
-│   │   ├── register/
-│   │   │   └── page.tsx                # Tela de cadastro (e-mail/senha)
-│   │   └── termos/
-│   │       └── page.tsx                # Termos de Serviço (CDC — SSG)
+│   │   │   └── register.ts             # Server Action de cadastro
+│   │   ├── admin/                      # Painel administrativo (role = admin)
+│   │   │   ├── layout.tsx              # Guard de admin
+│   │   │   ├── page.tsx                # Dashboard admin
+│   │   │   ├── assinaturas/            # Gerenciamento de push subscriptions
+│   │   │   └── usuarios/               # Lista de usuários
+│   │   ├── api/
+│   │   │   ├── audio/                  # Proxy CORS para áudios Cloudflare R2
+│   │   │   ├── push/
+│   │   │   │   ├── send/               # Disparo de push (Vercel Cron + manual)
+│   │   │   │   └── subscribe/          # Registro de subscription VAPID
+│   │   │   └── admin/push/test/        # Teste de push para o próprio admin
+│   │   ├── auth/callback/              # Callback OAuth + confirmação de e-mail
+│   │   ├── biblia/sobre/               # Aviso legal da tradução bíblica
+│   │   ├── login/                      # Tela de login (Google + e-mail/senha)
+│   │   ├── offline/                    # Página fallback offline
+│   │   ├── register/                   # Tela de cadastro
+│   │   ├── privacidade/                # Política de Privacidade LGPD (SSG)
+│   │   └── termos/                     # Termos de Serviço CDC (SSG)
 │   ├── components/
-│   │   ├── auth/                       # Componentes client de autenticação
-│   │   │   ├── CredentialsLoginForm.tsx # Formulário login e-mail/senha
-│   │   │   └── RegisterForm.tsx        # Formulário de cadastro
-│   │   ├── layout/                     # Componentes de layout reutilizáveis
-│   │   │   └── UserHeader.tsx          # Cabeçalho universal (avatar + título + ProfileModal)
+│   │   ├── auth/
+│   │   │   ├── CredentialsLoginForm.tsx
+│   │   │   └── RegisterForm.tsx
+│   │   ├── admin/
+│   │   │   └── PushNotificationCard.tsx # Card de push c/ botão testar
+│   │   ├── layout/
+│   │   │   └── UserHeader.tsx          # Header universal (avatar + ProfileModal)
 │   │   ├── providers/
-│   │   │   └── SessionProvider.tsx     # NextAuth SessionProvider (client)
-│   │   ├── tabs/                       # Telas das 5 abas principais
-│   │   │   ├── TabHoje.tsx             # Aba Hoje — devocional + gamificação
-│   │   │   ├── TabExplorar.tsx         # Aba Explorar — meditações + filtros
-│   │   │   ├── TabBiblia.tsx           # Aba Bíblia — navegação + busca
-│   │   │   ├── TabOracoes.tsx          # Aba Orações — banco + criação
-│   │   │   └── TabDiario.tsx           # Aba Diário — entradas espirituais
-│   │   ├── ui/                         # Componentes shadcn/ui
-│   │   │   ├── button.tsx
-│   │   │   ├── card.tsx
-│   │   │   ├── dialog.tsx              # z-index corrigido: overlay z-[9999], content z-[10000]
-│   │   │   ├── Skeleton.tsx
-│   │   │   ├── LoadingSpinner.tsx
-│   │   │   └── ... (15+ componentes)
-│   │   ├── AppButton.tsx
-│   │   ├── AppCard.tsx
-│   │   ├── AuthSyncWrapper.tsx         # Sincroniza Google session → Zustand → Dexie
-│   │   ├── BottomNav.tsx               # Navegação inferior — z-[9999]
-│   │   ├── CalendarioFavoritosModal.tsx
-│   │   ├── ErrorBoundary.tsx
+│   │   │   └── SessionProvider.tsx
+│   │   ├── tabs/                       # 9 telas das abas principais
+│   │   │   ├── TabHoje.tsx
+│   │   │   ├── TabExplorar.tsx
+│   │   │   ├── TabMeditacoes.tsx
+│   │   │   ├── TabEstudos.tsx
+│   │   │   ├── TabBiblia.tsx
+│   │   │   ├── TabOracoes.tsx
+│   │   │   ├── TabDiario.tsx
+│   │   │   ├── TabDevocional.tsx
+│   │   │   ├── TabKids.tsx
+│   │   │   ├── explorar/
+│   │   │   │   └── MeditationCard.tsx  # Card meditação c/ next/image
+│   │   │   ├── meditacoes/
+│   │   │   │   ├── MeditationDetailModalWithPlayer.tsx
+│   │   │   │   └── MeditationPlayerBar.tsx
+│   │   │   ├── estudos/
+│   │   │   │   ├── EstudoCard.tsx
+│   │   │   │   ├── EstudoDetailModalWithPlayer.tsx
+│   │   │   │   └── EstudoPlayerBar.tsx
+│   │   │   ├── oracoes/
+│   │   │   │   ├── PrayerCard.tsx      # Card oração c/ next/image
+│   │   │   │   ├── PrayerDetailModalWithPlayer.tsx
+│   │   │   │   └── PrayerPlayerBar.tsx
+│   │   │   └── diario/
+│   │   ├── ui/                         # Componentes shadcn/ui customizados
+│   │   ├── AuthSyncWrapper.tsx         # Supabase → Zustand → Dexie
+│   │   ├── BottomNav.tsx               # Navegação inferior (z-[9999])
 │   │   ├── GamificationCard.tsx        # XP / streak / Árvore da Vida
-│   │   ├── HojeSteps.tsx               # 4 etapas diárias
-│   │   ├── ImmersiveAudioPlayer.tsx    # Player fullscreen — z-[2000]
-│   │   ├── MeditationPlayer.tsx
+│   │   ├── ImmersiveAudioPlayer.tsx    # Player fullscreen (z-[2000])
+│   │   ├── NotificationSheet.tsx       # UI de solicitação de push
 │   │   ├── OfflineIndicator.tsx
-│   │   ├── PaywallModal.tsx            # Modal upgrade Plus
-│   │   ├── ProfileModal.tsx            # Modal perfil — usa Dialog (z-[10000])
-│   │   └── SectionHeader.tsx
-│   ├── stores/                         # Zustand stores com persist
+│   │   ├── ProfileModal.tsx            # Modal perfil c/ next/image avatar
+│   │   ├── ServiceWorkerRegistration.tsx # Registro SW + Background Sync tags
+│   │   ├── TreeGrowthVisual.tsx        # Visualização 11 estágios da árvore
+│   │   └── PaywallModal.tsx
+│   ├── stores/
 │   │   ├── userStore.ts                # Perfil + isPlus
 │   │   ├── progressStore.ts            # XP, streak, nível, árvore
-│   │   └── tabStore.ts                 # Aba ativa
+│   │   ├── tabStore.ts                 # Aba ativa + deep link (?tab=)
+│   │   └── oracaoStore.ts              # Estado das orações
 │   ├── hooks/
 │   │   ├── useAuthSync.ts              # Supabase ↔ Zustand ↔ Dexie
 │   │   ├── useBible.ts                 # API bible-api.com + cache sessionStorage
-│   │   ├── useDB.ts                    # Acesso ao Dexie
+│   │   ├── useDarkMode.ts              # Dark mode via localStorage (light padrão)
+│   │   ├── useDiaryStorage.ts
 │   │   ├── useFavorites.ts             # Offline-first + sync Supabase + realtime
+│   │   ├── useImageFallback.ts         # Fallback inteligente de imagens por categoria
+│   │   ├── useImmersiveAudioPlayer.ts  # Player de áudio fullscreen
+│   │   ├── useMeditationPlayer.ts      # Player de meditação
+│   │   ├── useOnlineStatus.ts          # Online/offline + wasOffline flag
+│   │   ├── usePrayerPlayer.ts          # Player de oração
+│   │   ├── usePrayerStorage.ts
+│   │   ├── usePushNotifications.ts     # Subscription VAPID + solicitação de permissão
 │   │   ├── useSupabaseSync.ts          # Progress sync: hydrate + push debounced + realtime
-│   │   ├── useSyncManager.ts           # Prayers + journal offline → Supabase
-│   │   ├── useOnlineStatus.ts
-│   │   ├── useToast.ts
-│   │   └── use-pwa-install.ts
+│   │   ├── useSyncManager.ts           # Offline data → Supabase (prayers + journal)
+│   │   └── useToast.ts
 │   ├── lib/
-│   │   ├── animations.ts               # Configs Framer Motion
-│   │   ├── db.ts                       # Configuração Dexie (IndexedDB — 6 tabelas)
+│   │   ├── db.ts                       # Dexie IndexedDB (6 tabelas)
 │   │   ├── supabase.ts                 # Cliente browser (lazy init)
 │   │   ├── supabase-server.ts          # Cliente server (factory com cookies)
-│   │   └── utils.ts                    # cn() e utilitários
+│   │   └── utils.ts
 │   ├── data/
-│   │   ├── oracoes-diarias.ts          # Banco de orações pré-definidas
-│   │   ├── passagens-diarias.ts
-│   │   ├── seed.ts
-│   │   └── versiculos.ts
-│   ├── types/
-│   │   └── next-auth.d.ts              # Extensão dos tipos: session.user.id
-│   ├── constants/
-│   │   └── theme.ts
-│   ├── auth.config.ts                  # Config leve Auth.js (Edge Runtime compatible)
-│   ├── auth.ts                         # Config completa Auth.js (Node.js only)
-│   └── middleware.ts                   # Proteção de rotas (Edge Runtime)
+│   │   ├── estudos.ts                  # 21 estudos bíblicos com áudio R2
+│   │   ├── meditacoes.ts               # 17 meditações com áudio R2
+│   │   ├── oracoes.ts                  # 40+ orações com áudio R2
+│   │   └── ...
+│   └── styles/
+│       ├── tokens.css                  # Design tokens (cores, espaçamento, tipografia)
+│       └── animations.css
 ├── public/
-│   ├── manifest.json                   # PWA manifest
-│   ├── favicon.ico
-│   └── icon-*.png                      # Ícones PWA 192x192 e 512x512
-├── data/                               # Gerado automaticamente (no .gitignore)
-│   └── credentials-users.json          # Usuários de e-mail/senha (DEV only)
-├── .env.local                          # Variáveis de ambiente (no .gitignore)
+│   ├── sw.js                           # Service Worker customizado
+│   ├── manifest.json                   # PWA manifest (screenshots + shortcuts)
+│   ├── icon-192x192.png
+│   ├── icon-512x512.png
+│   ├── icon-logo.png
+│   ├── screenshots/                    # 5 screenshots do app (PWA install UI)
+│   └── images/
+│       ├── tree-stages/                # 11 imagens da Árvore da Vida (IA)
+│       ├── meditacoes/                 # 17 imagens de meditações (IA)
+│       ├── estudos/                    # 21 imagens de estudos bíblicos (IA)
+│       └── explore-cards/              # 6 cards da aba Explorar (IA)
+├── vercel.json                         # Cron jobs: 3x/dia notificações push
+├── next.config.ts                      # remotePatterns + AVIF/WebP + SW headers
 ├── package.json
-├── next.config.ts
 ├── tailwind.config.js
-├── tsconfig.json
-└── .gitignore
+└── tsconfig.json
 ```
 
 ---
 
-## Sistema de Autenticação (DETALHADO)
+## Service Worker — Estratégias de Cache
 
-### Dois provedores ativos
+Arquivo: `public/sw.js` (customizado, sem next-pwa/Workbox)
 
-```
-Google OAuth  →  GoogleProvider (auth.config.ts)
-E-mail/Senha  →  CredentialsProvider (auth.ts — Node.js only)
-```
-
-### Arquitetura de arquivos Auth.js (IMPORTANTE)
-
-O Next.js middleware roda no **Edge Runtime** (sem Node.js). Por isso, a config do Auth.js é dividida em dois arquivos:
-
-```
-auth.config.ts  ──►  Edge Runtime safe
-  - GoogleProvider
-  - callbacks (session, jwt)
-  - pages { signIn: "/login" }
-  - Usado pelo: middleware.ts
-
-auth.ts  ──►  Node.js Runtime only
-  - Importa e estende authConfig
-  - Adiciona CredentialsProvider (usa bcryptjs + fs)
-  - Exporta: handlers, auth, signIn, signOut
-  - Usado por: server actions, API routes, server components
-```
-
-**NUNCA** importe `@/auth` no `middleware.ts` — isso quebraria o Edge Runtime.
-O middleware importa `NextAuth(authConfig)` do `auth.config.ts`.
-
-### Store de credenciais (`src/lib/credentials-db.ts`)
-
-- Armazena usuários em `data/credentials-users.json` (server-side, Node.js)
-- Senhas hasheadas com **bcryptjs** (custo 12)
-- Funções: `findUserByEmail`, `createCredentialUser`, `verifyCredentials`
-- **DEV only** — em produção substituir por PostgreSQL/MongoDB com adapter Auth.js
-
-### Fluxo de cadastro
-
-```
-/register  →  RegisterForm (client)
-           →  registerUser (server action)
-           →  createCredentialUser (credentials-db.ts)
-           →  signIn("credentials") automático
-           →  /
-```
-
-### Rotas protegidas (middleware.ts)
-
-```
-Protegidas (requer auth): /  /explorar  /biblia  /oracoes  /diario
-Públicas:                  /login  /register  /api/auth/*
-```
-
----
-
-## Componente UserHeader (REUTILIZÁVEL)
-
-Localização: `src/components/layout/UserHeader.tsx`
-
-Todas as 5 abas usam este componente no topo. Ele **gerencia internamente** o estado do ProfileModal.
-
-```tsx
-<UserHeader
-  title="Bíblia"
-  subtitleElement={<button>link opcional abaixo do título</button>}
-  rightElement={<div>ícones/botões do lado direito</div>}
-/>
-```
-
-| Prop | Tipo | Descrição |
+| Rota | Estratégia | TTL |
 |---|---|---|
-| `title` | `string` | Nome da aba exibido ao lado do avatar |
-| `subtitleElement?` | `ReactNode` | Conteúdo abaixo do título (usado no TabHoje) |
-| `rightElement?` | `ReactNode` | Slot para ações no lado direito |
+| `/_next/static/` | CacheFirst | 1 ano |
+| `/_next/image` | CacheFirst | 30 dias |
+| R2 Cloudflare (áudios) | CacheFirst | 30 dias |
+| Google avatares | CacheFirst | 7 dias |
+| `/api/bible`, bible-api.com | NetworkFirst | 7 dias |
+| Navegação (pages) | NavigationFirst + fallback `/offline` | — |
+| Resto | StaleWhileRevalidate | — |
 
-**O que o UserHeader faz:**
-- Consome `useSession()` para exibir a **foto do Google** no avatar
-- Consome `useUserStore` para o nome (fallback)
-- Skeleton enquanto carrega
-- Fallback: inicial do nome com `bg-[#FB923C]` se a foto falhar
-- `onClick` no avatar → abre `ProfileModal`
+### Background Sync
+Quando offline, dados ficam em Dexie com `syncStatus: 'pending'`. Ao voltar online:
+1. SW detecta conectividade → dispara tags `background-sync-prayers`, `background-sync-journal`, `sync-progress`
+2. SW envia mensagem `BACKGROUND_SYNC` para todos os clients ativos
+3. `ServiceWorkerRegistration.tsx` despacha evento `sw-background-sync` no window
+4. `useSyncManager` escuta o evento e executa upsert no Supabase
 
 ---
 
-## Z-Index (hierarquia completa)
+## Push Notifications
+
+### Fluxo completo
+```
+Usuário permite notificação
+  → usePushNotifications subscreve VAPID
+  → POST /api/push/subscribe → salva em Supabase (user_id + subscription JSON)
+
+Vercel Cron (10h / 15h / 23h UTC)
+  → GET /api/push/send
+  → Lê todas as subscriptions do Supabase
+  → web-push.sendNotification() com mensagem personalizada por horário
+  → Notificação com deep link abre a aba correta no app
+```
+
+### Mensagens por horário
+| UTC | Brasília | Tipo | Deep link |
+|---|---|---|---|
+| 10h | 7h | Bom dia + motivação | `/?tab=hoje` |
+| 15h | 12h | Pausa espiritual | `/?tab=meditacoes` |
+| 23h | 20h | Reflexão noturna | `/?tab=oracoes` |
+
+---
+
+## Design System
+
+### Cores (light / dark)
+
+```css
+/* Light (padrão) */
+--background: #FAF9F6;
+--foreground: #1F2937;
+--primary:    #FB923C;   /* laranja — igual nos dois modos */
+--accent:     #10B981;   /* verde — igual nos dois modos */
+
+/* Dark (opcional) */
+--background: #1A1714;   /* marrom escuro quente */
+--foreground: #F0EDE8;   /* branco quente */
+--card:       #231F1B;
+--secondary:  #2E2924;
+--border:     #3D3830;
+```
+
+### Z-Index (hierarquia)
 
 | Elemento | z-index |
 |---|---|
 | Conteúdo normal | 0–100 |
-| Modais das abas (bottom-sheet) | z-[1000] |
-| OfflineIndicator (topo) | z-[1000] |
-| LoadingSpinner overlay | z-[999] |
-| MeditationPlayer / ImmersiveAudioPlayer | z-[2000] |
+| Modais bottom-sheet | z-[1000] |
+| ImmersiveAudioPlayer | z-[2000] |
 | BottomNav | z-[9999] |
-| **Dialog overlay (ProfileModal)** | **z-[9999]** |
-| **Dialog content (ProfileModal)** | **z-[10000]** |
-
-O `ProfileModal` usa o componente `Dialog` do shadcn/ui. Os valores foram corrigidos em `src/components/ui/dialog.tsx` para garantir que o modal apareça **acima do BottomNav** e de todos os outros overlays.
-
----
-
-## Telas e Rotas
-
-### `/login` — Tela de Login
-
-- **Layout split-screen**: imagem Unsplash (esquerda, md+) + formulário (direita)
-- **Glassmorphism card**: `bg-white/75 backdrop-blur-xl`
-- **Botão Google**: cores oficiais (4 paths SVG coloridos) + hover laranja suave
-- **Formulário e-mail/senha**: `CredentialsLoginForm` (client component)
-- **Divisor "ou"** entre Google e credenciais
-- Mobile: imagem como fundo com overlay `bg-[#FAF9F6]/85 backdrop-blur-sm`
-
-### `/register` — Tela de Cadastro
-
-- Mesmo layout split-screen do login (imagem diferente — amanhecer verde)
-- Campos: nome, e-mail, senha, confirmar senha
-- Validação client + server
-- Após cadastro: login automático → redireciona para `/`
-
-### `/` — Home (5 abas)
-
-Renderiza condicionalmente via `tabStore`:
-
-| Tab | Componente | Destaque |
-|---|---|---|
-| **Hoje** | `TabHoje.tsx` | 4 etapas + gamificação + UserHeader com CalendarioFavoritosModal |
-| **Explorar** | `TabExplorar.tsx` | 6 meditações Cloudflare R2 + filtros + paywall Plus |
-| **Bíblia** | `TabBiblia.tsx` | Online-only via bible-api.com + busca + navegação AT/NT |
-| **Orações** | `TabOracoes.tsx` | Banco pré-definido + criação personalizada |
-| **Diário** | `TabDiario.tsx` | 4 tipos de entrada + busca + tags |
-
-### `/biblia/sobre` — Aviso Legal da Bíblia
-
-### `/explorar` — Rota auxiliar (placeholder antigo, não é a aba principal)
-
----
-
-## Gamificação
-
-| Elemento | Valor |
-|---|---|
-| XP por dia completo | +75 |
-| Streak | Dias consecutivos |
-| Árvore da Vida | 0–10 (baseado em progresso) |
-| Níveis | Calculados pelo XP total |
-
-Store: `src/stores/progressStore.ts` (Zustand + localStorage persist)
-
----
-
-## Dados e Banco
-
-### Dexie (IndexedDB — client-side)
-
-6 tabelas em `src/lib/db.ts`:
-
-```
-users           — perfil do usuário autenticado
-progress        — XP, streak, nível, árvore
-devotionals     — conteúdo devocional
-prayers         — orações pessoais + pré-definidas
-journalEntries  — entradas do diário
-favorites       — favoritos por userId
-```
-
-**Importante:** Dexie roda **apenas no browser**. Não pode ser acessado em server components, server actions ou middleware.
-
-### JSON File Store (server-side — credenciais)
-
-Arquivo: `data/credentials-users.json` (criado automaticamente)
-
-```json
-[
-  {
-    "id": "uuid",
-    "email": "usuario@email.com",
-    "name": "Nome",
-    "passwordHash": "$2b$12$...",
-    "createdAt": "2026-02-19T..."
-  }
-]
-```
-
-**Para produção:** substituir por database real + Auth.js adapter.
+| Dialog overlay (ProfileModal) | z-[9999] |
+| Dialog content (ProfileModal) | z-[10000] |
 
 ---
 
@@ -379,267 +416,143 @@ Arquivo: `data/credentials-users.json` (criado automaticamente)
 Arquivo: `.env.local` (não commitado)
 
 ```env
-# Google OAuth — obrigatório
-AUTH_GOOGLE_ID="..."
-AUTH_GOOGLE_SECRET="..."
+# Supabase — obrigatório
+NEXT_PUBLIC_SUPABASE_URL="https://xxx.supabase.co"
+NEXT_PUBLIC_SUPABASE_ANON_KEY="..."
+SUPABASE_SERVICE_ROLE_KEY="..."
 
-# Segredo Auth.js — obrigatório (string longa aleatória)
-AUTH_SECRET="..."
+# Web Push VAPID — obrigatório para notificações
+NEXT_PUBLIC_VAPID_PUBLIC_KEY="..."
+VAPID_PRIVATE_KEY="..."
+VAPID_EMAIL="mailto:contato@minhajornadadiaria.com.br"
 ```
 
-Gerar `AUTH_SECRET`:
+Gerar chaves VAPID:
 ```bash
-openssl rand -base64 32
+npx web-push generate-vapid-keys
 ```
 
 ---
 
 ## Como Executar
 
-### 1. Instalar dependências
-
 ```bash
-cd jornada-com-deus
+# 1. Instalar dependências
 npm install
-```
 
-### 2. Configurar variáveis de ambiente
+# 2. Configurar .env.local com as variáveis acima
 
-```bash
-# Crie o arquivo .env.local com as variáveis acima
-# Para Google OAuth: console.cloud.google.com
-# Authorized redirect URIs: http://localhost:3000/api/auth/callback/google
-```
-
-### 3. Rodar em desenvolvimento
-
-```bash
+# 3. Desenvolvimento
 npm run dev
-# Acessa: http://localhost:3000
-# Redireciona para /login automaticamente se não autenticado
-```
+# → http://localhost:3000
 
-### 4. Build de produção
-
-```bash
+# 4. Build de produção
 npm run build
 npm start
-```
 
-### 5. Linting
-
-```bash
+# 5. Lint
 npm run lint
 ```
 
 ---
 
-## Padrões de Código
-
-### TypeScript
-
-- Strict mode ativado
-- Tipos explícitos em tudo — evitar `any`
-- Componentes: `PascalCase` | Hooks: `camelCase` com prefixo `use`
-
-### Imports (ordem)
-
-```typescript
-// 1. React e Next.js
-import { useState } from "react";
-import Link from "next/link";
-
-// 2. Bibliotecas externas
-import { motion } from "framer-motion";
-
-// 3. Componentes internos
-import { UserHeader } from "@/components/layout/UserHeader";
-
-// 4. Hooks, stores, lib
-import { useUserStore } from "@/stores/userStore";
-```
-
-### Server vs Client
-
-```
-"use client"  →  componentes com hooks, eventos, next-auth/react
-sem diretiva  →  server components (padrão no App Router)
-"use server"  →  server actions (em arquivos separados ou inline em forms)
-```
-
-### Regra crítica Auth.js
-
-```
-middleware.ts  →  importa APENAS auth.config.ts (Edge Runtime)
-resto do app   →  importa auth.ts (Node.js)
-```
-
----
-
-## Design System
-
-### Cores
-
-```css
---background: #FAF9F6;   /* Off-white sereno */
---primary:    #FB923C;   /* Laranja quente */
---accent:     #10B981;   /* Verde paz */
---foreground: #1F2937;   /* Cinza escuro */
---muted:      #6B7280;   /* Cinza médio */
---success:    #10B981;
---warning:    #F59E0B;
---error:      #EF4444;
-```
-
-### Espaçamento e formas
-
-- Padding padrão nas telas: `p-6 pb-28` (28 = espaço para BottomNav)
-- Cards principais: `rounded-2xl` (16px)
-- Avatar: `rounded-full` com `border-2 border-white shadow-md`
-- Glassmorphism: `bg-white/75 backdrop-blur-xl border border-white/60`
-
-### Animações (Framer Motion)
-
-Configs centralizadas em `src/lib/animations.ts`:
-- `fadeInUp` — entrada suave de baixo para cima
-- `staggerContainer` + `staggerItem` — listas animadas em cascata
-- `hoverLift` — elevação sutil no hover
-
----
-
-## Próximos Passos (Roadmap)
-
-### Produção imediata
-
-1. **Deploy** — Vercel (recomendado para Next.js)
-2. **Banco de dados real** — substituir `data/credentials-users.json` por PostgreSQL + Prisma + Auth.js adapter
-3. **Testes em dispositivos reais**
-
-### Features prioritárias
-
-1. **Notificações push** — lembretes diários de devocional
-2. **Modo noturno** — alternância automática dia/noite
-3. **Dashboard de progresso** — gráficos de evolução espiritual
-4. **Planos de leitura bíblica** — leituras estruturadas em dias
-5. **Sistema social** — compartilhamento de reflexões
-
-### Técnico
-
-1. **Capacitor** — build nativo iOS/Android
-2. **Google Play / App Store** — publicação
-3. **Pagamentos Plus** — integração Stripe/Hotmart
-4. **Analytics** — Google Analytics
-5. **Testes** — Jest + React Testing Library
-
----
-
-## 🗺️ Status do MVP — Rastreamento de Progresso
-
-> Última atualização: 25/02/2026
-
----
-
-### ✅ Implementado e funcional
-
-**Autenticação (Supabase):**
-- ✅ Google OAuth com foto real no avatar
-- ✅ Login com e-mail + senha (Supabase Auth)
-- ✅ Cadastro com confirmação de e-mail (`emailRedirectTo` dinâmico — aponta para domínio de produção)
-- ✅ Link de confirmação redireciona para `app.minhajornadadiaria.com.br` (não localhost)
-- ✅ Mensagem específica para e-mail não confirmado no login
-- ✅ Middleware de proteção de rotas (SSR cookies)
-- ✅ AuthContext + useAuthSync (Supabase → Zustand → Dexie)
-- ✅ Redirecionamento automático login ↔ home
-- ✅ Callback `/auth/callback` para Google OAuth + email confirm
-
-**Supabase — Banco de Dados + Segurança:**
-- ✅ Cliente browser (`src/lib/supabase.ts` — lazy init com placeholder)
-- ✅ Cliente server (`src/lib/supabase-server.ts` — factory para Server Components)
-- ✅ Migrations aplicadas no Supabase Cloud:
-  - `001_create_auth_tables.sql` — users, accounts, sessions
-  - `20260223_sync_offline_data.sql` — prayers, journal_entries (offline-first)
-  - `20260224_bible_verses.sql` — bible_verses com full-text search
-  - `20260224_user_progress_favorites.sql` — user_progress, user_favorites
-  - `20260224_enable_realtime_rls_consolidation.sql` — RLS idempotente + Realtime publication
-- ✅ **RLS (Row Level Security)** ativo em todas as tabelas (`auth.uid() = user_id`)
-- ✅ **Realtime Publication** habilitada (`ALTER PUBLICATION supabase_realtime ADD TABLE`)
-
-**Sync de dados do usuário (multi-device):**
-- ✅ Prayers — offline-first via `useSyncManager` (Dexie pending → Supabase upsert)
-- ✅ Journal entries — offline-first via `useSyncManager`
-- ✅ Progress/Streak/XP/Árvore — `useSupabaseSync`:
-  - Hydrate no login (remote ganha se tiver mais XP)
-  - Push debounced 2s em cada mudança
-  - **Realtime subscription** `postgres_changes` UPDATE (canal `progress-{userId}`)
-- ✅ Favorites — `useFavorites`:
-  - Hydrate no login (merge com localStorage)
-  - Toggle: localStorage imediato + upsert/delete Supabase em background
-  - **Realtime subscription** `postgres_changes` INSERT/DELETE (canal `favorites-{userId}`)
-
-**UI/UX — App:**
-- ✅ Tela de login split-screen com glassmorphism
-- ✅ 9 abas: Hoje, Explorar, Bíblia, Orações, Diário, Meditações, Estudos Bíblicos, Devocional, Kids
-- ✅ Bottom Navigation fixo com z-[9999]
-- ✅ Animações Framer Motion em todo o app
-- ✅ Tags coloridas (vermelho/roxo/azul/amarelo) em Meditações, Orações e Estudos Bíblicos
-- ✅ Modo offline com IndexedDB + Service Worker
-
-**Páginas Legais (App):**
-- ✅ `/privacidade` — Política de Privacidade (LGPD, 10 seções, SSG)
-- ✅ `/termos` — Termos de Serviço (CDC, 11 seções, SSG)
-- ✅ Links reais de termos/privacidade nas telas de login e registro
-
-**Conteúdo:**
-- ✅ 16 meditações com áudio no Cloudflare R2
-- ✅ 21 estudos bíblicos com áudio no Cloudflare R2
-- ✅ 40+ orações com áudio no Cloudflare R2
-- ✅ Bíblia online via bible-api.com (66 livros, busca, navegação)
-- ✅ Banco de orações pré-definidas + criação personalizada
-- ✅ Diário com 4 tipos de entrada
-
-**Gamificação:**
-- ✅ XP (+75/dia completo), streak, níveis, Árvore da Vida (11 estágios)
-- ✅ Imagens geradas por IA para cada estágio da árvore
-- ✅ Persistência: localStorage + Dexie + Supabase (multi-device com realtime)
-
-**PWA:**
-- ✅ Instalável em mobile
-- ✅ Offline funcional
-- ✅ Service Worker com cache Workbox
-
-**Site de Apresentação (`site/`):**
-- ✅ Landing page completa em `minhajornadadiaria.com.br`
-- ✅ 8 seções: Navbar, Hero, Missão, Problema/Solução, Recursos, Depoimentos, CTA, Footer
-- ✅ 3 mockups de telefone flutuantes com imagens geradas por IA (Picasso):
-  - Oração — mãos em oração, luz dourada sobre Bíblia aberta
-  - Estudo Bíblico — pessoa em meditação com diário, luz de manhã
-  - Bíblia — livro sagrado com luz divina de cima
-- ✅ Layout responsivo: desktop + tablet + mobile
-- ✅ Badges e textos desnecessários removidos (PWA Gratuito · Funciona Offline)
-- ✅ Deploy independente via `vercel --prod` na pasta `site/`
-
----
-
-### 🚧 Pendente para lançamento MVP
-
-- [ ] Testes end-to-end do fluxo de auth email (cadastro → confirm → login) em produção
-- [ ] Push notifications — lembretes diários de devocional
-- [ ] Build nativo (Capacitor) — iOS/Android — opcional pós-MVP
-- [ ] Pagamentos Stripe (Plus tier)
-
----
-
-### 🌐 Produção
+## Deploy
 
 | Serviço | URL | Deploy |
-|---------|-----|--------|
-| **App** | https://app.minhajornadadiaria.com.br | Vercel — auto push `main` |
-| **Site** | https://minhajornadadiaria.com.br | Vercel — `cd site && vercel --prod` |
+|---|---|---|
+| **App** | https://app.minhajornadadiaria.com.br | Vercel — automático no push `main` |
+| **Site** | https://minhajornadadiaria.com.br | Vercel — `cd site && npx vercel --prod` |
 | **Database** | Supabase Cloud | `tmwkizdzulzufpuonhod.supabase.co` |
-| **CDN Áudios** | Cloudflare R2 | pub-* (imutável) |
-| **Auth redirect** | /auth/callback | `app.minhajornadadiaria.com.br` |
+| **CDN Áudios** | Cloudflare R2 | pub-* buckets (imutável) |
+| **Auth redirect** | `/auth/callback` | `app.minhajornadadiaria.com.br` |
 
-> ⚠️ **Atenção deploy:** O site (`minhajornadadiaria.com.br`) tem projeto Vercel **separado** do app. Após mexer em `site/`, rodar: `cd site && npx vercel --prod`
+> ⚠️ O site (`minhajornadadiaria.com.br`) tem projeto Vercel **separado** do app. Após mexer em `site/`, rodar: `cd site && npx vercel --prod`
+
+---
+
+## Status MVP — 25/02/2026
+
+### ✅ Implementado e em produção
+
+**Autenticação e Acesso:**
+- ✅ Google OAuth + Login e-mail/senha (Supabase Auth)
+- ✅ Cadastro com nome completo + confirmação de e-mail
+- ✅ Middleware de proteção de rotas (SSR cookies)
+- ✅ Callback OAuth + confirm redirect para domínio de produção
+
+**Banco de Dados e Segurança:**
+- ✅ PostgreSQL Supabase com 5 migrations aplicadas
+- ✅ RLS ativo em todas as tabelas
+- ✅ Realtime publication habilitada
+
+**Sync e Offline:**
+- ✅ Offline-first com IndexedDB (Dexie) — prayers, journal, progress
+- ✅ Background Sync via Service Worker (sync automático ao voltar online)
+- ✅ Realtime multi-device: progress, favorites
+
+**Conteúdo:**
+- ✅ 17 meditações guiadas com áudio (Cloudflare R2)
+- ✅ 21 estudos bíblicos com áudio (Cloudflare R2)
+- ✅ 40+ orações com áudio (Cloudflare R2)
+- ✅ Bíblia completa online (66 livros, busca, navegação AT/NT)
+- ✅ Devocional diário + Kids
+
+**Gamificação:**
+- ✅ XP + streak + níveis + Árvore da Vida (11 estágios visuais)
+- ✅ Persistência localStorage + Dexie + Supabase Realtime
+
+**PWA:**
+- ✅ Instalável em Android e iOS
+- ✅ Service Worker customizado (5 estratégias de cache)
+- ✅ Background Sync automático
+- ✅ Meta tags iOS completas (splash screens, status bar, apple-touch-icon)
+- ✅ Manifest com screenshots para UI de instalação (Android Chrome)
+- ✅ Página offline com fallback
+
+**Push Notifications:**
+- ✅ Web Push com VAPID (permissão + subscription)
+- ✅ 3× ao dia via Vercel Cron (7h, 12h, 20h Brasília)
+- ✅ Mensagens personalizadas por horário e dia da semana
+- ✅ Deep links nas notificações (abre aba correta)
+
+**Painel Admin:**
+- ✅ Dashboard administrativo em `/admin`
+- ✅ Disparo manual de push + teste individual
+- ✅ Lista de assinaturas e usuários
+- ✅ Acesso protegido por `role = 'admin'` via RLS
+
+**Design e UX:**
+- ✅ Light mode como padrão + Dark mode opcional (paleta marrom-quente)
+- ✅ 9 abas com navegação por bottom nav
+- ✅ Imagens espirituais únicas geradas por IA para todo o conteúdo
+- ✅ `next/image` em todos os componentes (WebP/AVIF automático)
+- ✅ Animações Framer Motion em todo o app
+
+**Páginas Legais:**
+- ✅ Política de Privacidade (LGPD, SSG)
+- ✅ Termos de Serviço (CDC, SSG)
+
+**Site de Apresentação:**
+- ✅ Landing page completa em `minhajornadadiaria.com.br`
+- ✅ 3 mockups com imagens IA + responsivo desktop/mobile
+
+---
+
+### 🚧 Próximos Passos
+
+**Monetização:**
+- [ ] Pagamentos Stripe (tier Plus)
+- [ ] Integração Hotmart (alternativa)
+
+**Crescimento:**
+- [ ] Dashboard de progresso espiritual (gráficos de evolução)
+- [ ] Planos de leitura bíblica estruturados
+- [ ] Sistema social (compartilhamento de reflexões)
+
+**Técnico:**
+- [ ] Testes E2E (Playwright)
+- [ ] Build nativo Capacitor (iOS/Android)
+- [ ] Google Play / App Store
 
 ---
 
