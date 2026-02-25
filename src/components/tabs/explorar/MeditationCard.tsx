@@ -1,6 +1,14 @@
 import { MeditationCard as MeditationCardType } from "@/data/meditacoes";
-import { Heart, Play, Lock, Crown } from "lucide-react";
+import { Heart, Play, Crown } from "lucide-react";
 import { cn } from "@/lib/utils";
+
+const CATEGORY_IMAGES: Record<string, string> = {
+  "CORPO": "/images/meditacoes/med-corpo-descanso.png",
+  "ESPÍRITO": "/images/meditacoes/med-espirito-paz.png",
+  "MENTE": "/images/meditacoes/med-mente-ansiedade.png",
+  "ORAÇÃO": "/images/meditacoes/med-oracao-confianca.png",
+  "MÚSICA": "/images/meditacoes/med-oracao-confianca.png",
+};
 
 const TAG_COLORS: Record<string, string> = {
   "Sono": "bg-blue-100 text-blue-700",
@@ -49,9 +57,9 @@ export function MeditationCard({
     <div className="rounded-lg overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow group">
       {/* Imagem */}
       <div className="relative h-40 overflow-hidden bg-gray-200">
-        {meditation.image ? (
+        {(meditation.image || CATEGORY_IMAGES[meditation.category]) ? (
           <img
-            src={meditation.image}
+            src={meditation.image || CATEGORY_IMAGES[meditation.category]}
             alt={meditation.title}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform"
           />

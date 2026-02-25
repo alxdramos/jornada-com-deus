@@ -72,7 +72,6 @@ export function TabMeditacoes() {
           {/* Seção de Meditações */}
           <ContentSection
             title="Meditações"
-            onViewAll={() => {}}
             emptyState="Nenhuma meditação encontrada com esses filtros"
           >
             {meditacoesFiltradas.map((meditacao) => (

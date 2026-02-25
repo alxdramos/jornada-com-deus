@@ -1,6 +1,7 @@
 import { EstudoBiblico } from "@/data/estudos";
 import { Heart, BookOpen, Headphones } from "lucide-react";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 interface EstudoCardProps {
   estudo: EstudoBiblico;
@@ -8,6 +9,14 @@ interface EstudoCardProps {
   onPlay: (estudo: EstudoBiblico) => void;
   onFavorite: (id: string) => void;
 }
+
+const CATEGORY_IMAGES: Record<string, string> = {
+  "Salmos": "/images/estudos/est-salmos.png",
+  "Evangelhos": "/images/estudos/est-evangelhos.png",
+  "Epístolas": "/images/estudos/est-epistolas.png",
+  "Sabedoria": "/images/estudos/est-sabedoria.png",
+  "Proféticos": "/images/estudos/est-profeticos.png",
+};
 
 const CATEGORY_COLORS: Record<string, string> = {
   Salmos: "bg-blue-100 text-blue-700",
@@ -27,8 +36,21 @@ export function EstudoCard({ estudo, isFavorite, onPlay, onFavorite }: EstudoCar
       className="rounded-2xl overflow-hidden bg-white shadow-sm hover:shadow-md transition-all border border-gray-100 cursor-pointer"
       onClick={() => onPlay(estudo)}
     >
-      <div className="h-24 bg-gradient-to-br from-[#D97706] to-[#92400E] flex items-center justify-center relative">
-        <BookOpen className="w-10 h-10 text-white/80" />
+      <div className="h-24 relative overflow-hidden">
+        {CATEGORY_IMAGES[estudo.category] ? (
+          <Image
+            src={CATEGORY_IMAGES[estudo.category]}
+            alt={estudo.category}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 50vw, 33vw"
+          />
+        ) : (
+          <div className="w-full h-full bg-gradient-to-br from-[#D97706] to-[#92400E] flex items-center justify-center">
+            <BookOpen className="w-10 h-10 text-white/80" />
+          </div>
+        )}
+        <div className="absolute inset-0 bg-black/20" />
         {estudo.reference && (
           <span className="absolute bottom-2 left-3 text-white/90 text-xs font-medium bg-black/20 px-2 py-0.5 rounded-full">
             {estudo.reference}

@@ -42,7 +42,6 @@ export const MEDITACOES: MeditationCard[] = [
     "tags": [
       "Sono"
     ],
-    "image": "/images/creation_1737042742.png",
     "audioUrl": "https://pub-561f3fcecd8945ba90a5b9c1683fac22.r2.dev/.mp3"
   },
   {
@@ -55,7 +54,6 @@ export const MEDITACOES: MeditationCard[] = [
     "tags": [
       "Paz"
     ],
-    "image": "/images/creation_1337233742.png",
     "audioUrl": "https://pub-561f3fcecd8945ba90a5b9c1683fac22.r2.dev/Med_20260217181219_878.mp3"
   },
   {
@@ -68,7 +66,6 @@ export const MEDITACOES: MeditationCard[] = [
     "tags": [
       "Cura"
     ],
-    "image": "/images/creation_1737042742.png",
     "audioUrl": "https://pub-561f3fcecd8945ba90a5b9c1683fac22.r2.dev/Med_20260217181804_359.mp3"
   },
   {
@@ -81,7 +78,6 @@ export const MEDITACOES: MeditationCard[] = [
     "tags": [
       "Força"
     ],
-    "image": "/images/creation_1337233742.png",
     "audioUrl": "https://pub-561f3fcecd8945ba90a5b9c1683fac22.r2.dev/Med_20260218151008_325.mp3"
   },
   {
@@ -94,7 +90,6 @@ export const MEDITACOES: MeditationCard[] = [
     "tags": [
       "Conexão com Deus e Fé"
     ],
-    "image": "/images/creation_2520632742.png",
     "audioUrl": "https://pub-561f3fcecd8945ba90a5b9c1683fac22.r2.dev/Med_20260220024244_153.mp3"
   },
   {
@@ -107,7 +102,6 @@ export const MEDITACOES: MeditationCard[] = [
     "tags": [
       "Dependência e Drogas"
     ],
-    "image": "/images/creation_2422241905.png",
     "audioUrl": "https://pub-561f3fcecd8945ba90a5b9c1683fac22.r2.dev/Med_20260220031408_630.mp3"
   },
   {
@@ -120,7 +114,6 @@ export const MEDITACOES: MeditationCard[] = [
     "tags": [
       "Cura Interior e Emoções"
     ],
-    "image": "/images/creation_2422241905.png",
     "audioUrl": "https://pub-561f3fcecd8945ba90a5b9c1683fac22.r2.dev/Med_20260220170107_966.mp3"
   },
   {
@@ -133,7 +126,6 @@ export const MEDITACOES: MeditationCard[] = [
     "tags": [
       "Insônia e Ansiedade Noturna"
     ],
-    "image": "/images/creation_2422241905.png",
     "audioUrl": "https://pub-561f3fcecd8945ba90a5b9c1683fac22.r2.dev/Med_20260220170727_950.mp3"
   },
   {
@@ -146,7 +138,6 @@ export const MEDITACOES: MeditationCard[] = [
     "tags": [
       "Autocontrole e Hábitos"
     ],
-    "image": "/images/creation_2422241905.png",
     "audioUrl": "https://pub-561f3fcecd8945ba90a5b9c1683fac22.r2.dev/Med_20260220175814_219.mp3"
   },
   {
@@ -159,7 +150,6 @@ export const MEDITACOES: MeditationCard[] = [
     "tags": [
       "Relacionamentos e Amor"
     ],
-    "image": "/images/creation_1337233742.png",
     "audioUrl": "https://pub-561f3fcecd8945ba90a5b9c1683fac22.r2.dev/Med_20260220185642_462.mp3"
   },
   {
@@ -172,7 +162,6 @@ export const MEDITACOES: MeditationCard[] = [
     "tags": [
       "Cura Interior e Emoções"
     ],
-    "image": "/images/creation_2422241905.png",
     "audioUrl": "https://pub-561f3fcecd8945ba90a5b9c1683fac22.r2.dev/Med_20260220190013_399.mp3"
   },
   {
@@ -185,7 +174,6 @@ export const MEDITACOES: MeditationCard[] = [
     "tags": [
       "Propósito e Direção"
     ],
-    "image": "/images/creation_1337233742.png",
     "audioUrl": "https://pub-561f3fcecd8945ba90a5b9c1683fac22.r2.dev/Med_20260220195814_874.mp3"
   },
   {
@@ -198,7 +186,6 @@ export const MEDITACOES: MeditationCard[] = [
     "tags": [
       "Insônia e Ansiedade Noturna"
     ],
-    "image": "/images/creation_2422241905.png",
     "audioUrl": "https://pub-561f3fcecd8945ba90a5b9c1683fac22.r2.dev/Med_20260220205813_953.mp3"
   },
   {
@@ -211,7 +198,6 @@ export const MEDITACOES: MeditationCard[] = [
     "tags": [
       "Família"
     ],
-    "image": "/images/creation_1337233742.png",
     "audioUrl": "https://pub-561f3fcecd8945ba90a5b9c1683fac22.r2.dev/Med_20260220215814_194.mp3"
   },
   {
@@ -224,7 +210,6 @@ export const MEDITACOES: MeditationCard[] = [
     "tags": [
       "Dependência e Drogas"
     ],
-    "image": "/images/creation_2422241905.png",
     "audioUrl": "https://pub-561f3fcecd8945ba90a5b9c1683fac22.r2.dev/Med_20260220225814_748.mp3"
   },
   {
@@ -237,7 +222,6 @@ export const MEDITACOES: MeditationCard[] = [
     "tags": [
       "Autocontrole e Hábitos"
     ],
-    "image": "/images/creation_2422241905.png",
     "audioUrl": "https://pub-561f3fcecd8945ba90a5b9c1683fac22.r2.dev/Med_20260220235814_721.mp3"
   },
   {
@@ -250,7 +234,6 @@ export const MEDITACOES: MeditationCard[] = [
     "tags": [
       "Cura Interior e Emoções"
     ],
-    "image": "/images/creation_2422241905.png",
     "audioUrl": "https://pub-561f3fcecd8945ba90a5b9c1683fac22.r2.dev/Med_20260222170257_106.mp3"
   }
 ];
