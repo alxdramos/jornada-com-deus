@@ -80,7 +80,7 @@ export function FeaturesSection() {
   const inView = useInView(ref, { once: true, margin: '-60px' });
 
   return (
-    <section id="recursos" className="py-24 sm:py-32 bg-white">
+    <section id="recursos" className="py-24 sm:py-32 bg-white scroll-mt-16">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
 
         {/* Header */}
