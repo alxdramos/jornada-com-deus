@@ -5,12 +5,43 @@
   "description": "App devocional cristão para criar hábito diário com Deus",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#F8FAFC",
-  "theme_color": "#6B4CE6",
+  "display_override": ["standalone"],
+  "background_color": "#FAF9F6",
+  "theme_color": "#FB923C",
   "orientation": "portrait",
   "scope": "/",
   "lang": "pt-BR",
   "categories": ["lifestyle", "productivity", "religion"],
+  "shortcuts": [
+    {
+      "name": "Devocional de Hoje",
+      "short_name": "Hoje",
+      "description": "Abrir o devocional do dia",
+      "url": "/?tab=hoje",
+      "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Orações",
+      "short_name": "Orações",
+      "description": "Acessar suas orações",
+      "url": "/?tab=oracoes",
+      "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Meditações",
+      "short_name": "Meditações",
+      "description": "Ouvir meditações guiadas",
+      "url": "/?tab=meditacoes",
+      "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Diário Espiritual",
+      "short_name": "Diário",
+      "description": "Escrever no diário espiritual",
+      "url": "/?tab=diario",
+      "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192" }]
+    }
+  ],
   "icons": [
     {
       "src": "/icon-192x192.png",

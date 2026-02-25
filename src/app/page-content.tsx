@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import { useTabStore } from "@/stores/tabStore";
+import { Suspense, useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useTabStore, type TabId } from "@/stores/tabStore";
 import { Header } from "@/components/layout";
 import { TabHoje } from "@/components/tabs/TabHoje";
 import { TabExplorar } from "@/components/tabs/TabExplorar";
@@ -17,6 +18,22 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { InstallPromptModal } from "@/components/InstallPromptModal";
 import { useInstallPrompt } from "@/hooks/useInstallPrompt";
 import { useSyncManager } from "@/hooks/useSyncManager";
+
+const VALID_TABS: TabId[] = ['hoje', 'explorar', 'biblia', 'meditacoes', 'oracoes', 'diario', 'estudos'];
+
+function TabInitializer() {
+  const searchParams = useSearchParams();
+  const setActiveTab = useTabStore((s) => s.setActiveTab);
+
+  useEffect(() => {
+    const tab = searchParams.get('tab') as TabId | null;
+    if (tab && VALID_TABS.includes(tab)) {
+      setActiveTab(tab);
+    }
+  }, [searchParams, setActiveTab]);
+
+  return null;
+}
 
 export function HomeContent() {
   const activeTab = useTabStore((s) => s.activeTab);
@@ -37,6 +54,10 @@ export function HomeContent() {
 
   return (
     <>
+      {/* Lê ?tab= da URL para shortcuts do manifest PWA */}
+      <Suspense fallback={null}>
+        <TabInitializer />
+      </Suspense>
       <Header />
       <ErrorBoundary fallbackLabel="Erro na aba Hoje">
         {activeTab === "hoje" && <TabHoje />}
