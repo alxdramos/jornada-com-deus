@@ -3,6 +3,7 @@ import { KpiCard } from '@/components/admin/KpiCard'
 import { UsersLineChart } from '@/components/admin/charts/UsersLineChart'
 import { DauMauChart } from '@/components/admin/charts/DauMauChart'
 import { FreePlusDonut } from '@/components/admin/charts/FreePlusDonut'
+import { PushNotificationCard } from '@/components/admin/PushNotificationCard'
 import {
   getKpiData,
   getUserGrowth30d,
@@ -90,7 +91,7 @@ async function DashboardContent() {
       </div>
 
       {/* Bottom Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <DauMauChart data={dau} />
 
         {/* Cadastros recentes */}
@@ -129,6 +130,9 @@ async function DashboardContent() {
             </div>
           )}
         </div>
+
+        {/* Notificação Push */}
+        <PushNotificationCard />
       </div>
     </div>
   )
