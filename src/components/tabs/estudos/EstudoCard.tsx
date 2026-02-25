@@ -10,12 +10,29 @@ interface EstudoCardProps {
   onFavorite: (id: string) => void;
 }
 
-const CATEGORY_IMAGES: Record<string, string> = {
-  "Salmos": "/images/estudos/est-salmos.png",
-  "Evangelhos": "/images/estudos/est-evangelhos.png",
-  "Epístolas": "/images/estudos/est-epistolas.png",
-  "Sabedoria": "/images/estudos/est-sabedoria.png",
-  "Proféticos": "/images/estudos/est-profeticos.png",
+// Imagem única por estudo (sem repetição)
+const STUDY_IMAGES: Record<string, string> = {
+  est_0:  "/images/estudos/est-0-paz-caos.png",
+  est_1:  "/images/estudos/est-1-coragem-recomecar.png",
+  est_2:  "/images/estudos/est-2-forca-fraqueza.png",
+  est_3:  "/images/estudos/est-3-foco-sem-distracoes.png",
+  est_4:  "/images/estudos/est-4-identidade-secreto.png",
+  est_5:  "/images/estudos/est-5-comparacao-contentamento.png",
+  est_6:  "/images/estudos/est-6-palavras-constroem.png",
+  est_7:  "/images/estudos/est-7-trabalho-proposito.png",
+  est_8:  "/images/estudos/est-8-perdao-liberta.png",
+  est_9:  "/images/estudos/est-9-descanso-ritmo.png",
+  est_10: "/images/estudos/est-10-santidade-cotidiano.png",
+  est_11: "/images/estudos/est-11-vencendo-culpa.png",
+  est_12: "/images/estudos/est-12-disciplina-espiritual.png",
+  est_13: "/images/estudos/est-13-medo-futuro.png",
+  est_14: "/images/estudos/est-14-autocontrole-impulsos.png",
+  est_15: "/images/estudos/est-15-equilibrio-trabalho.png",
+  est_16: "/images/estudos/est-16-amor-pratico.png",
+  est_17: "/images/estudos/est-17-processos-maturidade.png",
+  est_18: "/images/estudos/est-18-coracao-quebrantado.png",
+  est_19: "/images/estudos/est-19-financas-sabedoria.png",
+  est_20: "/images/estudos/est-20-decisoes-guiadas.png",
 };
 
 const CATEGORY_COLORS: Record<string, string> = {
@@ -37,10 +54,10 @@ export function EstudoCard({ estudo, isFavorite, onPlay, onFavorite }: EstudoCar
       onClick={() => onPlay(estudo)}
     >
       <div className="h-24 relative overflow-hidden">
-        {CATEGORY_IMAGES[estudo.category] ? (
+        {STUDY_IMAGES[estudo.id] ? (
           <Image
-            src={CATEGORY_IMAGES[estudo.category]}
-            alt={estudo.category}
+            src={STUDY_IMAGES[estudo.id]}
+            alt={estudo.shortTitle}
             fill
             className="object-cover"
             sizes="(max-width: 768px) 50vw, 33vw"
