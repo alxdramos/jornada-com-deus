@@ -535,7 +535,9 @@ Configs centralizadas em `src/lib/animations.ts`:
 
 ## 🗺️ Status do MVP — Rastreamento de Progresso
 
-> Última atualização: 24/02/2026
+> Última atualização: 25/02/2026
+
+---
 
 ### ✅ Implementado e funcional
 
@@ -560,7 +562,7 @@ Configs centralizadas em `src/lib/animations.ts`:
   - `20260224_user_progress_favorites.sql` — user_progress, user_favorites
   - `20260224_enable_realtime_rls_consolidation.sql` — RLS idempotente + Realtime publication
 - ✅ **RLS (Row Level Security)** ativo em todas as tabelas (`auth.uid() = user_id`)
-- ✅ **Realtime Publication** habilitada (`supabase_realtime ADD TABLE`)
+- ✅ **Realtime Publication** habilitada (`ALTER PUBLICATION supabase_realtime ADD TABLE`)
 
 **Sync de dados do usuário (multi-device):**
 - ✅ Prayers — offline-first via `useSyncManager` (Dexie pending → Supabase upsert)
@@ -574,7 +576,7 @@ Configs centralizadas em `src/lib/animations.ts`:
   - Toggle: localStorage imediato + upsert/delete Supabase em background
   - **Realtime subscription** `postgres_changes` INSERT/DELETE (canal `favorites-{userId}`)
 
-**UI/UX:**
+**UI/UX — App:**
 - ✅ Tela de login split-screen com glassmorphism
 - ✅ 9 abas: Hoje, Explorar, Bíblia, Orações, Diário, Meditações, Estudos Bíblicos, Devocional, Kids
 - ✅ Bottom Navigation fixo com z-[9999]
@@ -582,7 +584,7 @@ Configs centralizadas em `src/lib/animations.ts`:
 - ✅ Tags coloridas (vermelho/roxo/azul/amarelo) em Meditações, Orações e Estudos Bíblicos
 - ✅ Modo offline com IndexedDB + Service Worker
 
-**Páginas Legais:**
+**Páginas Legais (App):**
 - ✅ `/privacidade` — Política de Privacidade (LGPD, 10 seções, SSG)
 - ✅ `/termos` — Termos de Serviço (CDC, 11 seções, SSG)
 - ✅ Links reais de termos/privacidade nas telas de login e registro
@@ -605,6 +607,17 @@ Configs centralizadas em `src/lib/animations.ts`:
 - ✅ Offline funcional
 - ✅ Service Worker com cache Workbox
 
+**Site de Apresentação (`site/`):**
+- ✅ Landing page completa em `minhajornadadiaria.com.br`
+- ✅ 8 seções: Navbar, Hero, Missão, Problema/Solução, Recursos, Depoimentos, CTA, Footer
+- ✅ 3 mockups de telefone flutuantes com imagens geradas por IA (Picasso):
+  - Oração — mãos em oração, luz dourada sobre Bíblia aberta
+  - Estudo Bíblico — pessoa em meditação com diário, luz de manhã
+  - Bíblia — livro sagrado com luz divina de cima
+- ✅ Layout responsivo: desktop + tablet + mobile
+- ✅ Badges e textos desnecessários removidos (PWA Gratuito · Funciona Offline)
+- ✅ Deploy independente via `vercel --prod` na pasta `site/`
+
 ---
 
 ### 🚧 Pendente para lançamento MVP
@@ -614,13 +627,19 @@ Configs centralizadas em `src/lib/animations.ts`:
 - [ ] Build nativo (Capacitor) — iOS/Android — opcional pós-MVP
 - [ ] Pagamentos Stripe (Plus tier)
 
+---
+
 ### 🌐 Produção
 
-- **URL:** https://app.minhajornadadiaria.com.br
-- **Hosting:** Vercel (auto-deploy no push para `main`)
-- **Database:** Supabase Cloud (`tmwkizdzulzufpuonhod.supabase.co`)
-- **CDN Áudios:** Cloudflare R2 (pub-*)
-- **Auth redirect:** `https://app.minhajornadadiaria.com.br/auth/callback`
+| Serviço | URL | Deploy |
+|---------|-----|--------|
+| **App** | https://app.minhajornadadiaria.com.br | Vercel — auto push `main` |
+| **Site** | https://minhajornadadiaria.com.br | Vercel — `cd site && vercel --prod` |
+| **Database** | Supabase Cloud | `tmwkizdzulzufpuonhod.supabase.co` |
+| **CDN Áudios** | Cloudflare R2 | pub-* (imutável) |
+| **Auth redirect** | /auth/callback | `app.minhajornadadiaria.com.br` |
+
+> ⚠️ **Atenção deploy:** O site (`minhajornadadiaria.com.br`) tem projeto Vercel **separado** do app. Após mexer em `site/`, rodar: `cd site && npx vercel --prod`
 
 ---
 
