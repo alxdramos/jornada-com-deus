@@ -528,48 +528,79 @@ Configs centralizadas em `src/lib/animations.ts`:
 
 ## Estado Atual do Desenvolvimento (19/02/2026)
 
+## 🗺️ Status do MVP — Rastreamento de Progresso
+
+> Última atualização: 24/02/2026
+
 ### ✅ Implementado e funcional
 
-**Autenticação completa:**
-- Google OAuth com foto real no avatar
-- Login com e-mail + senha (CredentialsProvider)
-- Cadastro de nova conta com hash bcryptjs
-- Middleware de proteção de rotas (Edge Runtime)
-- `auth.config.ts` separado para compatibilidade Edge/Node
-- Redirecionamento automático login ↔ home
+**Autenticação (Supabase):**
+- ✅ Google OAuth com foto real no avatar
+- ✅ Login com e-mail + senha (Supabase Auth)
+- ✅ Cadastro com confirmação de e-mail (emailRedirectTo dinâmico)
+- ✅ Middleware de proteção de rotas (SSR cookies)
+- ✅ AuthContext + useAuthSync (Supabase → Zustand → Dexie)
+- ✅ Redirecionamento automático login ↔ home
+- ✅ Callback `/auth/callback` para Google OAuth + email confirm
+
+**Supabase — Banco de Dados:**
+- ✅ Cliente browser (`src/lib/supabase.ts` — lazy init com placeholder)
+- ✅ Cliente server (`src/lib/supabase-server.ts` — factory para Server Components)
+- ✅ Migrations aplicadas:
+  - `001_create_auth_tables.sql` — users, accounts, sessions
+  - `20260223_sync_offline_data.sql` — prayers, journal_entries (offline-first)
+  - `20260224_bible_verses.sql` — bible_verses com full-text search
+  - `20260224_user_progress_favorites.sql` — user_progress, user_favorites
+- ✅ RLS ativo em todas as tabelas
+
+**Sync de dados do usuário:**
+- ✅ Prayers — offline-first via `useSyncManager` (Dexie pending → Supabase upsert)
+- ✅ Journal entries — offline-first via `useSyncManager`
+- ✅ Progress/Streak/XP/Árvore — `useSupabaseSync` (hydrate login + push debounced + realtime)
+- ✅ Favorites — `useFavorites` com sync Supabase (hydrate login + toggle upsert/delete)
+- ✅ Realtime subscription multi-device para progresso
 
 **UI/UX:**
-- Tela de login split-screen com glassmorphism
-- Tela de cadastro com mesmo padrão visual
-- `UserHeader` reutilizável em todas as 5 abas (foto Google + ProfileModal)
-- `ProfileModal` com z-index corrigido (acima do BottomNav)
-- 5 abas completas: Hoje, Explorar, Bíblia, Orações, Diário
-- Bottom Navigation fixo com z-[9999]
-- Animações Framer Motion em todo o app
-- Skeletons de loading em todos os estados
-- Modo offline com IndexedDB + Service Worker
+- ✅ Tela de login split-screen com glassmorphism
+- ✅ 9 abas: Hoje, Explorar, Bíblia, Orações, Diário, Meditações, Estudos Bíblicos, Devocional, Kids
+- ✅ Bottom Navigation fixo com z-[9999]
+- ✅ Animações Framer Motion em todo o app
+- ✅ Tags coloridas (vermelho/roxo/azul/amarelo) em Meditações, Orações e Estudos
+- ✅ Modo offline com IndexedDB + Service Worker
 
 **Conteúdo:**
-- 6 meditações reais no Cloudflare R2
-- Bíblia online via bible-api.com (66 livros, busca, navegação)
-- Banco de orações pré-definidas + criação personalizada
-- Diário com 4 tipos de entrada
+- ✅ 16 meditações com áudio no Cloudflare R2
+- ✅ 21 estudos bíblicos com áudio no Cloudflare R2
+- ✅ 40+ orações com áudio no Cloudflare R2
+- ✅ Bíblia online via bible-api.com (66 livros, busca, navegação)
+- ✅ Banco de orações pré-definidas + criação personalizada
+- ✅ Diário com 4 tipos de entrada
 
 **Gamificação:**
-- XP (+75/dia completo), streak, níveis, Árvore da Vida
-- Persistência no localStorage via Zustand
+- ✅ XP (+75/dia completo), streak, níveis, Árvore da Vida (11 estágios)
+- ✅ Imagens geradas por IA para cada estágio da árvore
+- ✅ Persistência: localStorage + Dexie + Supabase (multi-device)
 
 **PWA:**
-- Instalável em mobile
-- Offline funcional
-- Service Worker com cache Workbox
+- ✅ Instalável em mobile
+- ✅ Offline funcional
+- ✅ Service Worker com cache Workbox
 
-### 🚧 Pendente para produção
+### 🚧 Pendente para lançamento MVP
 
-- Banco de dados real para credenciais (atualmente JSON file)
-- Build nativo (Capacitor)
-- Pagamentos (Plus)
-- Deploy
+- [ ] Executar migration `20260224_user_progress_favorites.sql` no Supabase cloud
+- [ ] Testes end-to-end do fluxo de auth email (cadastro → confirm → login)
+- [ ] Build nativo (Capacitor) — opcional pós-MVP
+- [ ] Pagamentos Stripe (Plus tier)
+- [ ] Push notifications (orações diárias)
+
+### 🌐 Produção
+
+- **URL:** https://app.minhajornadadiaria.com.br
+- **Hosting:** Vercel (auto-deploy no push para `main`)
+- **Database:** Supabase Cloud (`tmwkizdzulzufpuonhod.supabase.co`)
+- **CDN Áudios:** Cloudflare R2 (pub-*)
+- **Auth redirect:** `https://app.minhajornadadiaria.com.br/auth/callback`
 
 ---
 
