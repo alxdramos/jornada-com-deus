@@ -88,7 +88,7 @@ export function TabOracoes() {
                   id: oracao.id,
                   title: oracao.titulo,
                   content: oracao.texto,
-                  category: "Geral",
+                  category: oracao.theme && oracao.theme !== "default" ? oracao.theme : "Geral",
                   isCustom: false,
                   createdAt: new Date(oracao.createdAt),
                   audioUrl: oracao.audioUrl,

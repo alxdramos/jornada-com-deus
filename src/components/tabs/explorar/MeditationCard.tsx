@@ -2,6 +2,32 @@ import { MeditationCard as MeditationCardType } from "@/data/meditacoes";
 import { Heart, Play, Lock, Crown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+const TAG_COLORS: Record<string, string> = {
+  "Sono": "bg-blue-100 text-blue-700",
+  "Paz": "bg-purple-100 text-purple-700",
+  "Cura": "bg-red-100 text-red-700",
+  "Força": "bg-yellow-100 text-yellow-700",
+  "Conexão com Deus e Fé": "bg-red-100 text-red-700",
+  "Dependência e Drogas": "bg-purple-100 text-purple-700",
+  "Cura Interior e Emoções": "bg-blue-100 text-blue-700",
+  "Insônia e Ansiedade Noturna": "bg-yellow-100 text-yellow-700",
+  "Autocontrole e Hábitos": "bg-red-100 text-red-700",
+  "Relacionamentos e Amor": "bg-purple-100 text-purple-700",
+  "Propósito e Direção": "bg-blue-100 text-blue-700",
+  "Família": "bg-yellow-100 text-yellow-700",
+};
+
+const FALLBACK_TAG_COLORS = [
+  "bg-red-100 text-red-700",
+  "bg-purple-100 text-purple-700",
+  "bg-blue-100 text-blue-700",
+  "bg-yellow-100 text-yellow-700",
+];
+
+function getTagColor(tag: string, index: number): string {
+  return TAG_COLORS[tag] || FALLBACK_TAG_COLORS[index % 4];
+}
+
 interface MeditationCardProps {
   meditation: MeditationCardType;
   isPlus: boolean;
@@ -81,10 +107,10 @@ export function MeditationCard({
         )}
         {meditation.tags.length > 0 && (
           <div className="flex gap-1 mt-2 flex-wrap">
-            {meditation.tags.slice(0, 2).map((tag) => (
+            {meditation.tags.slice(0, 2).map((tag, i) => (
               <span
                 key={tag}
-                className="bg-[#F3F4F6] text-[#6B7280] px-2 py-0.5 rounded text-xs"
+                className={cn("px-2 py-0.5 rounded text-xs font-medium", getTagColor(tag, i))}
               >
                 {tag}
               </span>

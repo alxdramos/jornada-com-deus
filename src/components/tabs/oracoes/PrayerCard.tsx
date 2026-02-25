@@ -3,6 +3,23 @@ import { Heart, Play } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 
+const THEME_COLORS: Record<string, string> = {
+  "Perdão": "bg-red-100 text-red-700",
+  "Cura Divina": "bg-blue-100 text-blue-700",
+  "Ansiedade": "bg-purple-100 text-purple-700",
+  "Gratidão": "bg-yellow-100 text-yellow-700",
+  "Fortalecimento": "bg-red-100 text-red-700",
+  "Intercessão": "bg-purple-100 text-purple-700",
+  "Família": "bg-blue-100 text-blue-700",
+  "Paz Interior": "bg-blue-100 text-blue-700",
+  "Proteção": "bg-yellow-100 text-yellow-700",
+  "Esperança": "bg-yellow-100 text-yellow-700",
+  "Paz": "bg-blue-100 text-blue-700",
+  "Graças": "bg-purple-100 text-purple-700",
+  "Força": "bg-red-100 text-red-700",
+  "Fé": "bg-purple-100 text-purple-700",
+};
+
 interface PrayerCardProps {
   prayer: Prayer;
   isFavorite: boolean;
@@ -83,10 +100,10 @@ export function PrayerCard({
           <div className="flex gap-1 mt-2 flex-wrap">
             <span
               className={cn(
-                "px-2 py-0.5 rounded text-xs",
+                "px-2 py-0.5 rounded text-xs font-medium",
                 prayer.isCustom
                   ? "bg-[#FB923C]/10 text-[#FB923C]"
-                  : "bg-[#10B981]/10 text-[#10B981]"
+                  : THEME_COLORS[prayer.category] || "bg-gray-100 text-gray-700"
               )}
             >
               {prayer.category}
