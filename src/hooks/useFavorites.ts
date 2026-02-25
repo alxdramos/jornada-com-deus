@@ -18,6 +18,7 @@ function getItemType(id: string): string {
  * - Monta: lê localStorage (funciona offline)
  * - Login: busca user_favorites do Supabase e mescla com local
  * - Toggle: atualiza localStorage + upsert/delete no Supabase (se online)
+ * - Realtime: subscription para sync multi-device (INSERT/DELETE em user_favorites)
  */
 export function useFavorites() {
   const { user: supabaseUser } = useAuth()
@@ -60,6 +61,45 @@ export function useFavorites() {
     }
 
     hydrate().catch(console.error)
+  }, [supabaseUser])
+
+  // ── Realtime: sync multi-device ──────────────────────────
+  useEffect(() => {
+    if (!supabaseUser) return
+
+    const channel = supabase
+      .channel(`favorites-${supabaseUser.id}`)
+      .on(
+        'postgres_changes',
+        {
+          event:  '*',
+          schema: 'public',
+          table:  'user_favorites',
+          filter: `user_id=eq.${supabaseUser.id}`,
+        },
+        (payload) => {
+          if (payload.eventType === 'INSERT') {
+            const itemId = (payload.new as Record<string, unknown>).item_id as string
+            setFavorites((prev) => {
+              const next = new Set(prev)
+              next.add(itemId)
+              localStorage.setItem(LS_KEY, JSON.stringify([...next]))
+              return next
+            })
+          } else if (payload.eventType === 'DELETE') {
+            const itemId = (payload.old as Record<string, unknown>).item_id as string
+            setFavorites((prev) => {
+              const next = new Set(prev)
+              next.delete(itemId)
+              localStorage.setItem(LS_KEY, JSON.stringify([...next]))
+              return next
+            })
+          }
+        }
+      )
+      .subscribe()
+
+    return () => { supabase.removeChannel(channel) }
   }, [supabaseUser])
 
   // ── Toggle com sync ──────────────────────────────────────
