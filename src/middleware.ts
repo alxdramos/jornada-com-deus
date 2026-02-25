@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 
-const protectedRoutes = ['/', '/explorar', '/biblia', '/oracoes', '/meditacoes', '/diario', '/perfil'];
+const protectedRoutes = ['/', '/explorar', '/biblia', '/oracoes', '/meditacoes', '/diario', '/perfil', '/admin'];
 const authRoutes = ['/login', '/cadastro'];
 // Rotas públicas que nunca devem ser bloqueadas pelo middleware
 const publicRoutes = ['/auth/callback'];
