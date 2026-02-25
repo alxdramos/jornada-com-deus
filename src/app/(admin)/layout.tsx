@@ -19,8 +19,8 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
   // Verifica role admin (service role bypassa RLS)
   const { data: adminUser } = await supabaseAdmin
-    .from('users')
-    .select('name, email, image, role')
+    .from('profiles')
+    .select('name, email, avatar_url, role')
     .eq('id', user.id)
     .single()
 

@@ -36,7 +36,7 @@ export async function getUserGrowth30d(): Promise<GrowthPoint[]> {
   const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
 
   const { data } = await supabaseAdmin
-    .from('users')
+    .from('profiles')
     .select('created_at')
     .gte('created_at', thirtyDaysAgo)
     .order('created_at', { ascending: true })
@@ -73,7 +73,7 @@ export async function getDauLast7d(): Promise<DauPoint[]> {
 // ── Distribuição de planos ────────────────────────────────────────────────────
 export async function getPlanDistribution(): Promise<PlanPoint[]> {
   const { count: totalCount } = await supabaseAdmin
-    .from('users')
+    .from('profiles')
     .select('*', { count: 'exact', head: true })
 
   // MVP: sem sistema de pagamento ainda — todos são free
@@ -90,8 +90,8 @@ export async function getAdminUsers(
   search?: string
 ): Promise<{ users: AdminUser[]; total: number }> {
   let query = supabaseAdmin
-    .from('users')
-    .select('id, name, email, image, role, created_at', { count: 'exact' })
+    .from('profiles')
+    .select('id, name, email, avatar_url, role, created_at', { count: 'exact' })
     .order('created_at', { ascending: false })
     .range((page - 1) * pageSize, page * pageSize - 1)
 
@@ -125,8 +125,9 @@ export async function getAdminUsers(
 // ── Cadastros recentes ────────────────────────────────────────────────────────
 export async function getRecentUsers(limit = 5): Promise<RecentUser[]> {
   const { data } = await supabaseAdmin
-    .from('users')
+    .from('profiles')
     .select('id, name, email, created_at')
+
     .order('created_at', { ascending: false })
     .limit(limit)
 

@@ -5,7 +5,7 @@ export interface AdminUser {
   id: string
   name: string | null
   email: string
-  image: string | null
+  avatar_url: string | null
   role: 'user' | 'admin' | 'moderator'
   created_at: string
   // From user_progress (joined)
