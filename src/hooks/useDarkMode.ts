@@ -16,18 +16,11 @@ export const useDarkMode = () => {
   useEffect(() => {
     setMounted(true);
 
-    // Check localStorage first
+    // Light é o padrão. Dark só ativa se o usuário explicitamente escolheu.
     const stored = localStorage.getItem('dark-mode');
-    if (stored !== null) {
-      const isDarkMode = stored === 'true';
-      setIsDark(isDarkMode);
-      applyDarkMode(isDarkMode);
-    } else {
-      // Check system preference
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      setIsDark(prefersDark);
-      applyDarkMode(prefersDark);
-    }
+    const isDarkMode = stored === 'true';
+    setIsDark(isDarkMode);
+    applyDarkMode(isDarkMode);
   }, []);
 
   const toggle = () => {

@@ -94,40 +94,36 @@
 }
 
 /* ========================================
-   DARK MODE
+   DARK MODE — ativa SOMENTE via classe .dark
+   (nunca por prefers-color-scheme automático)
+   Paleta: noite espiritual quente — tons
+   marrons escuros em vez de slate frio
    ======================================== */
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* ========== COLORS — BACKGROUNDS ========== */
-    --color-bg-primary: #0F172A;
-    --color-bg-secondary: #1E293B;
-    --color-bg-tertiary: #334155;
-    --color-bg-inverse: #F8F7F4;
-
-    /* ========== COLORS — TEXT ========== */
-    --color-text-primary: #F8F7F4;
-    --color-text-secondary: #CBD5E1;
-    --color-text-tertiary: #94A3B8;
-    --color-text-inverse: #0F172A;
-
-    /* ========== COLORS — BORDERS ========== */
-    --color-border-subtle: #334155;
-    --color-border-normal: #475569;
-    --color-border-strong: #64748B;
-  }
-}
-
 .dark {
-  --color-bg-primary: #0F172A;
-  --color-bg-secondary: #1E293B;
-  --color-bg-tertiary: #334155;
-  --color-bg-inverse: #F8F7F4;
-  --color-text-primary: #F8F7F4;
-  --color-text-secondary: #CBD5E1;
-  --color-text-tertiary: #94A3B8;
-  --color-text-inverse: #0F172A;
-  --color-border-subtle: #334155;
-  --color-border-normal: #475569;
-  --color-border-strong: #64748B;
+  /* ========== COLORS — BACKGROUNDS ========== */
+  /* Warm dark browns — evoca noite acolhedora, não frio tecnológico */
+  --color-bg-primary: #1A1714;
+  --color-bg-secondary: #231F1B;
+  --color-bg-tertiary: #2E2924;
+  --color-bg-inverse: #F0EDE8;
+
+  /* ========== COLORS — TEXT ========== */
+  /* Branco quente — não puro, mais suave aos olhos */
+  --color-text-primary: #F0EDE8;
+  --color-text-secondary: #B8AFA4;
+  --color-text-tertiary: #8A8078;
+  --color-text-inverse: #1A1714;
+
+  /* ========== COLORS — BORDERS ========== */
+  /* Bordas sutis com calor, não azul frio */
+  --color-border-subtle: #2E2924;
+  --color-border-normal: #3D3830;
+  --color-border-strong: #544E47;
+
+  /* ========== SHADOWS — mais suaves no dark ========== */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 8px 24px rgba(0, 0, 0, 0.6);
 }
