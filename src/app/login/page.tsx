@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { Loader2 } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { CredentialsLoginForm } from '@/components/auth/CredentialsLoginForm'
@@ -157,9 +158,9 @@ export default function LoginPage() {
           {/* Termos */}
           <p className="text-center text-xs text-[#9CA3AF] leading-relaxed">
             Ao entrar, você concorda com nossos{" "}
-            <span className="text-[#FB923C] hover:underline cursor-pointer">termos de uso</span>
+            <Link href="/termos" className="text-[#FB923C] hover:underline">termos de uso</Link>
             {" "}e{" "}
-            <span className="text-[#FB923C] hover:underline cursor-pointer">política de privacidade</span>
+            <Link href="/privacidade" className="text-[#FB923C] hover:underline">política de privacidade</Link>
           </p>
 
         </div>

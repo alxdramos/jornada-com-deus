@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { RegisterForm } from "@/components/auth/RegisterForm";
 
 export const metadata = {
@@ -90,9 +91,9 @@ export default function RegisterPage() {
           {/* Termos */}
           <p className="text-center text-xs text-[#9CA3AF] leading-relaxed">
             Ao criar uma conta, você concorda com nossos{" "}
-            <span className="text-[#FB923C] hover:underline cursor-pointer">termos de uso</span>
+            <Link href="/termos" className="text-[#FB923C] hover:underline">termos de uso</Link>
             {" "}e{" "}
-            <span className="text-[#FB923C] hover:underline cursor-pointer">política de privacidade</span>
+            <Link href="/privacidade" className="text-[#FB923C] hover:underline">política de privacidade</Link>
           </p>
 
         </div>
