@@ -225,32 +225,55 @@ self.addEventListener('sync', (event) => {
   }
 });
 
-// ─── PUSH NOTIFICATIONS (placeholder) ─────────────────────────────────────────
+// ─── PUSH NOTIFICATIONS ────────────────────────────────────────────────────────
 self.addEventListener('push', (event) => {
   if (!event.data) return;
 
-  const data = event.data.json().catch(() => ({ title: 'Jornada com Deus', body: event.data.text() }));
+  let payload;
+  try {
+    payload = event.data.json();
+  } catch {
+    payload = { title: 'Jornada com Deus', body: event.data.text() };
+  }
 
-  event.waitUntil(
-    data.then((payload) =>
-      self.registration.showNotification(payload.title || 'Jornada com Deus', {
-        body:    payload.body || 'Novo conteúdo disponível.',
-        icon:    '/icon-192x192.png',
-        badge:   '/icon-192x192.png',
-        vibrate: [200, 100, 200],
-        data:    payload,
-      })
-    )
-  );
+  const title = payload.title || 'Jornada com Deus';
+  const options = {
+    body:    payload.body || 'Sua jornada espiritual te espera!',
+    icon:    payload.icon  || '/icon-192x192.png',
+    badge:   payload.badge || '/icon-192x192.png',
+    vibrate: [200, 100, 200, 100, 200],
+    tag:     payload.tag   || 'jornada-notification',
+    renotify: false,
+    requireInteraction: false,
+    data: { url: payload.url || '/' },
+    actions: [
+      { action: 'open', title: 'Abrir jornada' },
+      { action: 'dismiss', title: 'Fechar' },
+    ],
+  };
+
+  event.waitUntil(self.registration.showNotification(title, options));
 });
 
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
+
+  if (event.action === 'dismiss') return;
+
+  const targetUrl = event.notification.data?.url || '/';
+
   event.waitUntil(
-    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clients) => {
-      const focused = clients.find((c) => c.focus);
-      if (focused) return focused.focus();
-      return self.clients.openWindow('/');
-    })
+    self.clients
+      .matchAll({ type: 'window', includeUncontrolled: true })
+      .then((clients) => {
+        // Focar aba já aberta se existir
+        const existing = clients.find((c) => c.url.includes(self.location.origin));
+        if (existing) {
+          existing.focus();
+          existing.navigate(targetUrl);
+          return;
+        }
+        return self.clients.openWindow(targetUrl);
+      })
   );
 });
