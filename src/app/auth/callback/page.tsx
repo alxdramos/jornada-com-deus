@@ -76,7 +76,7 @@ export default function AuthCallbackPage() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-[#FAF9F6] gap-4">
       <div className="w-10 h-10 border-4 border-[#FB923C] border-t-transparent rounded-full animate-spin" />
-      <p className="text-[#1F2937] text-base font-medium">Autenticando com Google...</p>
+      <p className="text-[#1F2937] text-base font-medium">Autenticando, aguarde...</p>
     </div>
   )
 }
