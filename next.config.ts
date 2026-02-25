@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // web-push é CommonJS — não pode ser bundlado pelo Next.js; deve rodar como módulo externo
+  serverExternalPackages: ['web-push'],
+
   images: {
     remotePatterns: [
       {
