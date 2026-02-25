@@ -13,6 +13,7 @@ export function RegisterForm() {
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [needsConfirmation, setNeedsConfirmation] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -31,7 +32,7 @@ export function RegisterForm() {
         throw new Error("Senha deve ter mínimo 6 caracteres");
       }
 
-      const { error: signUpError } = await supabase.auth.signUp({
+      const { data, error: signUpError } = await supabase.auth.signUp({
         email,
         password,
       });
@@ -43,11 +44,16 @@ export function RegisterForm() {
       setPassword("");
       setConfirmPassword("");
 
-      // Auto-login após cadastro
-      setTimeout(() => {
-        router.push("/");
-        router.refresh();
-      }, 1500);
+      if (data.session) {
+        // Confirmação de e-mail desativada (ex: ambiente local) — auto-login
+        setTimeout(() => {
+          router.push("/");
+          router.refresh();
+        }, 1500);
+      } else {
+        // Produção: Supabase exige confirmação de e-mail antes de logar
+        setNeedsConfirmation(true);
+      }
     } catch (err) {
       setError((err as Error).message);
     } finally {
@@ -65,11 +71,15 @@ export function RegisterForm() {
         </div>
       )}
 
-      {/* Sucesso (brevíssimo — redireciona) */}
+      {/* Sucesso */}
       {success && (
-        <div className="flex items-center gap-2 p-3 bg-green-50 border border-green-200 rounded-xl text-sm text-green-700">
-          <CheckCircle2 className="w-4 h-4 shrink-0" />
-          <span>Conta criada! Entrando…</span>
+        <div className="flex items-start gap-2 p-3 bg-green-50 border border-green-200 rounded-xl text-sm text-green-700">
+          <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5" />
+          <span>
+            {needsConfirmation
+              ? "Conta criada! Enviamos um e-mail de confirmação. Verifique sua caixa de entrada (e spam) e clique no link para ativar."
+              : "Conta criada! Entrando…"}
+          </span>
         </div>
       )}
 

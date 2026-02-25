@@ -24,8 +24,13 @@ export function CredentialsLoginForm() {
       await signIn(email.trim(), password);
       router.push("/");
       router.refresh();
-    } catch {
-      setError("E-mail ou senha incorretos. Verifique seus dados.");
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "";
+      if (message.toLowerCase().includes("email not confirmed")) {
+        setError("E-mail ainda não confirmado. Verifique sua caixa de entrada e clique no link de confirmação.");
+      } else {
+        setError("E-mail ou senha incorretos. Verifique seus dados.");
+      }
     } finally {
       setLoading(false);
     }
