@@ -27,8 +27,53 @@ export const metadata: Metadata = {
   },
   manifest: "/manifest.json",
   icons: {
-    icon: "/favicon.ico",
-    apple: "/icon-192x192.png",
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/icon-192x192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icon-512x512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [
+      { url: "/icon-192x192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icon-512x512.png", sizes: "512x512", type: "image/png" },
+    ],
+  },
+  // ── iOS PWA: app nativo no iPhone ──────────────────────────────────────
+  appleWebApp: {
+    capable: true,
+    title: "Jornada com Deus",
+    statusBarStyle: "default",
+    startupImage: [
+      // iPhone SE 2ª geração / iPhone 8 — 750×1334
+      {
+        url: "/screenshots/screenshot-hoje.png",
+        media:
+          "(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)",
+      },
+      // iPhone XR / iPhone 11 — 828×1792
+      {
+        url: "/screenshots/screenshot-explorar.png",
+        media:
+          "(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)",
+      },
+      // iPhone 12 / 13 / 14 — 1170×2532
+      {
+        url: "/screenshots/screenshot-oracoes.png",
+        media:
+          "(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)",
+      },
+      // iPhone 14 Pro / 15 — 1179×2556
+      {
+        url: "/screenshots/screenshot-diario.png",
+        media:
+          "(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)",
+      },
+      // iPhone 14 Pro Max / 15 Plus — 1290×2796
+      {
+        url: "/screenshots/screenshot-hoje.png",
+        media:
+          "(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)",
+      },
+    ],
   },
   openGraph: {
     title: "Jornada com Deus",
