@@ -1,3 +1,6 @@
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import webpush from 'web-push';
@@ -34,7 +37,7 @@ function getTodayMessage() {
   return DAILY_MESSAGES[dayOfWeek];
 }
 
-async function sendNotifications(req: NextRequest) {
+async function handlePush(req: NextRequest) {
   // Validar CRON_SECRET (Vercel injeta Authorization: Bearer <secret>)
   const authHeader = req.headers.get('authorization');
   const expectedSecret = `Bearer ${process.env.CRON_SECRET}`;
@@ -42,6 +45,8 @@ async function sendNotifications(req: NextRequest) {
   if (authHeader !== expectedSecret) {
     return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
   }
+
+  console.log('[push/send] Rota executada em dynamic mode -', new Date().toISOString());
 
   try {
     const supabase = getSupabase();
@@ -119,6 +124,5 @@ async function sendNotifications(req: NextRequest) {
   }
 }
 
-// Vercel Cron chama via GET — POST disponível para testes manuais
-export const GET = sendNotifications;
-export const POST = sendNotifications;
+export const GET = handlePush;
+export const POST = handlePush;
