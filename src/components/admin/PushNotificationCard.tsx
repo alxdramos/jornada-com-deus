@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Bell, Send, Loader2, CheckCircle2, AlertCircle } from 'lucide-react'
+import { Bell, Send, Loader2, CheckCircle2, AlertCircle, FlaskConical } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 type Status = 'idle' | 'loading' | 'success' | 'error'
@@ -13,12 +13,24 @@ interface SendResult {
   message?: string
 }
 
+async function getSelfSubscription(): Promise<PushSubscription | null> {
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) return null;
+  try {
+    const registration = await navigator.serviceWorker.ready;
+    return await registration.pushManager.getSubscription();
+  } catch {
+    return null;
+  }
+}
+
 export function PushNotificationCard() {
   const [title, setTitle] = useState('')
   const [body, setBody] = useState('')
   const [status, setStatus] = useState<Status>('idle')
+  const [testStatus, setTestStatus] = useState<Status>('idle')
   const [result, setResult] = useState<SendResult | null>(null)
   const [errorMsg, setErrorMsg] = useState('')
+  const [testErrorMsg, setTestErrorMsg] = useState('')
 
   async function handleSend() {
     if (!title.trim() || !body.trim()) return
@@ -50,7 +62,48 @@ export function PushNotificationCard() {
     }
   }
 
+  async function handleTestSelf() {
+    setTestStatus('loading')
+    setTestErrorMsg('')
+
+    try {
+      const subscription = await getSelfSubscription()
+
+      if (!subscription) {
+        throw new Error('Você não está inscrito nas notificações. Ative o sino 🔔 primeiro.')
+      }
+
+      const subJson = subscription.toJSON()
+      const res = await fetch('/api/admin/push/test', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          subscription: {
+            endpoint: subJson.endpoint,
+            keys: { p256dh: subJson.keys?.p256dh, auth: subJson.keys?.auth },
+          },
+          title: title.trim() || undefined,
+          body: body.trim() || undefined,
+        }),
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        throw new Error(data.error ?? 'Erro ao enviar teste')
+      }
+
+      setTestStatus('success')
+      setTimeout(() => setTestStatus('idle'), 3000)
+    } catch (err) {
+      setTestErrorMsg(err instanceof Error ? err.message : 'Erro desconhecido')
+      setTestStatus('error')
+      setTimeout(() => setTestStatus('idle'), 5000)
+    }
+  }
+
   const canSend = title.trim().length > 0 && body.trim().length > 0 && status !== 'loading'
+  const canTest = testStatus !== 'loading' && status !== 'loading'
 
   return (
     <div className="bg-white rounded-2xl border border-[#E5E7EB] p-5 shadow-sm">
@@ -112,22 +165,47 @@ export function PushNotificationCard() {
           </div>
         )}
 
-        {/* Botão */}
-        <button
-          onClick={handleSend}
-          disabled={!canSend}
-          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#FB923C] text-white text-sm font-semibold transition-all duration-200 hover:bg-[#F97316] active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed"
-        >
-          {status === 'loading' ? (
-            <Loader2 size={15} className="animate-spin" />
-          ) : (
-            <Send size={15} />
-          )}
-          {status === 'loading' ? 'Enviando...' : 'Enviar para todos'}
-        </button>
+        {/* Botões */}
+        <div className="flex gap-2">
+          {/* Testar para mim */}
+          <button
+            onClick={handleTestSelf}
+            disabled={!canTest}
+            title="Envia a notificação apenas para você (requer notificações ativas)"
+            className="flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl border border-[#E5E7EB] bg-white text-[#6B7280] text-xs font-semibold transition-all duration-200 hover:bg-[#F9F8F5] hover:border-[#D1D5DB] active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed shrink-0"
+          >
+            {testStatus === 'loading' ? (
+              <Loader2 size={13} className="animate-spin" />
+            ) : testStatus === 'success' ? (
+              <CheckCircle2 size={13} className="text-[#10B981]" />
+            ) : (
+              <FlaskConical size={13} />
+            )}
+            {testStatus === 'loading' ? 'Testando...' : testStatus === 'success' ? 'Enviado!' : 'Testar'}
+          </button>
+
+          {/* Enviar para todos */}
+          <button
+            onClick={handleSend}
+            disabled={!canSend}
+            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#FB923C] text-white text-sm font-semibold transition-all duration-200 hover:bg-[#F97316] active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            {status === 'loading' ? (
+              <Loader2 size={15} className="animate-spin" />
+            ) : (
+              <Send size={15} />
+            )}
+            {status === 'loading' ? 'Enviando...' : 'Enviar para todos'}
+          </button>
+        </div>
+
+        {/* Hint do botão de teste */}
+        <p className="text-xs text-[#C4C9D4]">
+          Testar envia só para você. Precisa ter o sino 🔔 ativado neste dispositivo.
+        </p>
       </div>
 
-      {/* Feedback */}
+      {/* Feedback — envio geral */}
       <AnimatePresence>
         {status === 'success' && result && (
           <motion.div
@@ -162,6 +240,19 @@ export function PushNotificationCard() {
           >
             <AlertCircle size={15} className="text-red-400 shrink-0" />
             <p className="text-xs text-red-500">{errorMsg}</p>
+          </motion.div>
+        )}
+
+        {/* Feedback — teste */}
+        {testStatus === 'error' && testErrorMsg && (
+          <motion.div
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            className="mt-3 flex items-center gap-2 p-3 rounded-xl bg-amber-50 border border-amber-100"
+          >
+            <AlertCircle size={15} className="text-amber-500 shrink-0" />
+            <p className="text-xs text-amber-600">{testErrorMsg}</p>
           </motion.div>
         )}
       </AnimatePresence>
