@@ -14,6 +14,7 @@ export function RegisterForm() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [needsConfirmation, setNeedsConfirmation] = useState(false);
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -24,6 +25,10 @@ export function RegisterForm() {
     setIsPending(true);
 
     try {
+      if (name.trim().split(/\s+/).filter(Boolean).length < 2) {
+        throw new Error("Informe seu nome completo (nome e sobrenome)");
+      }
+
       if (password !== confirmPassword) {
         throw new Error("Senhas não correspondem");
       }
@@ -37,12 +42,14 @@ export function RegisterForm() {
         password,
         options: {
           emailRedirectTo: `${window.location.origin}/auth/callback`,
+          data: { full_name: name.trim() },
         },
       });
 
       if (signUpError) throw signUpError;
 
       setSuccess(true);
+      setName("");
       setEmail("");
       setPassword("");
       setConfirmPassword("");
@@ -85,6 +92,29 @@ export function RegisterForm() {
           </span>
         </div>
       )}
+
+      {/* Nome completo */}
+      <div className="space-y-1.5">
+        <label htmlFor="reg-name" className="block text-sm font-medium text-[#1F2937]">
+          Nome completo
+        </label>
+        <input
+          id="reg-name"
+          type="text"
+          autoComplete="name"
+          required
+          placeholder="João Silva"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          disabled={isPending || success}
+          className="
+            w-full h-11 px-4 rounded-xl border border-gray-200
+            bg-white/80 text-[#1F2937] text-sm placeholder:text-gray-400
+            focus:outline-none focus:ring-2 focus:ring-[#FB923C]/40 focus:border-[#FB923C]
+            transition-colors duration-150 disabled:opacity-50
+          "
+        />
+      </div>
 
       {/* E-mail */}
       <div className="space-y-1.5">
