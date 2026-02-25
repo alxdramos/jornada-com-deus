@@ -7,6 +7,7 @@ import { Chip } from '@/components/atoms/Chip';
 import { ContentSection } from './explorar/ContentSection';
 import { MeditationCard } from './explorar/MeditationCard';
 import { MeditationDetailModalWithPlayer } from './meditacoes/MeditationDetailModalWithPlayer';
+import { MeditacoesModal } from './meditacoes/MeditacoesModal';
 import { PaywallModal } from '@/components/PaywallModal';
 import { useUserStore } from '@/stores/userStore';
 import { useFavorites } from '@/hooks/useFavorites';
@@ -17,22 +18,22 @@ export function TabMeditacoes() {
   const isPlus = user?.isPlus ?? false;
   const { toggleFavorite, isFavorite } = useFavorites();
 
+  const [showAllModal, setShowAllModal] = useState(false);
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedMeditation, setSelectedMeditation] = useState<MeditationCardType | null>(null);
   const [paywallOpen, setPaywallOpen] = useState(false);
   const [chipAtivo, setChipAtivo] = useState("TUDO");
 
-  // Gerar chips dinamicamente a partir das tags das meditações
   const tagsUnicas = Array.from(new Set(MEDITACOES.flatMap(m => m.tags))).sort();
   const CHIPS = ["TUDO", ...tagsUnicas];
 
-  // Filtrar meditações apenas por chips
   const meditacoesFiltradas = MEDITACOES.filter(med => {
-    const chipMatch = chipAtivo === "TUDO" || med.tags.includes(chipAtivo);
-    return chipMatch;
+    return chipAtivo === "TUDO" || med.tags.includes(chipAtivo);
   });
 
-  // Handlers
+  // Apenas os 4 primeiros na lista principal
+  const iniciais = meditacoesFiltradas.slice(0, 4);
+
   const handleViewDetails = (meditation: MeditationCardType) => {
     if (meditation.plus && !isPlus) {
       setSelectedMeditation(meditation);
@@ -47,7 +48,6 @@ export function TabMeditacoes() {
     <>
       <div className="min-h-screen bg-bg-primary p-6 pb-28">
         <div className="max-w-4xl mx-auto space-y-6">
-          {/* Header padronizado */}
           <UserHeader
             title="Meditações"
             rightElement={
@@ -57,7 +57,6 @@ export function TabMeditacoes() {
             }
           />
 
-          {/* Filtros - Tags/Chips */}
           <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
             {CHIPS.map((chip) => (
               <Chip
@@ -69,12 +68,12 @@ export function TabMeditacoes() {
             ))}
           </div>
 
-          {/* Seção de Meditações */}
           <ContentSection
             title="Meditações"
+            onViewAll={() => setShowAllModal(true)}
             emptyState="Nenhuma meditação encontrada com esses filtros"
           >
-            {meditacoesFiltradas.map((meditacao) => (
+            {iniciais.map((meditacao) => (
               <MeditationCard
                 key={meditacao.id}
                 meditation={meditacao}
@@ -88,7 +87,15 @@ export function TabMeditacoes() {
         </div>
       </div>
 
-      {/* Modais */}
+      {/* Modal com todas as meditações */}
+      {showAllModal && (
+        <MeditacoesModal
+          isOpen={showAllModal}
+          onClose={() => setShowAllModal(false)}
+          onViewDetails={handleViewDetails}
+        />
+      )}
+
       <PaywallModal
         isOpen={paywallOpen}
         onClose={() => setPaywallOpen(false)}
@@ -96,7 +103,7 @@ export function TabMeditacoes() {
         feature={selectedMeditation?.title}
       />
 
-      {selectedMeditation && (
+      {selectedMeditation && showDetailModal && (
         <MeditationDetailModalWithPlayer
           meditation={selectedMeditation}
           isFavorite={isFavorite(selectedMeditation.id)}

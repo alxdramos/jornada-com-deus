@@ -7,12 +7,14 @@ import { Chip } from '@/components/atoms/Chip';
 import { ContentSection } from './explorar/ContentSection';
 import { EstudoCard } from './estudos/EstudoCard';
 import { EstudoDetailModalWithPlayer } from './estudos/EstudoDetailModalWithPlayer';
+import { EstudosModal } from './estudos/EstudosModal';
 import { useFavorites } from '@/hooks/useFavorites';
 import { BookOpen } from 'lucide-react';
 
 export function TabEstudos() {
   const { toggleFavorite, isFavorite } = useFavorites();
   const [selectedEstudo, setSelectedEstudo] = useState<EstudoBiblico | null>(null);
+  const [showAllModal, setShowAllModal] = useState(false);
   const [chipAtivo, setChipAtivo] = useState("TUDO");
 
   const categorias = Array.from(CATEGORIAS_ESTUDOS).filter(cat => {
@@ -23,6 +25,9 @@ export function TabEstudos() {
   const estudosFiltrados = ESTUDOS.filter(estudo => {
     return chipAtivo === "TUDO" || estudo.category === chipAtivo;
   });
+
+  // Apenas os 4 primeiros na lista principal
+  const iniciais = estudosFiltrados.slice(0, 4);
 
   return (
     <>
@@ -50,9 +55,10 @@ export function TabEstudos() {
 
           <ContentSection
             title="Estudos Bíblicos"
+            onViewAll={() => setShowAllModal(true)}
             emptyState="Nenhum estudo encontrado com esses filtros"
           >
-            {estudosFiltrados.map((estudo) => (
+            {iniciais.map((estudo) => (
               <EstudoCard
                 key={estudo.id}
                 estudo={estudo}
@@ -64,6 +70,15 @@ export function TabEstudos() {
           </ContentSection>
         </div>
       </div>
+
+      {/* Modal com todos os estudos */}
+      {showAllModal && (
+        <EstudosModal
+          isOpen={showAllModal}
+          onClose={() => setShowAllModal(false)}
+          onViewDetails={setSelectedEstudo}
+        />
+      )}
 
       {selectedEstudo && (
         <EstudoDetailModalWithPlayer

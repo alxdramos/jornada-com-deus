@@ -2,12 +2,25 @@ import { MeditationCard as MeditationCardType } from "@/data/meditacoes";
 import { Heart, Play, Crown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const CATEGORY_IMAGES: Record<string, string> = {
-  "CORPO": "/images/meditacoes/med-corpo-descanso.png",
-  "ESPÍRITO": "/images/meditacoes/med-espirito-paz.png",
-  "MENTE": "/images/meditacoes/med-mente-ansiedade.png",
-  "ORAÇÃO": "/images/meditacoes/med-oracao-confianca.png",
-  "MÚSICA": "/images/meditacoes/med-oracao-confianca.png",
+// Imagem única por meditação
+const MEDITATION_IMAGES: Record<string, string> = {
+  med_0:  "/images/meditacoes/med-0-rocha-descanso.png",
+  med_1:  "/images/meditacoes/med-1-clareira-paz.png",
+  med_2:  "/images/meditacoes/med-2-refugio-jardim.png",
+  med_3:  "/images/meditacoes/med-3-getsemani.png",
+  med_4:  "/images/meditacoes/med-4-confianca-oracao.png",
+  med_5:  "/images/meditacoes/med-5-forca-fraqueza.png",
+  med_6:  "/images/meditacoes/med-6-autoimagem.png",
+  med_7:  "/images/meditacoes/med-7-madrugada-paz.png",
+  med_8:  "/images/meditacoes/med-8-disciplina-manha.png",
+  med_9:  "/images/meditacoes/med-9-paz-interior.png",
+  med_10: "/images/meditacoes/med-10-cura-culpa.png",
+  med_11: "/images/meditacoes/med-11-portas-deus.png",
+  med_12: "/images/meditacoes/med-12-ansiedade-respiracao.png",
+  med_13: "/images/meditacoes/med-13-lar-gentileza.png",
+  med_14: "/images/meditacoes/med-14-cura-vergonha.png",
+  med_15: "/images/meditacoes/med-15-guardando-coracao.png",
+  med_16: "/images/meditacoes/med-16-autoimagem-curta.png",
 };
 
 const TAG_COLORS: Record<string, string> = {
@@ -57,9 +70,9 @@ export function MeditationCard({
     <div className="rounded-lg overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow group">
       {/* Imagem */}
       <div className="relative h-40 overflow-hidden bg-gray-200">
-        {(meditation.image || CATEGORY_IMAGES[meditation.category]) ? (
+        {(meditation.image || MEDITATION_IMAGES[meditation.id]) ? (
           <img
-            src={meditation.image || CATEGORY_IMAGES[meditation.category]}
+            src={meditation.image || MEDITATION_IMAGES[meditation.id]}
             alt={meditation.title}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform"
           />
