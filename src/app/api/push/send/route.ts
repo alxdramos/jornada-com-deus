@@ -29,8 +29,7 @@ function getTodayMessage() {
   return DAILY_MESSAGES[dayOfWeek];
 }
 
-// POST /api/push/send — chamado pelo Vercel Cron (7h BRT = 10h UTC)
-export async function POST(req: NextRequest) {
+async function sendNotifications(req: NextRequest) {
   // Validar CRON_SECRET (Vercel injeta Authorization: Bearer <secret>)
   const authHeader = req.headers.get('authorization');
   const expectedSecret = `Bearer ${process.env.CRON_SECRET}`;
@@ -112,3 +111,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
   }
 }
+
+// Vercel Cron chama via GET — POST disponível para testes manuais
+export const GET = sendNotifications;
+export const POST = sendNotifications;
