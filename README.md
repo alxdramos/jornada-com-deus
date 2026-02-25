@@ -97,8 +97,12 @@ jornada-com-deus/
 │   │   │   └── page.tsx                # Rota auxiliar /explorar (placeholder)
 │   │   ├── login/
 │   │   │   └── page.tsx                # Tela de login (Google + e-mail/senha)
-│   │   └── register/
-│   │       └── page.tsx                # Tela de cadastro (e-mail/senha)
+│   │   ├── privacidade/
+│   │   │   └── page.tsx                # Política de Privacidade (LGPD — SSG)
+│   │   ├── register/
+│   │   │   └── page.tsx                # Tela de cadastro (e-mail/senha)
+│   │   └── termos/
+│   │       └── page.tsx                # Termos de Serviço (CDC — SSG)
 │   ├── components/
 │   │   ├── auth/                       # Componentes client de autenticação
 │   │   │   ├── CredentialsLoginForm.tsx # Formulário login e-mail/senha
@@ -139,17 +143,20 @@ jornada-com-deus/
 │   │   ├── progressStore.ts            # XP, streak, nível, árvore
 │   │   └── tabStore.ts                 # Aba ativa
 │   ├── hooks/
-│   │   ├── useAuthSync.ts              # Auth.js ↔ Zustand ↔ Dexie
+│   │   ├── useAuthSync.ts              # Supabase ↔ Zustand ↔ Dexie
 │   │   ├── useBible.ts                 # API bible-api.com + cache sessionStorage
 │   │   ├── useDB.ts                    # Acesso ao Dexie
-│   │   ├── useFavorites.ts
+│   │   ├── useFavorites.ts             # Offline-first + sync Supabase + realtime
+│   │   ├── useSupabaseSync.ts          # Progress sync: hydrate + push debounced + realtime
+│   │   ├── useSyncManager.ts           # Prayers + journal offline → Supabase
 │   │   ├── useOnlineStatus.ts
 │   │   ├── useToast.ts
 │   │   └── use-pwa-install.ts
 │   ├── lib/
 │   │   ├── animations.ts               # Configs Framer Motion
-│   │   ├── credentials-db.ts           # Store server-side de credenciais (JSON file)
 │   │   ├── db.ts                       # Configuração Dexie (IndexedDB — 6 tabelas)
+│   │   ├── supabase.ts                 # Cliente browser (lazy init)
+│   │   ├── supabase-server.ts          # Cliente server (factory com cookies)
 │   │   └── utils.ts                    # cn() e utilitários
 │   ├── data/
 │   │   ├── oracoes-diarias.ts          # Banco de orações pré-definidas
@@ -526,8 +533,6 @@ Configs centralizadas em `src/lib/animations.ts`:
 
 ---
 
-## Estado Atual do Desenvolvimento (19/02/2026)
-
 ## 🗺️ Status do MVP — Rastreamento de Progresso
 
 > Última atualização: 24/02/2026
@@ -537,36 +542,50 @@ Configs centralizadas em `src/lib/animations.ts`:
 **Autenticação (Supabase):**
 - ✅ Google OAuth com foto real no avatar
 - ✅ Login com e-mail + senha (Supabase Auth)
-- ✅ Cadastro com confirmação de e-mail (emailRedirectTo dinâmico)
+- ✅ Cadastro com confirmação de e-mail (`emailRedirectTo` dinâmico — aponta para domínio de produção)
+- ✅ Link de confirmação redireciona para `app.minhajornadadiaria.com.br` (não localhost)
+- ✅ Mensagem específica para e-mail não confirmado no login
 - ✅ Middleware de proteção de rotas (SSR cookies)
 - ✅ AuthContext + useAuthSync (Supabase → Zustand → Dexie)
 - ✅ Redirecionamento automático login ↔ home
 - ✅ Callback `/auth/callback` para Google OAuth + email confirm
 
-**Supabase — Banco de Dados:**
+**Supabase — Banco de Dados + Segurança:**
 - ✅ Cliente browser (`src/lib/supabase.ts` — lazy init com placeholder)
 - ✅ Cliente server (`src/lib/supabase-server.ts` — factory para Server Components)
-- ✅ Migrations aplicadas:
+- ✅ Migrations aplicadas no Supabase Cloud:
   - `001_create_auth_tables.sql` — users, accounts, sessions
   - `20260223_sync_offline_data.sql` — prayers, journal_entries (offline-first)
   - `20260224_bible_verses.sql` — bible_verses com full-text search
   - `20260224_user_progress_favorites.sql` — user_progress, user_favorites
-- ✅ RLS ativo em todas as tabelas
+  - `20260224_enable_realtime_rls_consolidation.sql` — RLS idempotente + Realtime publication
+- ✅ **RLS (Row Level Security)** ativo em todas as tabelas (`auth.uid() = user_id`)
+- ✅ **Realtime Publication** habilitada (`supabase_realtime ADD TABLE`)
 
-**Sync de dados do usuário:**
+**Sync de dados do usuário (multi-device):**
 - ✅ Prayers — offline-first via `useSyncManager` (Dexie pending → Supabase upsert)
 - ✅ Journal entries — offline-first via `useSyncManager`
-- ✅ Progress/Streak/XP/Árvore — `useSupabaseSync` (hydrate login + push debounced + realtime)
-- ✅ Favorites — `useFavorites` com sync Supabase (hydrate login + toggle upsert/delete)
-- ✅ Realtime subscription multi-device para progresso
+- ✅ Progress/Streak/XP/Árvore — `useSupabaseSync`:
+  - Hydrate no login (remote ganha se tiver mais XP)
+  - Push debounced 2s em cada mudança
+  - **Realtime subscription** `postgres_changes` UPDATE (canal `progress-{userId}`)
+- ✅ Favorites — `useFavorites`:
+  - Hydrate no login (merge com localStorage)
+  - Toggle: localStorage imediato + upsert/delete Supabase em background
+  - **Realtime subscription** `postgres_changes` INSERT/DELETE (canal `favorites-{userId}`)
 
 **UI/UX:**
 - ✅ Tela de login split-screen com glassmorphism
 - ✅ 9 abas: Hoje, Explorar, Bíblia, Orações, Diário, Meditações, Estudos Bíblicos, Devocional, Kids
 - ✅ Bottom Navigation fixo com z-[9999]
 - ✅ Animações Framer Motion em todo o app
-- ✅ Tags coloridas (vermelho/roxo/azul/amarelo) em Meditações, Orações e Estudos
+- ✅ Tags coloridas (vermelho/roxo/azul/amarelo) em Meditações, Orações e Estudos Bíblicos
 - ✅ Modo offline com IndexedDB + Service Worker
+
+**Páginas Legais:**
+- ✅ `/privacidade` — Política de Privacidade (LGPD, 10 seções, SSG)
+- ✅ `/termos` — Termos de Serviço (CDC, 11 seções, SSG)
+- ✅ Links reais de termos/privacidade nas telas de login e registro
 
 **Conteúdo:**
 - ✅ 16 meditações com áudio no Cloudflare R2
@@ -579,20 +598,21 @@ Configs centralizadas em `src/lib/animations.ts`:
 **Gamificação:**
 - ✅ XP (+75/dia completo), streak, níveis, Árvore da Vida (11 estágios)
 - ✅ Imagens geradas por IA para cada estágio da árvore
-- ✅ Persistência: localStorage + Dexie + Supabase (multi-device)
+- ✅ Persistência: localStorage + Dexie + Supabase (multi-device com realtime)
 
 **PWA:**
 - ✅ Instalável em mobile
 - ✅ Offline funcional
 - ✅ Service Worker com cache Workbox
 
+---
+
 ### 🚧 Pendente para lançamento MVP
 
-- [ ] Executar migration `20260224_user_progress_favorites.sql` no Supabase cloud
-- [ ] Testes end-to-end do fluxo de auth email (cadastro → confirm → login)
-- [ ] Build nativo (Capacitor) — opcional pós-MVP
+- [ ] Testes end-to-end do fluxo de auth email (cadastro → confirm → login) em produção
+- [ ] Push notifications — lembretes diários de devocional
+- [ ] Build nativo (Capacitor) — iOS/Android — opcional pós-MVP
 - [ ] Pagamentos Stripe (Plus tier)
-- [ ] Push notifications (orações diárias)
 
 ### 🌐 Produção
 
