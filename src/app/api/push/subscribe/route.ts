@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+function getSupabase() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+}
 
 // Representação serializada de PushSubscription (resultado de .toJSON())
 interface SerializedPushSubscription {
@@ -28,6 +30,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Subscription inválida' }, { status: 400 });
     }
 
+    const supabase = getSupabase();
     const { error } = await supabase
       .from('push_subscriptions')
       .upsert(
@@ -63,6 +66,7 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ error: 'endpoint obrigatório' }, { status: 400 });
     }
 
+    const supabase = getSupabase();
     const { error } = await supabase
       .from('push_subscriptions')
       .delete()

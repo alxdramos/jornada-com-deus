@@ -2,16 +2,21 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import webpush from 'web-push';
 
-webpush.setVapidDetails(
-  process.env.VAPID_SUBJECT!,
-  process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
-  process.env.VAPID_PRIVATE_KEY!
-);
+function getSupabase() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+}
 
-const supabase = createClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+function getWebPush() {
+  webpush.setVapidDetails(
+    process.env.VAPID_SUBJECT!,
+    process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
+    process.env.VAPID_PRIVATE_KEY!
+  );
+  return webpush;
+}
 
 // Mensagens rotativas — uma por dia da semana
 const DAILY_MESSAGES = [
@@ -39,6 +44,7 @@ async function sendNotifications(req: NextRequest) {
   }
 
   try {
+    const supabase = getSupabase();
     // Buscar todas as subscriptions ativas
     const { data: subscriptions, error } = await supabase
       .from('push_subscriptions')
@@ -64,11 +70,12 @@ async function sendNotifications(req: NextRequest) {
       tag: 'daily-reminder',
     });
 
+    const wp = getWebPush();
     // Enviar para todos — coletar expiradas para limpeza
     const expiredEndpoints: string[] = [];
     const results = await Promise.allSettled(
       subscriptions.map((sub) =>
-        webpush.sendNotification(
+        wp.sendNotification(
           {
             endpoint: sub.endpoint,
             keys: { p256dh: sub.p256dh, auth: sub.auth_key },
