@@ -1,20 +1,43 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Flame, Star } from "lucide-react";
-import { LEVEL_XP_STEP, useProgressStore } from "@/stores/progressStore";
+import { TREE_XP_THRESHOLDS, useProgressStore } from "@/stores/progressStore";
 import { AppCard } from "./AppCard";
-import { TreeGrowthVisual } from "./TreeGrowthVisual";
+import { TreeGrowthVisual, TREE_STAGES } from "./TreeGrowthVisual";
 
 export function GamificationCard() {
   const { progress, getXpForNextLevel, getTreeProgress } = useProgressStore();
-  const safeLevel = Math.max(1, progress.level);
-  const xpCurrentLevel = (safeLevel - 1) * LEVEL_XP_STEP;
+
+  // XP dentro do nível atual (baseado nos thresholds reais)
+  const safeLevel = Math.max(0, Math.min(10, progress.level));
+  const xpCurrentLevel = TREE_XP_THRESHOLDS[safeLevel] ?? 0;
+  const xpNextLevel = safeLevel < 10 ? (TREE_XP_THRESHOLDS[safeLevel + 1] ?? TREE_XP_THRESHOLDS[10]) : TREE_XP_THRESHOLDS[10];
+  const xpForThisLevel = Math.max(1, xpNextLevel - xpCurrentLevel);
   const xpInLevel = Math.max(0, progress.totalXp - xpCurrentLevel);
-  const xpProgress = Math.min(100, (xpInLevel / LEVEL_XP_STEP) * 100);
+  const xpProgress = safeLevel >= 10 ? 100 : Math.min(100, (xpInLevel / xpForThisLevel) * 100);
   const treeProgress = getTreeProgress();
 
+  // Animação de evolução da árvore
+  const prevTreeLevelRef = useRef(progress.treeLevel);
+  const [showEvolution, setShowEvolution] = useState(false);
+  const [evolvedStageName, setEvolvedStageName] = useState('');
+
+  useEffect(() => {
+    if (progress.treeLevel > prevTreeLevelRef.current) {
+      const stage = TREE_STAGES[progress.treeLevel];
+      setEvolvedStageName(stage?.name ?? '');
+      setShowEvolution(true);
+      const timer = setTimeout(() => setShowEvolution(false), 3500);
+      prevTreeLevelRef.current = progress.treeLevel;
+      return () => clearTimeout(timer);
+    }
+    prevTreeLevelRef.current = progress.treeLevel;
+  }, [progress.treeLevel]);
+
   return (
+    <div className="relative">
     <AppCard title="Sua Jornada" className="bg-gradient-to-br from-primary/5 to-accent/5 border-primary/20">
       <div className="space-y-6">
 
@@ -64,7 +87,7 @@ export function GamificationCard() {
               Nível {progress.level}
             </span>
             <span className="text-muted-foreground">
-              {xpInLevel} / {LEVEL_XP_STEP} XP
+              {xpInLevel} / {xpForThisLevel} XP
             </span>
           </div>
 
@@ -97,5 +120,38 @@ export function GamificationCard() {
 
       </div>
     </AppCard>
+
+    {/* Overlay de celebração ao evoluir a árvore */}
+    <AnimatePresence>
+      {showEvolution && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+          className="absolute inset-0 z-10 flex items-center justify-center rounded-3xl"
+          style={{ background: 'rgba(0,0,0,0.35)', backdropFilter: 'blur(4px)' }}
+        >
+          <motion.div
+            initial={{ scale: 0.7, y: 16 }}
+            animate={{ scale: 1, y: 0 }}
+            exit={{ scale: 0.8, y: -16 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 22 }}
+            className="bg-white rounded-2xl px-8 py-6 text-center shadow-2xl mx-4"
+          >
+            <motion.div
+              animate={{ rotate: [0, -10, 10, -8, 8, 0], scale: [1, 1.15, 1] }}
+              transition={{ duration: 0.7, delay: 0.1 }}
+              className="text-5xl mb-3"
+            >
+              🌿✨
+            </motion.div>
+            <div className="text-lg font-bold text-green-700">Árvore Evoluiu!</div>
+            <div className="text-sm text-green-600 mt-1">{evolvedStageName}</div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+    </div>
   );
 }

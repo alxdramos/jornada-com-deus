@@ -3,22 +3,22 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useUserStore } from '@/stores/userStore';
 import {
   useProgressStore,
-  getCompletedDaysFromXp,
+  XP_PER_DAY,
   getLevelFromXp,
-  getTreeLevelFromDays,
 } from '@/stores/progressStore';
 import { db } from '@/lib/db';
 
 type StoreProgress = ReturnType<typeof useProgressStore.getState>['progress'];
 
 const normalizeStoreProgress = (progress: StoreProgress): StoreProgress => {
-  const completedDaysFromXp = getCompletedDaysFromXp(progress.totalXp);
+  const completedDaysFromXp = Math.floor(progress.totalXp / XP_PER_DAY);
   const normalizedCompletedDays = Math.max(progress.completedDays, completedDaysFromXp);
+  const unifiedLevel = getLevelFromXp(progress.totalXp); // level === treeLevel (unified)
   return {
     ...progress,
-    level: getLevelFromXp(progress.totalXp),
+    level: unifiedLevel,
+    treeLevel: unifiedLevel,
     completedDays: normalizedCompletedDays,
-    treeLevel: getTreeLevelFromDays(normalizedCompletedDays),
   };
 };
 
@@ -27,13 +27,13 @@ const mapDexieProgressToStore = (
   localProgress: StoreProgress
 ): StoreProgress => {
   const totalXp = userProgress.xp ?? 0;
-  const completedDays = getCompletedDaysFromXp(totalXp);
+  const completedDays = Math.floor(totalXp / XP_PER_DAY);
   return {
     currentStreak: userProgress.streak ?? 0,
     maxStreak: Math.max(localProgress.maxStreak, userProgress.streak ?? 0),
     totalXp,
     level: getLevelFromXp(totalXp),
-    treeLevel: getTreeLevelFromDays(completedDays),
+    treeLevel: getLevelFromXp(totalXp), // unified with level
     lastCompletedDate: userProgress.lastCompletedDate
       ? String(userProgress.lastCompletedDate).slice(0, 10)
       : null,
@@ -48,7 +48,7 @@ const persistProgressToDexie = async (userId: number, progress: StoreProgress, p
     streak: progress.currentStreak,
     xp: progress.totalXp,
     level: getLevelFromXp(progress.totalXp),
-    treeLevel: getTreeLevelFromDays(progress.completedDays),
+    treeLevel: getLevelFromXp(progress.totalXp), // unified with level
     lastCompletedDate: progress.lastCompletedDate ? new Date(progress.lastCompletedDate) : undefined,
   };
 

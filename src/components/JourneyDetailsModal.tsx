@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Flame, Star } from "lucide-react";
-import { LEVEL_XP_STEP, useProgressStore } from "@/stores/progressStore";
+import { TREE_XP_THRESHOLDS, useProgressStore } from "@/stores/progressStore";
 import { TreeGrowthVisual } from "./TreeGrowthVisual";
 
 interface JourneyDetailsModalProps {
@@ -12,10 +12,12 @@ interface JourneyDetailsModalProps {
 
 export function JourneyDetailsModal({ isOpen, onClose }: JourneyDetailsModalProps) {
   const { progress, getXpForNextLevel, getTreeProgress } = useProgressStore();
-  const safeLevel = Math.max(1, progress.level);
-  const xpCurrentLevel = (safeLevel - 1) * LEVEL_XP_STEP;
+  const safeLevel = Math.max(0, Math.min(10, progress.level));
+  const xpCurrentLevel = TREE_XP_THRESHOLDS[safeLevel] ?? 0;
+  const xpNextLevel = safeLevel < 10 ? (TREE_XP_THRESHOLDS[safeLevel + 1] ?? TREE_XP_THRESHOLDS[10]) : TREE_XP_THRESHOLDS[10];
+  const xpForThisLevel = Math.max(1, xpNextLevel - xpCurrentLevel);
   const xpInLevel = Math.max(0, progress.totalXp - xpCurrentLevel);
-  const xpProgress = Math.min(100, (xpInLevel / LEVEL_XP_STEP) * 100);
+  const xpProgress = safeLevel >= 10 ? 100 : Math.min(100, (xpInLevel / xpForThisLevel) * 100);
   const treeProgress = getTreeProgress();
 
   return (
@@ -83,7 +85,7 @@ export function JourneyDetailsModal({ isOpen, onClose }: JourneyDetailsModalProp
                       Nível {progress.level}
                     </span>
                     <span className="text-sm text-text-secondary">
-                      {xpInLevel} / {LEVEL_XP_STEP} XP
+                      {xpInLevel} / {xpForThisLevel} XP
                     </span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
