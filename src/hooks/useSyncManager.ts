@@ -119,7 +119,7 @@ export function useSyncManager() {
     }
   }, [supabaseUser, isSyncing, success, toastError]);
 
-  // Dispara sync quando o app volta online depois de ter ficado offline
+  // Dispara sync quando o app volta online depois de ter ficado offline (path primário)
   useEffect(() => {
     if (!wasOffline || !isOnline || !supabaseUser) return;
     syncOfflineData();
@@ -130,6 +130,19 @@ export function useSyncManager() {
     if (!isOnline || !supabaseUser || syncedOnMountRef.current) return;
     syncedOnMountRef.current = true;
     syncOfflineData();
+  }, [isOnline, supabaseUser]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Responde ao evento do SW Background Sync (path secundário — app em background)
+  // O SW envia BACKGROUND_SYNC → ServiceWorkerRegistration despacha 'sw-background-sync'
+  useEffect(() => {
+    const handleSwSync = () => {
+      if (isOnline && supabaseUser) {
+        syncOfflineData();
+      }
+    };
+
+    window.addEventListener('sw-background-sync', handleSwSync as EventListener);
+    return () => window.removeEventListener('sw-background-sync', handleSwSync as EventListener);
   }, [isOnline, supabaseUser]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return { isSyncing, lastSync, syncOfflineData };

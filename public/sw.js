@@ -213,10 +213,17 @@ self.addEventListener('fetch', (event) => {
 });
 
 // ─── BACKGROUND SYNC: fila de requests offline ────────────────────────────────
+const SYNC_TAGS = [
+  'background-sync-prayers',
+  'background-sync-journal',
+  'sync-progress',
+];
+
 self.addEventListener('sync', (event) => {
-  if (event.tag === 'background-sync-prayers' || event.tag === 'background-sync-journal') {
+  if (SYNC_TAGS.includes(event.tag)) {
     event.waitUntil(
-      self.clients.matchAll().then((clients) => {
+      self.clients.matchAll({ includeUncontrolled: true, type: 'window' }).then((clients) => {
+        if (clients.length === 0) return;
         clients.forEach((client) =>
           client.postMessage({ type: 'BACKGROUND_SYNC', tag: event.tag })
         );
