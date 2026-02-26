@@ -57,6 +57,27 @@ interface HotmartWebhookPayload {
   };
 }
 
+type PlanInterval = 'mensal' | 'trimestral' | 'anual';
+
+// Detecta o intervalo do plano pelo nome que o produtor configurou na Hotmart
+function detectPlanInterval(planName?: string): PlanInterval {
+  if (!planName) return 'mensal';
+  const name = planName.toLowerCase();
+  if (name.includes('anual') || name.includes('annual') || name.includes('12')) return 'anual';
+  if (name.includes('trimestral') || name.includes('quarterly') || name.includes('3 mes') || name.includes('3mes')) return 'trimestral';
+  return 'mensal';
+}
+
+// Calcula expires_at com margem de 5 dias por segurança
+function calcExpiresAt(interval: PlanInterval): string {
+  const DAYS: Record<PlanInterval, number> = {
+    mensal: 35,        // 30 + 5
+    trimestral: 95,    // 90 + 5
+    anual: 370,        // 365 + 5
+  };
+  return new Date(Date.now() + DAYS[interval] * 24 * 60 * 60 * 1000).toISOString();
+}
+
 // POST /api/webhooks/hotmart — recebe eventos do Hotmart
 export async function POST(req: NextRequest) {
   try {
@@ -85,6 +106,8 @@ export async function POST(req: NextRequest) {
     const pricePaid = payload.data?.purchase?.payment?.value ?? 0;
     const currency = payload.data?.purchase?.payment?.currency_value ?? 'BRL';
     const productId = String(payload.data?.product?.id ?? '');
+    const planName = payload.data?.subscription?.plan?.name;
+    const planInterval = detectPlanInterval(planName);
 
     // 3. Log do webhook
     const { error: logError } = await supabase.from('hotmart_webhook_logs').insert({
@@ -137,6 +160,7 @@ export async function POST(req: NextRequest) {
         subscriptionData = {
           user_id: userId,
           plan: 'plus',
+          plan_interval: planInterval,
           status: 'active',
           hotmart_subscription_id: subscriptionCode ?? null,
           hotmart_transaction: transaction,
@@ -144,8 +168,7 @@ export async function POST(req: NextRequest) {
           price_paid: pricePaid,
           currency,
           starts_at: new Date().toISOString(),
-          // Assinaturas mensais — expiram em 35 dias (margem de 5 dias)
-          expires_at: new Date(Date.now() + 35 * 24 * 60 * 60 * 1000).toISOString(),
+          expires_at: calcExpiresAt(planInterval),
           canceled_at: null,
           updated_at: new Date().toISOString(),
         };
@@ -217,7 +240,7 @@ export async function POST(req: NextRequest) {
         .eq('buyer_email', buyerEmail);
     }
 
-    console.log(`[hotmart/webhook] Evento ${event} processado para ${buyerEmail} → status: ${newStatus}`);
+    console.log(`[hotmart/webhook] Evento ${event} processado para ${buyerEmail} → status: ${newStatus} | intervalo: ${planInterval ?? 'n/a'}`);
     return NextResponse.json({ received: true, event, status: newStatus });
   } catch (err) {
     console.error('[hotmart/webhook] Erro interno:', err);
