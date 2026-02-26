@@ -2,6 +2,8 @@ import { Heart, X, BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePrayerPlayer } from "@/hooks/usePrayerPlayer";
+import { useReadingFontSize } from "@/hooks/useReadingFontSize";
+import { stripAudioMarkers } from "@/lib/stripAudioMarkers";
 import { EstudoPlayerBar } from "./EstudoPlayerBar";
 import { EstudoBiblico } from "@/data/estudos";
 
@@ -38,6 +40,8 @@ export function EstudoDetailModalWithPlayer({
     isOpen: !!estudo,
   });
 
+  const { fontSize, canIncrease, canDecrease, increase, decrease } = useReadingFontSize();
+
   if (!estudo) return null;
 
   return (
@@ -51,6 +55,9 @@ export function EstudoDetailModalWithPlayer({
           onClick={onClose}
         >
           <motion.div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="estudo-modal-title"
             initial={{ y: "100%" }}
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
@@ -62,7 +69,7 @@ export function EstudoDetailModalWithPlayer({
                 <BookOpen className="w-32 h-32 text-white" />
               </div>
               <div className="flex-1 relative z-10">
-                <h2 className="text-xl font-bold text-white drop-shadow-lg leading-tight">
+                <h2 id="estudo-modal-title" className="text-xl font-bold text-white drop-shadow-lg leading-tight">
                   {estudo.shortTitle}
                 </h2>
                 {estudo.reference && (
@@ -79,6 +86,7 @@ export function EstudoDetailModalWithPlayer({
               <div className="flex gap-2 ml-4 relative z-10">
                 <button
                   onClick={() => onToggleFavorite(estudo.id)}
+                  aria-label={isFavorite ? "Remover dos favoritos" : "Adicionar aos favoritos"}
                   className={cn(
                     "p-2 rounded-lg transition-colors backdrop-blur-sm",
                     isFavorite ? "text-red-400 bg-white/20" : "text-white hover:bg-white/20"
@@ -88,6 +96,7 @@ export function EstudoDetailModalWithPlayer({
                 </button>
                 <button
                   onClick={onClose}
+                  aria-label="Fechar"
                   className="p-2 rounded-lg hover:bg-white/20 transition-colors text-white"
                 >
                   <X className="w-5 h-5" />
@@ -123,16 +132,50 @@ export function EstudoDetailModalWithPlayer({
             <audio ref={audioRef} crossOrigin="anonymous" />
 
             <div className="mb-6">
-              <h3 className="text-sm font-semibold text-[#6B7280] mb-4 uppercase tracking-wide">Estudo Bíblico</h3>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-sm font-semibold text-[#6B7280] uppercase tracking-wide">Estudo Bíblico</h3>
+                <div className="flex items-center gap-1.5" role="group" aria-label="Tamanho da fonte">
+                  <button
+                    onClick={decrease}
+                    disabled={!canDecrease}
+                    aria-label="Diminuir tamanho da fonte"
+                    className={cn(
+                      "w-7 h-7 rounded-md text-xs font-bold transition-colors",
+                      canDecrease
+                        ? "bg-gray-100 text-gray-700 hover:bg-gray-200 active:bg-gray-300"
+                        : "bg-gray-50 text-gray-300 cursor-not-allowed"
+                    )}
+                  >
+                    A-
+                  </button>
+                  <button
+                    onClick={increase}
+                    disabled={!canIncrease}
+                    aria-label="Aumentar tamanho da fonte"
+                    className={cn(
+                      "w-7 h-7 rounded-md text-xs font-bold transition-colors",
+                      canIncrease
+                        ? "bg-gray-100 text-gray-700 hover:bg-gray-200 active:bg-gray-300"
+                        : "bg-gray-50 text-gray-300 cursor-not-allowed"
+                    )}
+                  >
+                    A+
+                  </button>
+                </div>
+              </div>
               <div className="bg-[#F9FAFB] rounded-2xl p-6">
-                <p className="text-[#1F2937] leading-relaxed whitespace-pre-wrap text-sm md:text-base">
-                  {estudo.text}
+                <p
+                  className="text-[#1F2937] whitespace-pre-wrap"
+                  style={{ fontSize: `${fontSize}px`, lineHeight: '1.85' }}
+                >
+                  {stripAudioMarkers(estudo.text)}
                 </p>
               </div>
             </div>
 
             <button
               onClick={onClose}
+              aria-label="Fechar estudo bíblico"
               className="w-full py-4 bg-[#D97706] text-white font-semibold rounded-xl hover:bg-[#B45309] transition-colors"
             >
               Fechar
