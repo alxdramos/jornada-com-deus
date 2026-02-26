@@ -32,21 +32,23 @@ export function ExpandableStepCard({
       <div className="flex items-center gap-4 p-4">
         <button
           onClick={onToggleComplete}
+          aria-label={isCompleted ? `Desmarcar "${title}" como concluído` : `Marcar "${title}" como concluído`}
           className="shrink-0 w-10 h-10 rounded-full flex items-center justify-center border-2 border-[#E5E7EB] hover:border-[#10B981] transition-colors"
         >
           {isCompleted ? (
             <CheckCircle className="w-5 h-5 text-[#10B981]" />
           ) : (
-            <div className="w-4 h-4 rounded-full border-2 border-[#9CA3AF]" />
+            <div className="w-4 h-4 rounded-full border-2 border-[#9CA3AF]" aria-hidden="true" />
           )}
         </button>
 
         <button
           onClick={onToggleExpand}
+          aria-expanded={isExpanded}
           className="flex-1 min-w-0 text-left"
         >
           <div className="flex items-center gap-2">
-            <Icon className="w-5 h-5 shrink-0 text-[#1F2937]" />
+            <Icon className="w-5 h-5 shrink-0 text-[#1F2937]" aria-hidden="true" />
             <span className="font-medium text-[#1F2937]">{title}</span>
           </div>
           <p className="text-xs text-[#6B7280] mt-0.5 truncate">
@@ -56,10 +58,12 @@ export function ExpandableStepCard({
 
         <button
           onClick={onToggleExpand}
+          aria-label={isExpanded ? `Recolher ${title}` : `Expandir ${title}`}
+          aria-expanded={isExpanded}
           className="shrink-0 p-1"
         >
           <motion.div animate={{ rotate: isExpanded ? 180 : 0 }}>
-            <ChevronDown className="w-5 h-5 text-[#9CA3AF]" />
+            <ChevronDown className="w-5 h-5 text-[#9CA3AF]" aria-hidden="true" />
           </motion.div>
         </button>
       </div>

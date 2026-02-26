@@ -29,7 +29,7 @@ export function TabHoje() {
           subtitleElement={
             <button
               onClick={() => setCalendarioOpen(true)}
-              className="text-sm text-orange-500 font-medium hover:text-orange-600 transition-colors"
+              className="text-sm text-orange-700 font-medium hover:text-orange-800 transition-colors"
             >
               VER CALENDÁRIO &amp; FAVORITOS
             </button>
@@ -77,7 +77,7 @@ export function TabHoje() {
           </h3>
           <button
             onClick={() => setJourneyModalOpen(true)}
-            className="text-sm font-medium text-orange-500 hover:text-orange-600 transition-colors"
+            className="text-sm font-medium text-orange-700 hover:text-orange-800 transition-colors"
           >
             VER TUDO &gt;
           </button>

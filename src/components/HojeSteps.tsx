@@ -117,12 +117,13 @@ export function HojeSteps() {
           <div className="flex items-center gap-4">
             <button
               onClick={() => toggleEtapa("devocional")}
+              aria-label={completados.has("devocional") ? 'Desmarcar "Devocional" como concluído' : 'Marcar "Devocional" como concluído'}
               className="shrink-0 w-10 h-10 rounded-full flex items-center justify-center border-2 border-[#E5E7EB] hover:border-[#10B981] transition-colors"
             >
               {completados.has("devocional") ? (
-                <div className="w-5 h-5 text-[#10B981]">✓</div>
+                <div className="w-5 h-5 text-[#10B981]" aria-hidden="true">✓</div>
               ) : (
-                <div className="w-4 h-4 rounded-full border-2 border-[#9CA3AF]" />
+                <div className="w-4 h-4 rounded-full border-2 border-[#9CA3AF]" aria-hidden="true" />
               )}
             </button>
 

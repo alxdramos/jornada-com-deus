@@ -39,6 +39,8 @@ export function BottomNav() {
             <motion.button
               key={item.id}
               onClick={() => setActiveTab(item.id)}
+              aria-label={item.label}
+              aria-current={isActive ? "page" : undefined}
               className={cn(
                 "flex flex-col items-center justify-center min-w-0 flex-1 py-2 relative"
               )}
@@ -59,10 +61,11 @@ export function BottomNav() {
               )}
 
               <Icon
-                className={`w-6 h-6 mb-1 transition-colors ${isActive ? 'text-orange-500' : 'text-gray-500'}`}
+                className={`w-6 h-6 mb-1 transition-colors ${isActive ? 'text-orange-700' : 'text-gray-500'}`}
+                aria-hidden="true"
               />
               <span
-                className={`text-xs font-medium transition-colors ${isActive ? 'text-orange-500' : 'text-gray-500'}`}
+                className={`text-xs font-medium transition-colors ${isActive ? 'text-orange-700' : 'text-gray-500'}`}
               >
                 {item.label}
               </span>
