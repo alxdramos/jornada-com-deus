@@ -23,7 +23,7 @@
 - **Paleta:** fundo `#FAF9F6`, primary `#FB923C` (laranja), accent `#10B981` (verde), texto `#1F2937`
 - **Dark mode:** disponível (paleta marrom-quente `#1A1714` — não azul frio)
 - **Freemium:** conteúdo base gratuito + áudio narrado = tier Plus
-- **Gamificação:** streak diário, XP (+75/dia), níveis, **Árvore da Vida** (11 estágios visuais)
+- **Gamificação:** streak diário, XP (+100/dia), níveis, **Árvore da Vida** (11 estágios visuais), feedback háptico e animação de evolução
 - **Offline-first:** funciona sem internet via IndexedDB + Service Worker
 
 ---
@@ -188,10 +188,12 @@
 - Persistida em localStorage via `useDarkMode`
 
 ### Gamificação
-- XP +75 por dia completo
+- XP +100 por dia completo (thresholds não-lineares por nível)
 - Streak de dias consecutivos
-- Níveis calculados pelo XP total
-- **Árvore da Vida** — 11 estágios visuais (Semente → Bananeira Gloriosa)
+- Nível e treeLevel unificados — ambos derivados do `totalXp` via `getLevelFromXp()`
+- **Árvore da Vida** — 11 estágios visuais com thresholds de dias `[0,5,10,18,27,37,48,59,70,80,90]`
+- **Animação de evolução** — overlay "Árvore Evoluiu!" com Framer Motion (3.5s) ao subir de estágio
+- **Feedback háptico** — `useHaptics` com padrões: `light`, `stepComplete`, `dayComplete`, `levelUp`, `treeEvolve`, `error` (Web Vibration API, fallback silencioso no iOS)
 - Persistência: localStorage + Dexie + Supabase Realtime
 
 ### Site de Apresentação (`site/`)
@@ -288,6 +290,8 @@ jornada-com-deus/
 │   │   ├── useDarkMode.ts              # Dark mode via localStorage (light padrão)
 │   │   ├── useDiaryStorage.ts
 │   │   ├── useFavorites.ts             # Offline-first + sync Supabase + realtime
+│   │   ├── useHaptics.ts               # Web Vibration API — padrões de feedback háptico
+│   │   ├── useHojeSteps.ts             # Etapas do dia com haptics integrado
 │   │   ├── useImageFallback.ts         # Fallback inteligente de imagens por categoria
 │   │   ├── useImmersiveAudioPlayer.ts  # Player de áudio fullscreen
 │   │   ├── useMeditationPlayer.ts      # Player de meditação
@@ -470,7 +474,7 @@ npm run lint
 
 ---
 
-## Status MVP — 25/02/2026
+## Status MVP — 25/02/2026 (atualizado)
 
 ### ✅ Implementado e em produção
 
@@ -498,7 +502,9 @@ npm run lint
 - ✅ Devocional diário + Kids
 
 **Gamificação:**
-- ✅ XP + streak + níveis + Árvore da Vida (11 estágios visuais)
+- ✅ XP +100/dia + streak + níveis + Árvore da Vida (11 estágios — thresholds não-lineares)
+- ✅ Feedback háptico (`useHaptics`) em cada etapa, dia completo, level up e evolução da árvore
+- ✅ Animação de evolução "Árvore Evoluiu!" com overlay Framer Motion (3.5s)
 - ✅ Persistência localStorage + Dexie + Supabase Realtime
 
 **PWA:**

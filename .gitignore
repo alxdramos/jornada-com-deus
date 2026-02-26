@@ -46,3 +46,4 @@ data/*.json
 /*.jpg
 /*.jpeg
 supabase/.temp
+.vercel
