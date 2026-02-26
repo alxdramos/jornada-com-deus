@@ -8,14 +8,19 @@ import { ContentSection } from './explorar/ContentSection';
 import { EstudoCard } from './estudos/EstudoCard';
 import { EstudoDetailModalWithPlayer } from './estudos/EstudoDetailModalWithPlayer';
 import { EstudosModal } from './estudos/EstudosModal';
+import { PaywallModal } from '@/components/PaywallModal';
+import { useSubscription } from '@/hooks/useSubscription';
 import { useFavorites } from '@/hooks/useFavorites';
 import { BookOpen } from 'lucide-react';
 
 export function TabEstudos() {
+  const { isPlusUser: isPlus } = useSubscription();
   const { toggleFavorite, isFavorite } = useFavorites();
   const [selectedEstudo, setSelectedEstudo] = useState<EstudoBiblico | null>(null);
   const [showAllModal, setShowAllModal] = useState(false);
   const [chipAtivo, setChipAtivo] = useState("TUDO");
+  const [paywallOpen, setPaywallOpen] = useState(false);
+  const [paywallFeature, setPaywallFeature] = useState('');
 
   const categorias = Array.from(CATEGORIAS_ESTUDOS).filter(cat => {
     if (cat === "TUDO") return true;
@@ -28,6 +33,15 @@ export function TabEstudos() {
 
   // Apenas os 4 primeiros na lista principal
   const iniciais = estudosFiltrados.slice(0, 4);
+
+  const handleViewDetails = (estudo: EstudoBiblico) => {
+    if (estudo.plus && !isPlus) {
+      setPaywallFeature(estudo.title);
+      setPaywallOpen(true);
+    } else {
+      setSelectedEstudo(estudo);
+    }
+  };
 
   return (
     <>
@@ -63,7 +77,7 @@ export function TabEstudos() {
                 key={estudo.id}
                 estudo={estudo}
                 isFavorite={isFavorite(estudo.id)}
-                onPlay={setSelectedEstudo}
+                onPlay={handleViewDetails}
                 onFavorite={toggleFavorite}
               />
             ))}
@@ -76,7 +90,7 @@ export function TabEstudos() {
         <EstudosModal
           isOpen={showAllModal}
           onClose={() => setShowAllModal(false)}
-          onViewDetails={setSelectedEstudo}
+          onViewDetails={handleViewDetails}
         />
       )}
 
@@ -88,6 +102,12 @@ export function TabEstudos() {
           onToggleFavorite={toggleFavorite}
         />
       )}
+
+      <PaywallModal
+        isOpen={paywallOpen}
+        onClose={() => setPaywallOpen(false)}
+        feature={paywallFeature}
+      />
     </>
   );
 }

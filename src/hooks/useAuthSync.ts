@@ -102,6 +102,9 @@ export function useAuthSync() {
               name,
               email,
               isPlus: existingDexieUser.isPlus,
+              plan: existingDexieUser.isPlus ? 'plus' : 'free',
+              subscriptionStatus: existingDexieUser.isPlus ? 'active' : null,
+              subscriptionExpiresAt: null,
               avatar,
               createdAt: existingDexieUser.createdAt,
             });
@@ -153,6 +156,9 @@ export function useAuthSync() {
               name,
               email,
               isPlus: false,
+              plan: 'free',
+              subscriptionStatus: null,
+              subscriptionExpiresAt: null,
               avatar,
               createdAt: new Date(),
             });

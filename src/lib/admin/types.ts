@@ -56,3 +56,35 @@ export interface RecentUser {
   email: string
   created_at: string
 }
+
+export interface SubscriberRow {
+  user_id: string
+  plan: string
+  status: string
+  price_paid: number | null
+  currency: string | null
+  starts_at: string | null
+  expires_at: string | null
+  canceled_at: string | null
+  created_at: string
+  email?: string
+  name?: string
+}
+
+export interface SubscriptionKpi {
+  totalPlus: number
+  mrr: number
+  conversionRate: number
+  churnThisMonth: number
+  newThisMonth: number
+}
+
+export interface WebhookLog {
+  id: string
+  event: string
+  hotmart_transaction: string | null
+  buyer_email: string | null
+  processed: boolean
+  error: string | null
+  created_at: string
+}

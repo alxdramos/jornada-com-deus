@@ -8,14 +8,19 @@ import { ContentSection } from "./explorar/ContentSection";
 import { OracoesModal } from "./oracoes/OracoesModal";
 import { PrayerDetailModalWithPlayer } from "./oracoes/PrayerDetailModalWithPlayer";
 import { PrayerCard } from "./oracoes/PrayerCard";
+import { PaywallModal } from "@/components/PaywallModal";
+import { useSubscription } from "@/hooks/useSubscription";
 import { Bird } from "lucide-react";
 
 export function TabOracoes() {
+  const { isPlusUser: isPlus } = useSubscription();
   const [showAllModal, setShowAllModal] = useState(false);
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedPrayer, setSelectedPrayer] = useState<Prayer | null>(null);
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
   const [chipAtivo, setChipAtivo] = useState("TUDO");
+  const [paywallOpen, setPaywallOpen] = useState(false);
+  const [paywallFeature, setPaywallFeature] = useState('');
 
   // Gerar chips dinamicamente a partir dos themes das orações
   const temasUnicos = Array.from(new Set(ORACOES.map(o => o.theme))).filter(t => t && t !== "default").sort();
@@ -32,8 +37,13 @@ export function TabOracoes() {
 
   // Handlers
   const handleViewDetails = (prayer: Prayer) => {
-    setSelectedPrayer(prayer);
-    setShowDetailModal(true);
+    if (prayer.plus && !isPlus) {
+      setPaywallFeature(prayer.title);
+      setPaywallOpen(true);
+    } else {
+      setSelectedPrayer(prayer);
+      setShowDetailModal(true);
+    }
   };
 
   const toggleFavorite = (prayerId: string) => {
@@ -131,6 +141,12 @@ export function TabOracoes() {
           }}
         />
       )}
+
+      <PaywallModal
+        isOpen={paywallOpen}
+        onClose={() => setPaywallOpen(false)}
+        feature={paywallFeature}
+      />
     </>
   );
 }

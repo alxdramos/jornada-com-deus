@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X,
@@ -51,15 +50,10 @@ const BENEFICIOS_PLUS = [
 ];
 
 export function PaywallModal({ isOpen, onClose, onUpgrade, feature }: PaywallModalProps) {
-  const [isUpgrading, setIsUpgrading] = useState(false);
-
-  const handleUpgrade = async () => {
-    setIsUpgrading(true);
-    // Simular processamento
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    setIsUpgrading(false);
+  const handleUpgrade = () => {
+    const checkoutUrl = process.env.NEXT_PUBLIC_HOTMART_CHECKOUT_URL ?? 'https://hotmart.com/product/jornada-com-deus-plus';
+    window.open(checkoutUrl, '_blank', 'noopener,noreferrer');
     onUpgrade?.();
-    onClose();
   };
 
   return (
@@ -158,25 +152,17 @@ export function PaywallModal({ isOpen, onClose, onUpgrade, feature }: PaywallMod
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={handleUpgrade}
-                  disabled={isUpgrading}
                   className={cn(
                     "w-full py-4 px-6 rounded-2xl font-semibold text-lg text-white",
                     "bg-gradient-to-r from-[#FB923C] to-[#F97316]",
                     "hover:opacity-95 active:scale-[0.98] transition-all",
-                    "shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                    "shadow-lg"
                   )}
                 >
-                  {isUpgrading ? (
-                    <div className="flex items-center justify-center gap-2">
-                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                      <span>Processando...</span>
-                    </div>
-                  ) : (
-                    <div className="flex items-center justify-center gap-2">
-                      <Crown className="w-5 h-5" />
-                      <span>Começar Jornada Plus</span>
-                    </div>
-                  )}
+                  <div className="flex items-center justify-center gap-2">
+                    <Crown className="w-5 h-5" />
+                    <span>Começar Jornada Plus</span>
+                  </div>
                 </motion.button>
 
                 {/* Footer */}

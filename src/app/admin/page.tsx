@@ -8,7 +8,7 @@ import {
   getKpiData,
   getUserGrowth30d,
   getDauLast7d,
-  getPlanDistribution,
+  getPlanDistributionReal,
   getRecentUsers,
 } from '@/lib/admin/queries'
 
@@ -19,7 +19,7 @@ async function DashboardContent() {
     getKpiData(),
     getUserGrowth30d(),
     getDauLast7d(),
-    getPlanDistribution(),
+    getPlanDistributionReal(),
     getRecentUsers(6),
   ])
 

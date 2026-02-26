@@ -6,6 +6,9 @@ interface User {
   name: string;
   email: string; // Email agora é obrigatório (identificador único)
   isPlus: boolean;
+  plan: 'free' | 'plus';
+  subscriptionStatus: 'active' | 'inactive' | 'canceled' | 'refunded' | 'expired' | 'chargeback' | null;
+  subscriptionExpiresAt: string | null;
   avatar?: string;
   createdAt: Date;
 }
@@ -15,6 +18,7 @@ interface UserStore {
   setUser: (user: User) => void;
   updateUser: (updates: Partial<User>) => void;
   togglePlus: () => void;
+  setPlan: (plan: 'free' | 'plus', status: User['subscriptionStatus'], expiresAt: string | null) => void;
   clearUser: () => void;
 }
 
@@ -39,6 +43,21 @@ export const useUserStore = create<UserStore>()(
             user: {
               ...currentUser,
               isPlus: !currentUser.isPlus
+            }
+          });
+        }
+      },
+
+      setPlan: (plan, status, expiresAt) => {
+        const currentUser = get().user;
+        if (currentUser) {
+          set({
+            user: {
+              ...currentUser,
+              isPlus: plan === 'plus' && status === 'active',
+              plan,
+              subscriptionStatus: status,
+              subscriptionExpiresAt: expiresAt,
             }
           });
         }

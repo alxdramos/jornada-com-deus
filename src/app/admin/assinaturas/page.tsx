@@ -1,15 +1,22 @@
 import { KpiCard } from '@/components/admin/KpiCard'
-import { SubscriptionsPlaceholder } from '@/components/admin/SubscriptionsTable'
+import { SubscribersTable, WebhookLogsTable } from '@/components/admin/SubscriptionsTable'
+import { getSubscriptionKpis, getSubscribers, getWebhookLogs } from '@/lib/admin/queries'
 
-// MVP - features avançadas como churn detalhado, cohort analysis etc. serão adicionadas depois
+export default async function AssinaturasPage() {
+  const [kpi, subscribers, webhookLogs] = await Promise.all([
+    getSubscriptionKpis(),
+    getSubscribers(50),
+    getWebhookLogs(20),
+  ])
 
-export default function AssinaturasPage() {
+  const mrrFormatted = kpi.mrr.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+
   return (
     <div className="p-6 space-y-6 max-w-[1400px]">
       <div>
         <h1 className="text-2xl font-bold text-[#1F2937]">Assinaturas</h1>
         <p className="text-sm text-[#9CA3AF] mt-0.5">
-          Monetização e planos de assinatura
+          Monetização via Hotmart — dados em tempo real
         </p>
       </div>
 
@@ -17,15 +24,15 @@ export default function AssinaturasPage() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <KpiCard
           title="Assinantes Plus"
-          value={0}
+          value={kpi.totalPlus}
           icon="crown"
           color="orange"
-          description="Gateway não integrado"
+          description={`+${kpi.newThisMonth} este mês`}
           index={0}
         />
         <KpiCard
           title="Taxa de Conversão"
-          value="0%"
+          value={`${kpi.conversionRate}%`}
           icon="trending-up"
           color="green"
           description="Free → Plus"
@@ -33,22 +40,26 @@ export default function AssinaturasPage() {
         />
         <KpiCard
           title="Churn (mês)"
-          value={0}
+          value={kpi.churnThisMonth}
           icon="activity"
           description="Cancelamentos"
           index={2}
         />
         <KpiCard
-          title="Receita MRR"
-          value="—"
+          title="MRR"
+          value={mrrFormatted}
           icon="zap"
-          description="Integração pendente"
+          color="green"
+          description="Receita mensal recorrente"
           index={3}
         />
       </div>
 
-      {/* Placeholder com roadmap */}
-      <SubscriptionsPlaceholder />
+      {/* Tabela de assinantes */}
+      <SubscribersTable subscribers={subscribers} />
+
+      {/* Logs de webhook */}
+      <WebhookLogsTable logs={webhookLogs} />
     </div>
   )
 }

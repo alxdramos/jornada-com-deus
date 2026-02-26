@@ -9,13 +9,12 @@ import { MeditationCard } from './explorar/MeditationCard';
 import { MeditationDetailModalWithPlayer } from './meditacoes/MeditationDetailModalWithPlayer';
 import { MeditacoesModal } from './meditacoes/MeditacoesModal';
 import { PaywallModal } from '@/components/PaywallModal';
-import { useUserStore } from '@/stores/userStore';
+import { useSubscription } from '@/hooks/useSubscription';
 import { useFavorites } from '@/hooks/useFavorites';
 import { Music } from 'lucide-react';
 
 export function TabMeditacoes() {
-  const user = useUserStore((s) => s.user);
-  const isPlus = user?.isPlus ?? false;
+  const { isPlusUser: isPlus } = useSubscription();
   const { toggleFavorite, isFavorite } = useFavorites();
 
   const [showAllModal, setShowAllModal] = useState(false);

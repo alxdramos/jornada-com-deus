@@ -27,6 +27,7 @@ export interface Prayer {
   createdAt: Date;
   audioUrl?: string;
   duration?: number; // Duração em segundos
+  plus?: boolean;
   imagem?: {
     background: string;
     icon: string;

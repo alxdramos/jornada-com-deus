@@ -9,6 +9,7 @@ export interface EstudoBiblico {
   text: string;
   category: string;
   audioUrl: string;
+  plus?: boolean;
 }
 
 export const CATEGORIAS_ESTUDOS = ["TUDO", "Salmos", "Evangelhos", "Epístolas", "Sabedoria", "Proféticos"] as const;
