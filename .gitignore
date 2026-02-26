@@ -45,3 +45,4 @@ data/*.json
 /*.png
 /*.jpg
 /*.jpeg
+supabase/.temp
