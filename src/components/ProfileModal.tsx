@@ -41,6 +41,7 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
   if (!authUser && !user) return null;
 
   return (
+    <>
     <AnimatePresence>
       {isOpen && (
         <Dialog open={isOpen} onOpenChange={onClose}>
@@ -206,13 +207,14 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
           </DialogContent>
         </Dialog>
       )}
-
-      {/* PaywallModal — abre quando usuário clica "Ver Planos Premium" */}
-      <PaywallModal
-        isOpen={showPaywall}
-        onClose={() => setShowPaywall(false)}
-        onUpgrade={() => setShowPaywall(false)}
-      />
     </AnimatePresence>
+
+    {/* PaywallModal FORA do AnimatePresence — evita conflito de stacking context com o Dialog */}
+    <PaywallModal
+      isOpen={showPaywall}
+      onClose={() => setShowPaywall(false)}
+      onUpgrade={() => setShowPaywall(false)}
+    />
+    </>
   );
 }

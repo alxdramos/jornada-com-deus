@@ -28,7 +28,7 @@ const PLANOS = [
   {
     id: "mensal" as const,
     label: "Mensal",
-    preco: "R$ 9,90",
+    preco: "R$ 19,90",
     periodo: "/mês",
     detalhe: "Renovação mensal automática",
     desconto: null,
@@ -38,9 +38,9 @@ const PLANOS = [
   {
     id: "trimestral" as const,
     label: "Trimestral",
-    preco: "R$ 8,30",
+    preco: "R$ 16,63",
     periodo: "/mês",
-    detalhe: "Cobrado R$ 24,90 a cada 3 meses",
+    detalhe: "Cobrado R$ 49,90 a cada 3 meses",
     desconto: "16% off",
     destaque: true,
     envKey: "NEXT_PUBLIC_HOTMART_CHECKOUT_TRIMESTRAL",
@@ -48,10 +48,10 @@ const PLANOS = [
   {
     id: "anual" as const,
     label: "Anual",
-    preco: "R$ 6,66",
+    preco: "R$ 12,49",
     periodo: "/mês",
-    detalhe: "Cobrado R$ 79,90 por ano",
-    desconto: "33% off",
+    detalhe: "Cobrado R$ 149,90 por ano",
+    desconto: "37% off",
     destaque: false,
     envKey: "NEXT_PUBLIC_HOTMART_CHECKOUT_ANUAL",
   },
@@ -117,19 +117,19 @@ export function PaywallModal({ isOpen, onClose, onUpgrade, feature }: PaywallMod
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/60 z-[1000] backdrop-blur-sm"
+            className="fixed inset-0 bg-black/60 z-[9998] backdrop-blur-sm"
             onClick={onClose}
           />
 
-          {/* Modal */}
+          {/* Modal — tela cheia */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="fixed inset-4 md:inset-8 flex items-center justify-center z-[1001] p-4"
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 40 }}
+            transition={{ type: "spring", damping: 28, stiffness: 320 }}
+            className="fixed inset-0 z-[9999] flex flex-col bg-white overflow-y-auto"
           >
-            <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+            <div className="w-full max-w-lg mx-auto flex flex-col min-h-full">
               {/* Header com gradiente Premium */}
               <div className="relative bg-gradient-to-br from-[#92400E] via-[#B45309] to-[#D97706] p-6 text-white">
                 <button
