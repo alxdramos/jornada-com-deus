@@ -174,9 +174,9 @@ export function TreeGrowthVisual({
                   <Image
                     src={stage.image}
                     alt={stage.name}
-                    fill
-                    className="object-cover"
-                    sizes="56px"
+                    width={56}
+                    height={56}
+                    className="w-full h-full object-cover"
                     onError={() => handleImgError(stage.level)}
                   />
                 )}
@@ -363,9 +363,9 @@ export function TreeGrowthVisual({
                     <Image
                       src={s.image}
                       alt={s.name}
-                      fill
-                      className="object-cover"
-                      sizes="32px"
+                      width={32}
+                      height={32}
+                      className="w-full h-full object-cover"
                       loading="lazy"
                       onError={() => handleImgError(s.level)}
                     />
