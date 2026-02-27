@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   X,
   Crown,
@@ -97,13 +97,17 @@ const BENEFICIOS_PREMIUM = [
 
 export function PaywallModal({ isOpen, onClose, onUpgrade, feature }: PaywallModalProps) {
   const [planoSelecionado, setPlanoSelecionado] = useState<PlanoId>("trimestral");
+  const [checkoutOpened, setCheckoutOpened] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
 
   const handleUpgrade = () => {
+    if (checkoutOpened) return;
     const url = CHECKOUT_URLS[planoSelecionado];
     if (!url) {
       console.warn("[PaywallModal] URL de checkout não configurada para o plano:", planoSelecionado);
       return;
     }
+    setCheckoutOpened(true);
     window.open(url, "_blank", "noopener,noreferrer");
     onUpgrade?.();
   };
@@ -134,6 +138,7 @@ export function PaywallModal({ isOpen, onClose, onUpgrade, feature }: PaywallMod
               <div className="relative bg-gradient-to-br from-[#92400E] via-[#B45309] to-[#D97706] p-6 text-white">
                 <button
                   onClick={onClose}
+                  aria-label="Fechar"
                   className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/30 transition-colors"
                 >
                   <X className="w-4 h-4" />
@@ -141,8 +146,8 @@ export function PaywallModal({ isOpen, onClose, onUpgrade, feature }: PaywallMod
 
                 <div className="flex items-center gap-3 mb-4">
                   <motion.div
-                    animate={{ rotate: [0, -8, 8, -4, 4, 0] }}
-                    transition={{ duration: 1.2, delay: 0.3, repeat: Infinity, repeatDelay: 4 }}
+                    animate={prefersReducedMotion ? {} : { rotate: [0, -8, 8, -4, 4, 0] }}
+                    transition={prefersReducedMotion ? {} : { duration: 1.2, delay: 0.3, repeat: Infinity, repeatDelay: 4 }}
                     className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center"
                   >
                     <Crown className="w-6 h-6 text-yellow-300" />
@@ -239,19 +244,26 @@ export function PaywallModal({ isOpen, onClose, onUpgrade, feature }: PaywallMod
 
                 {/* Botão de upgrade — gradiente Premium */}
                 <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
+                  whileHover={checkoutOpened ? {} : { scale: 1.02 }}
+                  whileTap={checkoutOpened ? {} : { scale: 0.98 }}
                   onClick={handleUpgrade}
+                  disabled={checkoutOpened}
+                  aria-disabled={checkoutOpened}
                   className={cn(
                     "w-full py-4 px-6 rounded-2xl font-semibold text-lg text-white",
                     "bg-gradient-to-r from-[#92400E] via-[#D97706] to-[#FB923C]",
                     "hover:opacity-95 active:scale-[0.98] transition-all",
-                    "shadow-[0_4px_20px_rgba(180,83,9,0.4)]"
+                    "shadow-[0_4px_20px_rgba(180,83,9,0.4)]",
+                    checkoutOpened && "opacity-70 cursor-not-allowed"
                   )}
                 >
                   <div className="flex items-center justify-center gap-2">
                     <Sparkles className="w-5 h-5 text-yellow-200" />
-                    <span>Assinar Premium {PLANOS.find((p) => p.id === planoSelecionado)?.label}</span>
+                    <span>
+                      {checkoutOpened
+                        ? "Checkout aberto..."
+                        : `Assinar Premium ${PLANOS.find((p) => p.id === planoSelecionado)?.label}`}
+                    </span>
                   </div>
                 </motion.button>
 

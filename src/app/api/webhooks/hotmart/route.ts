@@ -137,7 +137,7 @@ export async function POST(req: NextRequest) {
 
     if (!profile?.id) {
       // Usuário ainda não tem conta — log e aguarda (pode criar conta depois)
-      console.warn('[hotmart/webhook] Usuário não encontrado para email:', buyerEmail);
+      console.warn('[hotmart/webhook] Usuário não encontrado para email: [REDACTED]');
       // Atualizar log como não processado (usuário não existe ainda)
       await supabase
         .from('hotmart_webhook_logs')
@@ -240,7 +240,7 @@ export async function POST(req: NextRequest) {
         .eq('buyer_email', buyerEmail);
     }
 
-    console.log(`[hotmart/webhook] Evento ${event} processado para ${buyerEmail} → status: ${newStatus} | intervalo: ${planInterval ?? 'n/a'}`);
+    console.log(`[hotmart/webhook] Evento ${event} processado → status: ${newStatus} | intervalo: ${planInterval ?? 'n/a'}`);
     return NextResponse.json({ received: true, event, status: newStatus });
   } catch (err) {
     console.error('[hotmart/webhook] Erro interno:', err);

@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
     const headers = new Headers();
     headers.set('Content-Type', 'audio/mpeg');
     headers.set('Content-Length', buffer.byteLength.toString());
-    headers.set('Access-Control-Allow-Origin', '*');
+    headers.set('Access-Control-Allow-Origin', 'https://app.minhajornadadiaria.com.br');
     headers.set('Access-Control-Allow-Methods', 'GET, OPTIONS');
     headers.set('Cache-Control', 'public, max-age=86400'); // Cache por 24 horas
 
@@ -68,7 +68,7 @@ export async function OPTIONS() {
     {},
     {
       headers: {
-        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Origin': 'https://app.minhajornadadiaria.com.br',
         'Access-Control-Allow-Methods': 'GET, OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type',
       },
