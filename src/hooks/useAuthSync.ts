@@ -7,6 +7,7 @@ import {
   getLevelFromXp,
 } from '@/stores/progressStore';
 import { db } from '@/lib/db';
+import { supabase } from '@/lib/supabase';
 
 type StoreProgress = ReturnType<typeof useProgressStore.getState>['progress'];
 
@@ -112,6 +113,13 @@ export function useAuthSync() {
             const localProgress = useProgressStore.getState().progress;
             const normalizedLocal = normalizeStoreProgress(localProgress);
 
+            // Buscar flags de onboarding do Supabase (não armazenadas no Dexie)
+            const { data: supabaseProfile } = await supabase
+              .from('users')
+              .select('has_completed_onboarding, interests')
+              .eq('email', email)
+              .maybeSingle();
+
             setUser({
               id: existingDexieUser.id!,
               name,
@@ -122,6 +130,8 @@ export function useAuthSync() {
               subscriptionExpiresAt: null,
               avatar,
               createdAt: existingDexieUser.createdAt,
+              hasCompletedOnboarding: supabaseProfile?.has_completed_onboarding ?? false,
+              interests: supabaseProfile?.interests ?? [],
             });
 
             if (userProgress) {
@@ -176,6 +186,8 @@ export function useAuthSync() {
               subscriptionExpiresAt: null,
               avatar,
               createdAt: new Date(),
+              hasCompletedOnboarding: false,
+              interests: [],
             });
           }
         } catch (error) {

@@ -5,6 +5,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useUserStore } from "@/stores/userStore";
 import { useAuthSync } from "@/hooks/useAuthSync";
 import { useSupabaseSync } from "@/hooks/useSupabaseSync";
+import { OnboardingGate } from "@/components/onboarding/OnboardingGate";
 
 // Tempo máximo de espera pelo sync (fallback de segurança)
 const SYNC_TIMEOUT_MS = 5000;
@@ -57,5 +58,5 @@ export function AuthSyncWrapper({ children }: { children: React.ReactNode }) {
     return <AuthLoadingScreen />;
   }
 
-  return <>{children}</>;
+  return <OnboardingGate>{children}</OnboardingGate>;
 }

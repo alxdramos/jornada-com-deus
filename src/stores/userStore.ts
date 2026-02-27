@@ -11,6 +11,8 @@ interface User {
   subscriptionExpiresAt: string | null;
   avatar?: string;
   createdAt: Date;
+  hasCompletedOnboarding: boolean;
+  interests: string[];
 }
 
 interface UserStore {
@@ -20,6 +22,7 @@ interface UserStore {
   togglePlus: () => void;
   setPlan: (plan: 'free' | 'plus', status: User['subscriptionStatus'], expiresAt: string | null) => void;
   clearUser: () => void;
+  completeOnboarding: (interests: string[]) => void;
 }
 
 export const useUserStore = create<UserStore>()(
@@ -64,6 +67,13 @@ export const useUserStore = create<UserStore>()(
       },
 
       clearUser: () => set({ user: null }),
+
+      completeOnboarding: (interests) => {
+        const currentUser = get().user;
+        if (currentUser) {
+          set({ user: { ...currentUser, hasCompletedOnboarding: true, interests } });
+        }
+      },
     }),
     {
       name: 'user-storage',
