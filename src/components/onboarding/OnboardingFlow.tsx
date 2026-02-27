@@ -71,13 +71,13 @@ export function OnboardingFlow() {
 
   return (
     <motion.div
-      className="fixed inset-0 z-50 bg-background flex flex-col"
+      className="fixed inset-0 z-[10000] bg-background flex flex-col"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
       {/* Progress dots */}
-      <div className="flex items-center justify-center gap-2 pt-safe pt-4 pb-2 px-6">
+      <div className="flex items-center justify-center gap-2 pb-2 px-6" style={{ paddingTop: 'calc(1rem + env(safe-area-inset-top, 0px))' }}>
         {Array.from({ length: TOTAL_SLIDES }).map((_, i) => (
           <motion.div
             key={i}
@@ -132,7 +132,7 @@ export function OnboardingFlow() {
 
       {/* CTA button */}
       {showCta && (
-        <div className="px-6 pb-safe pb-8 pt-2">
+        <div className="px-6 pt-2" style={{ paddingBottom: 'calc(2rem + env(safe-area-inset-bottom, 0px))' }}>
           <motion.button
             onClick={isLastSlide ? handleFinish : goNext}
             disabled={!canProceed || isCompleting}
