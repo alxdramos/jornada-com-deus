@@ -21,7 +21,7 @@ export function TabHoje() {
   const displayName = user?.name || authUser?.user_metadata?.full_name || "Visitante";
 
   return (
-    <div className="min-h-screen bg-bg-primary p-6 pb-28">
+    <div className="min-h-screen bg-bg-primary p-6 pb-36">
       <div className="max-w-4xl mx-auto space-y-8">
         {/* Header reutilizável com avatar Google + ProfileModal */}
         <UserHeader

@@ -121,7 +121,7 @@ export function TabBiblia() {
   const totalChapters = bookData?.chapters || 0;
 
   return (
-    <div className="min-h-screen bg-bg-primary p-6 pb-28">
+    <div className="min-h-screen bg-bg-primary p-6 pb-36">
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Header */}
         <UserHeader

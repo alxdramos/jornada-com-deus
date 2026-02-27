@@ -5,7 +5,7 @@ import { UserHeader } from '@/components/layout/UserHeader';
 
 export function TabDevocional() {
   return (
-    <div className="min-h-screen bg-bg-primary p-6 pb-28">
+    <div className="min-h-screen bg-bg-primary p-6 pb-36">
       <div className="max-w-4xl mx-auto space-y-6">
         <UserHeader title="Devocional" />
         <div className="flex flex-col items-center justify-center py-24 gap-4 text-center">

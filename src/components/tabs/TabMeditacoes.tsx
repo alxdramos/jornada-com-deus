@@ -45,7 +45,7 @@ export function TabMeditacoes() {
 
   return (
     <>
-      <div className="min-h-screen bg-bg-primary p-6 pb-28">
+      <div className="min-h-screen bg-bg-primary p-6 pb-36">
         <div className="max-w-4xl mx-auto space-y-6">
           <UserHeader
             title="Meditações"
