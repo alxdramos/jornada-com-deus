@@ -1,13 +1,18 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
+import { useMediaSession } from "./useMediaSession";
 
 interface UsePrayerPlayerProps {
   audioUrl?: string;
   isOpen: boolean;
+  title?: string;
+  artwork?: string;
 }
 
 export function usePrayerPlayer({
   audioUrl,
-  isOpen
+  isOpen,
+  title,
+  artwork,
 }: UsePrayerPlayerProps) {
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -103,7 +108,7 @@ export function usePrayerPlayer({
     }
   }, [isOpen]);
 
-  const togglePlay = async () => {
+  const togglePlay = useCallback(async () => {
     if (audioUrl && audioRef.current) {
       try {
         if (playing) {
@@ -118,7 +123,33 @@ export function usePrayerPlayer({
         setPlaying(false);
       }
     }
-  };
+  }, [audioUrl, playing]);
+
+  const skipCb = useCallback((direction: 'forward' | 'backward') => {
+    const skipAmount = 15;
+    if (audioRef.current) {
+      const newTime = direction === 'forward'
+        ? Math.min(currentTime + skipAmount, duration)
+        : Math.max(currentTime - skipAmount, 0);
+      audioRef.current.currentTime = newTime;
+      setCurrentTime(newTime);
+      setProgress((newTime / duration) * 100);
+    }
+  }, [currentTime, duration]);
+
+  const handlePlay = useCallback(() => { void togglePlay(); }, [togglePlay]);
+  const handlePause = useCallback(() => { void togglePlay(); }, [togglePlay]);
+  const handleSeekBwd = useCallback(() => skipCb('backward'), [skipCb]);
+  const handleSeekFwd = useCallback(() => skipCb('forward'), [skipCb]);
+
+  useMediaSession({
+    metadata: isOpen && title ? { title, album: 'Orações' } : null,
+    playing,
+    onPlay: handlePlay,
+    onPause: handlePause,
+    onSeekBackward: handleSeekBwd,
+    onSeekForward: handleSeekFwd,
+  });
 
   const handleProgressClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (progressRef.current && audioRef.current) {
@@ -133,18 +164,7 @@ export function usePrayerPlayer({
     }
   };
 
-  const skip = (direction: 'forward' | 'backward') => {
-    const skipAmount = 15;
-    if (audioRef.current) {
-      const newTime = direction === 'forward'
-        ? Math.min(currentTime + skipAmount, duration)
-        : Math.max(currentTime - skipAmount, 0);
-
-      audioRef.current.currentTime = newTime;
-      setCurrentTime(newTime);
-      setProgress((newTime / duration) * 100);
-    }
-  };
+  const skip = skipCb;
 
   const formatTime = (seconds: number) => {
     if (!seconds || isNaN(seconds)) return '0:00';

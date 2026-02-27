@@ -41,6 +41,7 @@ export function MeditationDetailModalWithPlayer({
     audioUrl: meditation?.audioUrl,
     isPlus: true,
     isOpen: !!meditation,
+    title: meditation?.title,
   });
 
   const { fontSize, canIncrease, canDecrease, increase, decrease } = useReadingFontSize();

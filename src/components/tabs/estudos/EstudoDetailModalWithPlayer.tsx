@@ -38,6 +38,7 @@ export function EstudoDetailModalWithPlayer({
   } = usePrayerPlayer({
     audioUrl: estudo?.audioUrl,
     isOpen: !!estudo,
+    title: estudo?.title,
   });
 
   const { fontSize, canIncrease, canDecrease, increase, decrease } = useReadingFontSize();

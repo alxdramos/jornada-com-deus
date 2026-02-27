@@ -58,6 +58,7 @@ export function PrayerDetailModalWithPlayer({
   } = usePrayerPlayer({
     audioUrl: prayer?.audioUrl,
     isOpen: !!prayer,
+    title: prayer?.title,
   });
 
   const { imageUrl } = useImageFallback({

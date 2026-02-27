@@ -1,15 +1,20 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
+import { useMediaSession } from "./useMediaSession";
 
 interface UseMeditationPlayerProps {
   audioUrl?: string;
   isPlus: boolean;
   isOpen: boolean;
+  title?: string;
+  artwork?: string;
 }
 
 export function useMeditationPlayer({
   audioUrl,
   isPlus,
-  isOpen
+  isOpen,
+  title,
+  artwork,
 }: UseMeditationPlayerProps) {
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -131,7 +136,7 @@ export function useMeditationPlayer({
     }
   }, [isOpen]);
 
-  const togglePlay = async () => {
+  const togglePlay = useCallback(async () => {
     if (!isPlus) {
       setShowPlusOverlay(true);
       return;
@@ -153,7 +158,32 @@ export function useMeditationPlayer({
     } else {
       setPlaying(!playing);
     }
-  };
+  }, [isPlus, audioUrl, playing]);
+
+  const skip = useCallback((direction: 'forward' | 'backward') => {
+    const skipAmount = 15;
+    const dur = audioRef.current?.duration || 300;
+    const newTime = direction === 'forward'
+      ? Math.min(currentTime + skipAmount, dur)
+      : Math.max(currentTime - skipAmount, 0);
+    if (audioRef.current) audioRef.current.currentTime = newTime;
+    setCurrentTime(newTime);
+    setProgress((newTime / dur) * 100);
+  }, [currentTime]);
+
+  const handlePlay = useCallback(() => { void togglePlay(); }, [togglePlay]);
+  const handlePause = useCallback(() => { void togglePlay(); }, [togglePlay]);
+  const handleSeekBwd = useCallback(() => skip('backward'), [skip]);
+  const handleSeekFwd = useCallback(() => skip('forward'), [skip]);
+
+  useMediaSession({
+    metadata: isOpen && isPlus && title ? { title, album: 'Meditações', artwork } : null,
+    playing,
+    onPlay: handlePlay,
+    onPause: handlePause,
+    onSeekBackward: handleSeekBwd,
+    onSeekForward: handleSeekFwd,
+  });
 
   const handleProgressClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (progressRef.current) {
@@ -163,15 +193,6 @@ export function useMeditationPlayer({
       setProgress(newProgress);
       setCurrentTime((newProgress / 100) * 300);
     }
-  };
-
-  const skip = (direction: 'forward' | 'backward') => {
-    const skipAmount = 15;
-    const newTime = direction === 'forward'
-      ? Math.min(currentTime + skipAmount, 300)
-      : Math.max(currentTime - skipAmount, 0);
-    setCurrentTime(newTime);
-    setProgress((newTime / 300) * 100);
   };
 
   return {
