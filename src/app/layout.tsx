@@ -104,7 +104,12 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <body className={`${inter.variable} font-sans antialiased bg-background text-foreground`}>
-        <Suspense fallback={<div className="w-screen h-screen flex items-center justify-center">Carregando...</div>}>
+        <Suspense fallback={
+          <div className="w-screen h-screen flex flex-col items-center justify-center bg-background gap-4">
+            <div className="w-12 h-12 rounded-full border-4 border-amber-500 border-t-transparent animate-spin" />
+            <p className="text-sm text-muted-foreground">Carregando sua jornada...</p>
+          </div>
+        }>
           <SessionProvider>
             <AuthSyncWrapper>
               <ServiceWorkerRegistration />
