@@ -23,9 +23,9 @@ export function useOnboarding() {
         const { data: { user: authUser } } = await supabase.auth.getUser();
         if (authUser) {
           await supabase
-            .from('users')
+            .from('profiles')
             .update({ has_completed_onboarding: true, interests })
-            .eq('email', authUser.email);
+            .eq('id', authUser.id);
         }
       } catch (err) {
         console.error('[useOnboarding] Erro ao salvar onboarding:', err);

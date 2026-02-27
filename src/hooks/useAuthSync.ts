@@ -115,9 +115,9 @@ export function useAuthSync() {
 
             // Buscar flags de onboarding do Supabase (não armazenadas no Dexie)
             const { data: supabaseProfile } = await supabase
-              .from('users')
+              .from('profiles')
               .select('has_completed_onboarding, interests')
-              .eq('email', email)
+              .eq('id', supabaseUser.id)
               .maybeSingle();
 
             setUser({
