@@ -187,6 +187,28 @@
 - 40+ orações com áudio
 - Proxy CORS em `/api/audio` para todas as URLs R2
 
+### Players de Áudio — MediaSession API (lock screen + background)
+- **`useMediaSession.ts`** — hook reutilizável para todos os players
+- Metadados (título + álbum) transmitidos ao sistema operacional via `MediaMetadata`
+- Controles de play/pause/skip na **lock screen** do celular (Android e iOS)
+- **Background playback** — áudio continua mesmo com a tela bloqueada
+- Atualização de `playbackState` sincronizada com o estado real do player
+- Action handlers estáveis via `useCallback` (sem re-registro infinito)
+- Integrado em `usePrayerPlayer`, `useMeditationPlayer` e via ambos nos 3 modais
+
+### Onboarding Flow
+- 4 slides animados com Framer Motion (`x` slide transitions)
+- Slide 1: Boas-vindas, Slide 2: Recursos, Slide 3: Interesses espirituais, Slide 4: Notificações
+- Seleção de interesses com chips multi-select e persistência em Supabase
+- Solicitação de permissão de notificações integrada no slide final
+- Fluxo disparado automaticamente no primeiro login (campo `onboarding_completed` em profiles)
+
+### Observabilidade (Sentry)
+- Sentry SDK integrado no Next.js 15 (app + server + edge)
+- Captura automática de erros em produção com stack trace completo
+- Error Boundaries nos componentes críticos do app
+- Rota `/api/sentry-test` usada para validar a integração (removida após validação)
+
 ### Imagens Espirituais (geradas por IA)
 - **17 imagens únicas** para meditações (aquarela espiritual, luz dourada)
 - **21 imagens únicas** para estudos bíblicos (cenas temáticas sem texto)
@@ -248,7 +270,7 @@ jornada-com-deus/
 │   │   │   │   ├── send/               # Disparo de push (Vercel Cron + manual)
 │   │   │   │   └── subscribe/          # Registro de subscription VAPID
 │   │   │   ├── admin/push/test/        # Teste de push para o próprio admin
-│   │   │   └── webhooks/hotmart/       # Webhook Hotmart (valida HOTTOK + processa compras)
+│   │   │   └── webhooks/hotmart/       # Webhook Hotmart — HOTTOK timing-safe + HMAC + rate limit + idempotência
 │   │   ├── auth/callback/              # Callback OAuth + confirmação de e-mail
 │   │   ├── biblia/sobre/               # Aviso legal da tradução bíblica
 │   │   ├── login/                      # Tela de login (Google + e-mail/senha)
@@ -322,6 +344,7 @@ jornada-com-deus/
 │   │   ├── useHojeSteps.ts             # Etapas do dia com haptics integrado
 │   │   ├── useImageFallback.ts         # Fallback inteligente de imagens por categoria
 │   │   ├── useImmersiveAudioPlayer.ts  # Player de áudio fullscreen
+│   │   ├── useMediaSession.ts          # MediaSession API — lock screen + background playback
 │   │   ├── useMeditationPlayer.ts      # Player de meditação
 │   │   ├── useOnlineStatus.ts          # Online/offline + wasOffline flag
 │   │   ├── usePrayerPlayer.ts          # Player de oração
@@ -470,6 +493,7 @@ VAPID_EMAIL="mailto:contato@minhajornadadiaria.com.br"
 # Hotmart — obrigatório para monetização
 HOTMART_HOTTOK="..."                                    # Token de validação de webhooks (Dashboard Hotmart)
 NEXT_PUBLIC_HOTMART_CHECKOUT_URL="https://pay.hotmart.com/..."   # Link do produto para checkout
+HOTMART_WEBHOOK_SECRET="..."                            # Secret HMAC opcional — camada extra de segurança (X-Hotmart-Signature)
 ```
 
 Gerar chaves VAPID:
@@ -515,7 +539,7 @@ npm run lint
 
 ---
 
-## Status MVP — 27/02/2026 (atualizado)
+## Status MVP — 27/02/2026 (atualizado — sessão noturna)
 
 ### ✅ Implementado e em produção
 
@@ -571,12 +595,32 @@ npm run lint
 - ✅ Listagem completa de usuários
 - ✅ Acesso protegido por `role = 'admin'` via RLS
 
+**Players de Áudio (MediaSession API):**
+- ✅ `useMediaSession.ts` — hook central reutilizável pelos 3 players
+- ✅ Controles na lock screen do celular (play/pause/skip +15s/-15s)
+- ✅ Background playback — áudio não para ao bloquear a tela
+- ✅ Metadados (título + álbum) transmitidos ao SO via `MediaMetadata`
+- ✅ Integrado nos 3 players: meditações, orações e estudos bíblicos
+
 **Monetização (Hotmart):**
 - ✅ Paywall em meditações, orações e estudos bíblicos (conteúdo Premium)
 - ✅ PaywallModal com 3 planos (mensal/trimestral/anual) + checkout Hotmart
-- ✅ Webhook handler `/api/webhooks/hotmart` com validação HOTTOK
+- ✅ Webhook handler `/api/webhooks/hotmart` — segurança em 3 camadas:
+  - HOTTOK com `timingSafeEqual` (anti timing-attack)
+  - Rate limiting 30 req/min por IP (in-memory, 429 + Retry-After)
+  - Idempotência por `hotmart_transaction` (anti-replay de eventos duplicados)
+  - HMAC-SHA256 opcional via `HOTMART_WEBHOOK_SECRET` (header `X-Hotmart-Signature`)
 - ✅ Sincronização automática de plan via trigger SQL
 - ✅ `useSubscription` hook com Realtime listener
+
+**Onboarding:**
+- ✅ Flow de 4 slides com Framer Motion (disparado no 1º login)
+- ✅ Seleção de interesses espirituais com persistência em Supabase
+- ✅ Solicitação de permissão de notificações no último slide
+
+**Observabilidade:**
+- ✅ Sentry SDK integrado (app + server + edge)
+- ✅ Error Boundaries em componentes críticos
 
 **Design e UX:**
 - ✅ Light mode como padrão + Dark mode opcional (paleta marrom-quente `#1A1714`)
