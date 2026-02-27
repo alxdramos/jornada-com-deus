@@ -47,5 +47,18 @@ jornadacomdeus-ce9c0e55fc3e.json
 /*.png
 /*.jpg
 /*.jpeg
+
+# Test coverage (generated)
+coverage/
+
+# Local asset folders (generated images, AI output)
+Imagens Paisagem/
+
+# Windows scripts
+*.bat
+
+# Tool state files
+.image-state.json
+
 supabase/.temp
 .vercel
