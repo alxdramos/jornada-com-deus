@@ -2,13 +2,15 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Flame, Star } from "lucide-react";
+import { Flame, Star, Share2, Check } from "lucide-react";
 import { TREE_XP_THRESHOLDS, useProgressStore } from "@/stores/progressStore";
 import { AppCard } from "./AppCard";
 import { TreeGrowthVisual, TREE_STAGES } from "./TreeGrowthVisual";
+import { useNativeShare } from "@/hooks/useNativeShare";
 
 export function GamificationCard() {
   const { progress, getXpForNextLevel, getTreeProgress } = useProgressStore();
+  const { share, copied } = useNativeShare();
 
   // XP dentro do nível atual (baseado nos thresholds reais)
   const safeLevel = Math.max(0, Math.min(10, progress.level));
@@ -109,7 +111,32 @@ export function GamificationCard() {
 
         {/* Árvore da Vida — visualização por estágio */}
         <div className="space-y-2">
-          <div className="text-sm font-medium text-text-primary">Árvore da Vida</div>
+          <div className="flex items-center justify-between">
+            <div className="text-sm font-medium text-text-primary">Árvore da Vida</div>
+            <button
+              onClick={() => {
+                const stage = TREE_STAGES[progress.treeLevel];
+                share({
+                  title: "Minha Árvore da Vida 🌳",
+                  text: `🌳 Estágio ${progress.treeLevel + 1} — ${stage?.name ?? "Crescendo"}!\n\n🔥 ${progress.currentStreak} dias de streak\n📖 ${progress.completedDays} dias na jornada\n\nJunte-se a mim na Jornada com Deus!`,
+                });
+              }}
+              className="flex items-center gap-1 text-xs text-primary/70 hover:text-primary transition-colors px-2 py-1 rounded-lg hover:bg-primary/5"
+              aria-label="Compartilhar progresso da Árvore da Vida"
+            >
+              {copied ? (
+                <>
+                  <Check className="w-3.5 h-3.5 text-green-500" />
+                  <span className="text-green-500">Copiado!</span>
+                </>
+              ) : (
+                <>
+                  <Share2 className="w-3.5 h-3.5" />
+                  <span>Compartilhar</span>
+                </>
+              )}
+            </button>
+          </div>
           <TreeGrowthVisual
             treeLevel={progress.treeLevel}
             completedDays={progress.completedDays}

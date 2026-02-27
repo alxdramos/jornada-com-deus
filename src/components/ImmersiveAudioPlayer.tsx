@@ -2,6 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Play, Pause, SkipBack, SkipForward, Crown } from "lucide-react";
+import { useNativeShare } from "@/hooks/useNativeShare";
 import { useImmersiveAudioPlayer } from "@/hooks/useImmersiveAudioPlayer";
 import { formatTime } from "@/lib/time";
 import { TextSection } from "./immersive/TextSection";
@@ -29,6 +30,8 @@ export function ImmersiveAudioPlayer({
   texto,
   isPlus,
 }: ImmersiveAudioPlayerProps) {
+  const { share: shareAudio } = useNativeShare();
+
   const {
     playing,
     progress,
@@ -126,6 +129,12 @@ export function ImmersiveAudioPlayer({
             onToggleMute={() => setMuted(!muted)}
             onToggleFavorite={() => setIsFavorite(!isFavorite)}
             onToggleRepeat={() => setRepeat(!repeat)}
+            onShare={() =>
+              shareAudio({
+                title: titulo,
+                text: `🙏 Ouvi "${titulo}" na Jornada com Deus.\n\nVenha ouvir também!`,
+              })
+            }
           />
 
           <SpeedControls

@@ -2,7 +2,8 @@
 
 import { useMemo } from "react";
 import { motion } from "framer-motion";
-import { Quote, BookOpen, MessageCircle, Bird, Volume2 } from "lucide-react";
+import { Quote, BookOpen, MessageCircle, Bird, Volume2, Share2, Check } from "lucide-react";
+import { useNativeShare } from "@/hooks/useNativeShare";
 import { useUserStore } from "@/stores/userStore";
 import { cn } from "@/lib/utils";
 import { useHojeSteps } from "@/hooks/useHojeSteps";
@@ -34,6 +35,7 @@ export function HojeSteps() {
   const versiculoDoDia = useMemo(() => getVersiculoDoDia(), []);
   const passagemDoDia = useMemo(() => getPassagemDoDia(), []);
   const oracaoDoDia = useMemo(() => getOracaoDoDia(), []);
+  const { share: shareVersiculo, copied: versiculoCopied } = useNativeShare();
 
   return (
     <>
@@ -56,9 +58,33 @@ export function HojeSteps() {
             <p className="text-[#1F2937] text-base leading-relaxed italic font-medium">
               "{versiculoDoDia.texto}"
             </p>
-            <p className="text-[#6B4CE6] text-sm font-semibold mt-3">
-              — {versiculoDoDia.referencia}
-            </p>
+            <div className="flex items-center justify-between mt-3">
+              <p className="text-[#6B4CE6] text-sm font-semibold">
+                — {versiculoDoDia.referencia}
+              </p>
+              <button
+                onClick={() =>
+                  shareVersiculo({
+                    title: `${versiculoDoDia.referencia} — Jornada com Deus`,
+                    text: `✨ "${versiculoDoDia.texto}"\n— ${versiculoDoDia.referencia}\n\n🙏 Jornada com Deus`,
+                  })
+                }
+                className="flex items-center gap-1 text-xs text-[#6B4CE6]/70 hover:text-[#6B4CE6] transition-colors px-2 py-1 rounded-lg hover:bg-[#6B4CE6]/5"
+                aria-label="Compartilhar versículo"
+              >
+                {versiculoCopied ? (
+                  <>
+                    <Check className="w-3.5 h-3.5 text-green-500" />
+                    <span className="text-green-500">Copiado!</span>
+                  </>
+                ) : (
+                  <>
+                    <Share2 className="w-3.5 h-3.5" />
+                    <span>Compartilhar</span>
+                  </>
+                )}
+              </button>
+            </div>
           </div>
         </ExpandableStepCard>
 
