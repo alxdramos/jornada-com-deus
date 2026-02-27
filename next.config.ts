@@ -6,6 +6,9 @@ const nextConfig: NextConfig = {
 
   images: {
     formats: ["image/avif", "image/webp"],
+    // Tamanhos usados em TreeGrowthVisual: 32px (timeline), 56px (compact), 176px (modal)
+    // Sem estes valores, Next.js usaria 256px para imagens de 176px → geração mais lenta
+    imageSizes: [32, 56, 176, 352],
     remotePatterns: [
       {
         protocol: "https",

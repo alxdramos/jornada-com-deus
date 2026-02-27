@@ -10,6 +10,20 @@ import { db } from '@/lib/db';
 
 type StoreProgress = ReturnType<typeof useProgressStore.getState>['progress'];
 
+// Normaliza uma data qualquer para 'YYYY-MM-DD' (timezone local)
+// Trata o formato antigo bugado "Wed Feb 25" que vinha do String(Date).slice(0,10)
+function normalizeDateStr(raw: string | null): string | null {
+  if (!raw) return null;
+  // Já está no formato correto
+  if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) return raw;
+  const parsed = new Date(raw);
+  if (isNaN(parsed.getTime())) return null; // formato inválido — melhor ignorar
+  const y = parsed.getFullYear();
+  const m = String(parsed.getMonth() + 1).padStart(2, '0');
+  const d = String(parsed.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
+
 const normalizeStoreProgress = (progress: StoreProgress): StoreProgress => {
   const completedDaysFromXp = Math.floor(progress.totalXp / XP_PER_DAY);
   const normalizedCompletedDays = Math.max(progress.completedDays, completedDaysFromXp);
@@ -19,6 +33,7 @@ const normalizeStoreProgress = (progress: StoreProgress): StoreProgress => {
     level: unifiedLevel,
     treeLevel: unifiedLevel,
     completedDays: normalizedCompletedDays,
+    lastCompletedDate: normalizeDateStr(progress.lastCompletedDate),
   };
 };
 

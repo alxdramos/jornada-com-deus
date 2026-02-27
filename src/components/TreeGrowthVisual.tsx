@@ -272,6 +272,7 @@ export function TreeGrowthVisual({
                 fill
                 className="object-cover"
                 sizes="176px"
+                priority
                 onError={() => handleImgError(stage.level)}
               />
             )}
