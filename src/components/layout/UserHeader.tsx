@@ -5,6 +5,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useUserStore } from "@/stores/userStore";
 import { ProfileModal } from "@/components/ProfileModal";
 import { Skeleton } from "@/components/ui/Skeleton";
+import { useDarkMode } from "@/hooks/useDarkMode";
 import Image from "next/image";
 
 interface UserHeaderProps {
@@ -18,6 +19,7 @@ export function UserHeader({ title, subtitleElement, rightElement }: UserHeaderP
   const [avatarError, setAvatarError] = useState(false);
   const { user: authUser, loading } = useAuth();
   const user = useUserStore((s) => s.user);
+  const { isDark, toggle, mounted } = useDarkMode();
 
   const displayName = user?.name || authUser?.user_metadata?.full_name || "Visitante";
   const avatarUrl = authUser?.user_metadata?.avatar_url;
@@ -50,16 +52,25 @@ export function UserHeader({ title, subtitleElement, rightElement }: UserHeaderP
           </button>
 
           <div>
-            <h1 className="text-xl font-bold text-[#1F2937]">{title}</h1>
+            <h1 className="text-xl font-bold text-text-primary">{title}</h1>
             {subtitleElement && (
               <div className="mt-0.5">{subtitleElement}</div>
             )}
           </div>
         </div>
 
-        {rightElement && (
-          <div className="flex items-center gap-2">{rightElement}</div>
-        )}
+        <div className="flex items-center gap-2">
+          {rightElement}
+          {mounted && (
+            <button
+              onClick={toggle}
+              aria-label={isDark ? "Ativar modo claro" : "Ativar modo escuro"}
+              className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-bg-secondary transition-colors text-lg"
+            >
+              {isDark ? "☀️" : "🌙"}
+            </button>
+          )}
+        </div>
       </div>
 
       <ProfileModal isOpen={profileOpen} onClose={() => setProfileOpen(false)} />

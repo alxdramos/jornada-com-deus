@@ -25,7 +25,7 @@ export function TabHoje() {
       <div className="max-w-4xl mx-auto space-y-8">
         {/* Header reutilizável com avatar Google + ProfileModal */}
         <UserHeader
-          title="Cresça com Deus"
+          title="Minha Jornada Diária"
           subtitleElement={
             <button
               onClick={() => setCalendarioOpen(true)}

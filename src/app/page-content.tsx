@@ -5,7 +5,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useSearchParams } from "next/navigation";
 import { useTabStore, type TabId } from "@/stores/tabStore";
 import { createTabVariants } from "@/lib/animations";
-import { Header } from "@/components/layout";
 import { TabHoje } from "@/components/tabs/TabHoje";
 import { TabExplorar } from "@/components/tabs/TabExplorar";
 import { TabBiblia } from "@/components/tabs/TabBiblia";
@@ -76,7 +75,6 @@ export function HomeContent() {
       <Suspense fallback={null}>
         <TabInitializer />
       </Suspense>
-      <Header />
 
       {/* Transição premium entre abas — AnimatePresence com slide direcional */}
       <AnimatePresence mode="popLayout" initial={false}>
