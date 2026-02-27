@@ -73,13 +73,13 @@ export function TabHoje() {
         {/* Bloco Essenciais da Fé (como na referência) */}
         <div className="flex items-center justify-between pt-4">
           <h3 className="text-sm font-semibold uppercase tracking-wide text-text-secondary">
-            Essenciais da Fé
+            Sua Jornada
           </h3>
           <button
             onClick={() => setJourneyModalOpen(true)}
             className="text-sm font-medium text-orange-700 hover:text-orange-800 transition-colors"
           >
-            VER TUDO &gt;
+            VER DETALHES &gt;
           </button>
         </div>
 

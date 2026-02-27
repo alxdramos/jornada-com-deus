@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export interface TreeStage {
@@ -140,6 +141,10 @@ export function TreeGrowthVisual({
   treeProgress,
   compact = false,
 }: TreeGrowthVisualProps) {
+  const [failedImages, setFailedImages] = useState<Set<number>>(new Set());
+  const handleImgError = (level: number) =>
+    setFailedImages((prev) => new Set([...prev, level]));
+
   const stage = TREE_STAGES[Math.min(treeLevel, 10)];
   const nextStage = treeLevel < 10 ? TREE_STAGES[treeLevel + 1] : null;
   const daysToNext = nextStage ? nextStage.daysRequired - completedDays : 0;
@@ -160,13 +165,21 @@ export function TreeGrowthVisual({
                 className="relative w-14 h-14 rounded-xl overflow-hidden shrink-0 shadow-md"
                 style={{ border: `2px solid ${stage.bgFrom}66` }}
               >
-                <Image
-                  src={stage.image}
-                  alt={stage.name}
-                  fill
-                  className="object-cover"
-                  sizes="56px"
-                />
+                {failedImages.has(stage.level) ? (
+                  <div className="w-full h-full flex items-center justify-center text-2xl"
+                    style={{ background: `linear-gradient(135deg, ${stage.bgFrom}33, ${stage.bgTo}55)` }}>
+                    {stage.visual}
+                  </div>
+                ) : (
+                  <Image
+                    src={stage.image}
+                    alt={stage.name}
+                    fill
+                    className="object-cover"
+                    sizes="56px"
+                    onError={() => handleImgError(stage.level)}
+                  />
+                )}
               </motion.div>
             </AnimatePresence>
             <div>
@@ -247,13 +260,21 @@ export function TreeGrowthVisual({
             className="relative w-44 h-44 rounded-2xl overflow-hidden shadow-xl"
             style={{ border: `3px solid ${stage.bgTo}88` }}
           >
-            <Image
-              src={stage.image}
-              alt={stage.name}
-              fill
-              className="object-cover"
-              sizes="176px"
-            />
+            {failedImages.has(stage.level) ? (
+              <div className="w-full h-full flex items-center justify-center text-6xl"
+                style={{ background: `linear-gradient(135deg, ${stage.bgFrom}33, ${stage.bgTo}55)` }}>
+                {stage.visual}
+              </div>
+            ) : (
+              <Image
+                src={stage.image}
+                alt={stage.name}
+                fill
+                className="object-cover"
+                sizes="176px"
+                onError={() => handleImgError(stage.level)}
+              />
+            )}
             {/* Overlay sutil com gradiente da cor do estágio */}
             <div
               className="absolute inset-0 opacity-10"
@@ -332,13 +353,22 @@ export function TreeGrowthVisual({
                   className="relative w-8 h-8 rounded-lg overflow-hidden shrink-0"
                   style={{ border: `1px solid ${s.bgFrom}55` }}
                 >
-                  <Image
-                    src={s.image}
-                    alt={s.name}
-                    fill
-                    className="object-cover"
-                    sizes="32px"
-                  />
+                  {failedImages.has(s.level) ? (
+                    <div className="w-full h-full flex items-center justify-center text-sm"
+                      style={{ background: `linear-gradient(135deg, ${s.bgFrom}33, ${s.bgTo}55)` }}>
+                      {s.visual}
+                    </div>
+                  ) : (
+                    <Image
+                      src={s.image}
+                      alt={s.name}
+                      fill
+                      className="object-cover"
+                      sizes="32px"
+                      loading="lazy"
+                      onError={() => handleImgError(s.level)}
+                    />
+                  )}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div

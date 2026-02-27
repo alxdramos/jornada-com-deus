@@ -39,7 +39,7 @@ export function JourneyDetailsModal({ isOpen, onClose }: JourneyDetailsModalProp
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: "100%", opacity: 0 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="fixed bottom-0 left-0 right-0 z-50 bg-white rounded-t-3xl max-h-[92vh] overflow-y-auto"
+            className="fixed bottom-0 left-0 right-0 z-50 bg-background rounded-t-3xl max-h-[92vh] overflow-y-auto"
           >
             <div className="p-6 pb-20 max-w-2xl mx-auto">
               {/* Header */}

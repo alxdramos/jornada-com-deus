@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { EtapaId } from "@/data/hojeSteps";
 import { useProgressStore } from "@/stores/progressStore";
 import { useToast } from "@/hooks/useToast";
@@ -20,6 +20,14 @@ export function useHojeSteps() {
   const [expandido, setExpandido] = useState<EtapaId | null>(null);
   const [playerAberto, setPlayerAberto] = useState(false);
   const [lerAberto, setLerAberto] = useState(false);
+
+  // Sincroniza quando Zustand termina de hidratar do localStorage
+  // (useState inicializa antes da hidratação; useEffect corrige depois)
+  useEffect(() => {
+    if (todayDone) {
+      setCompletados(new Set(ALL_STEPS));
+    }
+  }, [todayDone]);
 
   const toggleEtapa = (id: EtapaId) => {
     // Não permite desmarcar se o dia já foi concluído

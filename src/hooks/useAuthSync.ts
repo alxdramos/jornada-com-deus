@@ -35,7 +35,7 @@ const mapDexieProgressToStore = (
     level: getLevelFromXp(totalXp),
     treeLevel: getLevelFromXp(totalXp), // unified with level
     lastCompletedDate: userProgress.lastCompletedDate
-      ? String(userProgress.lastCompletedDate).slice(0, 10)
+      ? new Date(userProgress.lastCompletedDate).toISOString().slice(0, 10)
       : null,
     completedDays,
     completedDates: localProgress.completedDates ?? [],
