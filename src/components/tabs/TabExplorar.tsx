@@ -15,32 +15,32 @@ const EXPLORE_CARDS: ExploreCard[] = [
   {
     id: 'meditacoes',
     label: 'Meditações',
-    image: '/images/explore-cards/explore-card-meditacoes.png',
+    image: '/images/explore-cards/explore-card-meditacoes.webp',
   },
   {
     id: 'oracoes',
     label: 'Orações',
-    image: '/images/explore-cards/explore-card-oracoes.png',
+    image: '/images/explore-cards/explore-card-oracoes.webp',
   },
   {
     id: 'estudos',
     label: 'Estudos Bíblicos',
-    image: '/images/explore-cards/explore-card-estudos.png',
+    image: '/images/explore-cards/explore-card-estudos.webp',
   },
   {
     id: 'biblia',
     label: 'Bíblia',
-    image: '/images/explore-cards/explore-card-biblia.png',
+    image: '/images/explore-cards/explore-card-biblia.webp',
   },
   {
     id: 'devocional',
     label: 'Devocional',
-    image: '/images/explore-cards/explore-card-devocional.png',
+    image: '/images/explore-cards/explore-card-devocional.webp',
   },
   {
     id: 'kids',
     label: 'Kids',
-    image: '/images/explore-cards/explore-card-kids.png',
+    image: '/images/explore-cards/explore-card-kids.webp',
   },
 ];
 

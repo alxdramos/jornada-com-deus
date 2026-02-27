@@ -70,37 +70,37 @@
   ],
   "screenshots": [
     {
-      "src": "/screenshots/screenshot-hoje.png",
+      "src": "/screenshots/screenshot-hoje.webp",
       "sizes": "382x830",
-      "type": "image/png",
+      "type": "image/webp",
       "form_factor": "narrow",
       "label": "Devocional Diário"
     },
     {
-      "src": "/screenshots/screenshot-explorar.png",
+      "src": "/screenshots/screenshot-explorar.webp",
       "sizes": "383x834",
-      "type": "image/png",
+      "type": "image/webp",
       "form_factor": "narrow",
       "label": "Explorar Conteúdo"
     },
     {
-      "src": "/screenshots/screenshot-oracoes.png",
+      "src": "/screenshots/screenshot-oracoes.webp",
       "sizes": "382x832",
-      "type": "image/png",
+      "type": "image/webp",
       "form_factor": "narrow",
       "label": "Orações"
     },
     {
-      "src": "/screenshots/screenshot-diario.png",
+      "src": "/screenshots/screenshot-diario.webp",
       "sizes": "382x833",
-      "type": "image/png",
+      "type": "image/webp",
       "form_factor": "narrow",
       "label": "Diário Espiritual"
     },
     {
-      "src": "/screenshots/screenshot-wide.png",
+      "src": "/screenshots/screenshot-wide.webp",
       "sizes": "1280x720",
-      "type": "image/png",
+      "type": "image/webp",
       "form_factor": "wide",
       "label": "Jornada com Deus — Visão Geral"
     }
