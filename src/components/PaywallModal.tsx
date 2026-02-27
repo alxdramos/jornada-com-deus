@@ -67,31 +67,31 @@ const CHECKOUT_URLS: Record<PlanoId, string | undefined> = {
 };
 
 // ─── Benefícios ───────────────────────────────────────────────────────────
-const BENEFICIOS_PLUS = [
+const BENEFICIOS_PREMIUM = [
   {
     icon: Volume2,
-    titulo: "Áudios de meditação exclusivos",
-    descricao: "Mais de 50 meditações guiadas em português",
+    titulo: "Áudios narrados exclusivos",
+    descricao: "Meditações e devocionais narrados em português do Brasil",
   },
   {
     icon: Moon,
-    titulo: "Modo sono personalizado",
-    descricao: "Meditações específicas para uma noite de descanso",
+    titulo: "Meditações exclusivas",
+    descricao: "Biblioteca completa com meditações para cada momento do dia",
+  },
+  {
+    icon: BookOpen,
+    titulo: "Estudos bíblicos completos",
+    descricao: "Acesso a todos os estudos aprofundados da Palavra",
   },
   {
     icon: Heart,
     titulo: "Diário espiritual avançado",
-    descricao: "Ferramentas de reflexão e acompanhamento de progresso",
-  },
-  {
-    icon: BookOpen,
-    titulo: "Biblioteca completa de estudos",
-    descricao: "Acesso a todos os conteúdos premium da Bíblia",
+    descricao: "Reflexões guiadas e acompanhamento da sua jornada",
   },
   {
     icon: Star,
     titulo: "Experiência sem anúncios",
-    descricao: "Foco total na sua jornada espiritual",
+    descricao: "Foco total na presença de Deus, sem distrações",
   },
 ];
 
@@ -130,8 +130,8 @@ export function PaywallModal({ isOpen, onClose, onUpgrade, feature }: PaywallMod
             className="fixed inset-4 md:inset-8 flex items-center justify-center z-[1001] p-4"
           >
             <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
-              {/* Header com gradiente */}
-              <div className="relative bg-gradient-to-br from-[#FB923C] via-[#F97316] to-[#EA580C] p-6 text-white">
+              {/* Header com gradiente Premium */}
+              <div className="relative bg-gradient-to-br from-[#92400E] via-[#B45309] to-[#D97706] p-6 text-white">
                 <button
                   onClick={onClose}
                   className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/30 transition-colors"
@@ -140,12 +140,16 @@ export function PaywallModal({ isOpen, onClose, onUpgrade, feature }: PaywallMod
                 </button>
 
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
-                    <Crown className="w-6 h-6" />
-                  </div>
+                  <motion.div
+                    animate={{ rotate: [0, -8, 8, -4, 4, 0] }}
+                    transition={{ duration: 1.2, delay: 0.3, repeat: Infinity, repeatDelay: 4 }}
+                    className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center"
+                  >
+                    <Crown className="w-6 h-6 text-yellow-300" />
+                  </motion.div>
                   <div>
-                    <h2 className="text-xl font-bold">Jornada Plus</h2>
-                    <p className="text-orange-100 text-sm">Desbloqueie sua experiência completa</p>
+                    <h2 className="text-xl font-bold">Jornada Premium</h2>
+                    <p className="text-amber-100 text-sm">Desbloqueie sua experiência completa</p>
                   </div>
                 </div>
 
@@ -153,10 +157,10 @@ export function PaywallModal({ isOpen, onClose, onUpgrade, feature }: PaywallMod
                   <div className="bg-white/10 rounded-2xl p-4 backdrop-blur-sm">
                     <div className="flex items-center gap-2 text-sm">
                       <Lock className="w-4 h-4" />
-                      <span>Este conteúdo requer Jornada Plus</span>
+                      <span>Este conteúdo requer Jornada Premium</span>
                     </div>
-                    <p className="text-orange-50 text-xs mt-1 opacity-90">
-                      "{feature}" está disponível apenas para membros Plus
+                    <p className="text-amber-50 text-xs mt-1 opacity-90">
+                      "{feature}" está disponível apenas para membros Premium
                     </p>
                   </div>
                 )}
@@ -210,7 +214,7 @@ export function PaywallModal({ isOpen, onClose, onUpgrade, feature }: PaywallMod
                 {/* Benefícios */}
                 <div className="space-y-3">
                   <h3 className="font-semibold text-[#1F2937] text-center text-sm">O que você ganha:</h3>
-                  {BENEFICIOS_PLUS.map((beneficio, index) => {
+                  {BENEFICIOS_PREMIUM.map((beneficio, index) => {
                     const Icon = beneficio.icon;
                     return (
                       <motion.div
@@ -233,28 +237,28 @@ export function PaywallModal({ isOpen, onClose, onUpgrade, feature }: PaywallMod
                   })}
                 </div>
 
-                {/* Botão de upgrade */}
+                {/* Botão de upgrade — gradiente Premium */}
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={handleUpgrade}
                   className={cn(
                     "w-full py-4 px-6 rounded-2xl font-semibold text-lg text-white",
-                    "bg-gradient-to-r from-[#FB923C] to-[#F97316]",
+                    "bg-gradient-to-r from-[#92400E] via-[#D97706] to-[#FB923C]",
                     "hover:opacity-95 active:scale-[0.98] transition-all",
-                    "shadow-lg"
+                    "shadow-[0_4px_20px_rgba(180,83,9,0.4)]"
                   )}
                 >
                   <div className="flex items-center justify-center gap-2">
-                    <Sparkles className="w-5 h-5" />
-                    <span>Assinar plano {PLANOS.find((p) => p.id === planoSelecionado)?.label}</span>
+                    <Sparkles className="w-5 h-5 text-yellow-200" />
+                    <span>Assinar Premium {PLANOS.find((p) => p.id === planoSelecionado)?.label}</span>
                   </div>
                 </motion.button>
 
                 {/* Footer */}
                 <div className="text-center space-y-2">
                   <p className="text-xs text-[#6B7280]">
-                    Pagamento seguro via Hotmart • Cancela quando quiser
+                    ✓ Pagamento seguro via Hotmart • ✓ Cancela quando quiser • ✓ 7 dias de garantia
                   </p>
                   <button
                     onClick={onClose}

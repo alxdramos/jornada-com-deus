@@ -24,14 +24,14 @@ export function ImmersivePlusOverlay({
               <Crown className="w-8 h-8 text-white" />
             </div>
             <h3 className="text-lg font-bold text-[#1F2937] mb-2">
-              Conteúdo Plus
+              Conteúdo Premium
             </h3>
             <p className="text-sm text-[#6B7280] mb-4">
-              Esta oração está disponível apenas para membros Plus
+              Esta oração está disponível apenas para membros Premium
             </p>
             <div className="space-y-3">
-              <button className="w-full py-3 px-4 bg-gradient-to-r from-[#FB923C] to-[#F97316] text-white font-semibold rounded-xl hover:opacity-95 transition-opacity">
-                Atualizar para Plus
+              <button className="w-full py-3 px-4 bg-gradient-to-r from-[#92400E] via-[#D97706] to-[#FB923C] text-white font-semibold rounded-xl hover:opacity-95 transition-opacity">
+                Ver Planos Premium
               </button>
               <button
                 onClick={onClose}

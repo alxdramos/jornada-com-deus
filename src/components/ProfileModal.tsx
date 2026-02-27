@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Crown, User, Mail, Calendar, Star, LogOut } from "lucide-react";
+import { Crown, User, Mail, Calendar, Star, LogOut, Sparkles, CheckCircle } from "lucide-react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useUserStore } from "@/stores/userStore";
 import { useProgressStore } from "@/stores/progressStore";
@@ -10,6 +10,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { AppButton } from "./AppButton";
 import { Skeleton } from "@/components/ui/Skeleton";
+import { useSubscription } from "@/hooks/useSubscription";
+import { PaywallModal } from "./PaywallModal";
 import Image from "next/image";
 
 interface ProfileModalProps {
@@ -19,10 +21,12 @@ interface ProfileModalProps {
 
 export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
   const { user: authUser, loading, signOut } = useAuth();
-  const { user, togglePlus } = useUserStore();
+  const { user } = useUserStore();
   const { progress } = useProgressStore();
+  const { isPlusUser, subscription } = useSubscription();
   const router = useRouter();
   const [avatarError, setAvatarError] = useState(false);
+  const [showPaywall, setShowPaywall] = useState(false);
 
   const displayName = user?.name || authUser?.user_metadata?.full_name || "Usuário";
   const displayEmail = user?.email || authUser?.email;
@@ -84,8 +88,8 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                   <h2 className="text-2xl font-bold text-foreground">
                     {loading ? <Skeleton className="h-8 w-32" /> : displayName}
                   </h2>
-                  {user?.isPlus && (
-                    <Crown className="w-5 h-5 text-yellow-500" />
+                  {isPlusUser && (
+                    <Crown className="w-5 h-5 text-amber-500" />
                   )}
                 </div>
 
@@ -129,36 +133,46 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                 </div>
               </motion.div>
 
-              {/* Toggle Plus */}
+              {/* Bloco de assinatura Premium */}
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
-                className="w-full p-4 bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-xl"
+                className="w-full"
               >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Crown className="w-5 h-5 text-yellow-600" />
-                    <span className="font-medium text-yellow-800">Jornada Plus</span>
+                {isPlusUser ? (
+                  /* ── Usuário Premium ── */
+                  <div className="p-4 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-2xl">
+                    <div className="flex items-center gap-2 mb-1">
+                      <Crown className="w-5 h-5 text-amber-600" />
+                      <span className="font-semibold text-amber-900">Jornada Premium</span>
+                      <CheckCircle className="w-4 h-4 text-green-500 ml-auto" />
+                    </div>
+                    <p className="text-xs text-amber-700">
+                      Assinatura ativa — Aproveite todos os benefícios!
+                    </p>
+                    {subscription.expiresAt && (
+                      <p className="text-[10px] text-amber-500 mt-1">
+                        Renova em {new Date(subscription.expiresAt).toLocaleDateString("pt-BR")}
+                      </p>
+                    )}
                   </div>
+                ) : (
+                  /* ── Usuário Free — CTA Premium ── */
                   <button
-                    onClick={togglePlus}
-                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                      user?.isPlus ? "bg-yellow-500" : "bg-gray-200"
-                    }`}
+                    onClick={() => setShowPaywall(true)}
+                    className="w-full p-4 bg-gradient-to-r from-[#92400E] via-[#D97706] to-[#FB923C] rounded-2xl text-white shadow-[0_4px_16px_rgba(180,83,9,0.35)] hover:opacity-95 active:scale-[0.98] transition-all"
                   >
-                    <span
-                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                        user?.isPlus ? "translate-x-6" : "translate-x-1"
-                      }`}
-                    />
+                    <div className="flex items-center justify-center gap-2">
+                      <Sparkles className="w-5 h-5 text-yellow-200" />
+                      <span className="font-semibold">Ver Planos Premium</span>
+                      <Crown className="w-4 h-4 text-yellow-200" />
+                    </div>
+                    <p className="text-xs text-amber-100 mt-1">
+                      Áudios narrados, meditações e estudos exclusivos
+                    </p>
                   </button>
-                </div>
-                <p className="text-xs text-yellow-700 mt-2">
-                  {user?.isPlus
-                    ? "Assinatura ativa — Aproveite todos os benefícios!"
-                    : "Desbloqueie áudios e recursos premium"}
-                </p>
+                )}
               </motion.div>
 
               {/* Botão sair */}
@@ -192,6 +206,13 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
           </DialogContent>
         </Dialog>
       )}
+
+      {/* PaywallModal — abre quando usuário clica "Ver Planos Premium" */}
+      <PaywallModal
+        isOpen={showPaywall}
+        onClose={() => setShowPaywall(false)}
+        onUpgrade={() => setShowPaywall(false)}
+      />
     </AnimatePresence>
   );
 }
