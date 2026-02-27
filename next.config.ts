@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { withSentryConfig } from "@sentry/nextjs";
 
 const nextConfig: NextConfig = {
   // web-push é CommonJS — não pode ser bundlado pelo Next.js; deve rodar como módulo externo
@@ -65,4 +66,28 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withSentryConfig(nextConfig, {
+  // Sentry organization e project slugs (configurar no Vercel)
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+
+  // Auth token para upload de source maps durante o build
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+
+  // Silencia output do Sentry no build local (só mostra no CI)
+  silent: process.env.NODE_ENV !== "production",
+
+  // Faz upload de source maps maiores para erros mais precisos
+  widenClientFileUpload: true,
+
+  // Tunel: roteia requests Sentry pelo Next.js → bypassa ad-blockers
+  tunnelRoute: "/monitoring-tunnel",
+
+  // Remove logs do Sentry do bundle de produção (menor bundle)
+  disableLogger: true,
+
+  // Source maps: deleta após upload (não fica no bundle final)
+  sourcemaps: {
+    deleteSourcemapsAfterUpload: true,
+  },
+});

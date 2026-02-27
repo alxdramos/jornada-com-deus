@@ -1,54 +1,70 @@
 "use client";
 
-import { Component, ReactNode } from "react";
-import { AlertCircle, RefreshCw } from "lucide-react";
+import React from "react";
+import * as Sentry from "@sentry/nextjs";
+import { RefreshCw } from "lucide-react";
 
 interface Props {
-  children: ReactNode;
+  children: React.ReactNode;
+  fallback?: React.ReactNode;
+  /** Label exibido no fallback padrão quando não há fallback customizado */
   fallbackLabel?: string;
+  /** Tag para identificar o contexto no Sentry (ex: "GamificationCard", "TabMeditacoes") */
+  context?: string;
 }
 
 interface State {
   hasError: boolean;
-  errorMessage: string;
+  error: Error | null;
 }
 
-export class ErrorBoundary extends Component<Props, State> {
+/**
+ * ErrorBoundary reutilizável para envolver componentes críticos.
+ * Captura erros de renderização e envia para o Sentry com contexto.
+ *
+ * Uso:
+ *   <ErrorBoundary context="GamificationCard">
+ *     <GamificationCard />
+ *   </ErrorBoundary>
+ */
+export class ErrorBoundary extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = { hasError: false, errorMessage: "" };
+    this.state = { hasError: false, error: null };
   }
 
   static getDerivedStateFromError(error: Error): State {
-    return { hasError: true, errorMessage: error.message };
+    return { hasError: true, error };
   }
 
-  componentDidCatch(error: Error) {
-    console.error("[ErrorBoundary]", error);
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    Sentry.captureException(error, {
+      tags: { context: this.props.context ?? "unknown" },
+      extra: { componentStack: errorInfo.componentStack },
+    });
   }
 
   handleReset = () => {
-    this.setState({ hasError: false, errorMessage: "" });
+    this.setState({ hasError: false, error: null });
   };
 
   render() {
     if (this.state.hasError) {
+      if (this.props.fallback) {
+        return this.props.fallback;
+      }
+
       return (
-        <div className="flex flex-col items-center justify-center py-20 px-6 text-center">
-          <div className="w-16 h-16 rounded-full bg-red-50 flex items-center justify-center mb-4">
-            <AlertCircle className="w-8 h-8 text-red-400" />
-          </div>
-          <h3 className="text-base font-semibold text-[#1F2937] mb-1">
-            {this.props.fallbackLabel ?? "Algo deu errado"}
-          </h3>
-          <p className="text-sm text-[#6B7280] mb-6 max-w-xs">
-            Ocorreu um erro inesperado nesta seção.
+        <div className="flex flex-col items-center justify-center gap-3 p-6 rounded-2xl bg-muted/30 border border-border text-center">
+          <span className="text-2xl">⚠️</span>
+          <p className="text-sm text-muted-foreground">
+            {this.props.fallbackLabel ?? "Este bloco encontrou um problema."}
           </p>
           <button
             onClick={this.handleReset}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#1F2937] text-white text-sm font-medium hover:bg-[#374151] transition-colors"
+            className="flex items-center gap-1.5 text-xs text-primary hover:underline"
           >
-            <RefreshCw className="w-4 h-4" />
+            <RefreshCw className="w-3 h-3" />
             Tentar novamente
           </button>
         </div>
