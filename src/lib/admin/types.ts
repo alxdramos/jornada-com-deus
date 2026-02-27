@@ -88,3 +88,40 @@ export interface WebhookLog {
   error: string | null
   created_at: string
 }
+
+// ── Support Tickets ────────────────────────────────────────────
+export type TicketCategory = 'pagamento' | 'acesso' | 'tecnico' | 'feedback' | 'outro'
+export type TicketPriority = 'normal' | 'alta'
+export type TicketStatus = 'aberto' | 'aguardando' | 'resolvido' | 'fechado'
+
+export interface SupportTicket {
+  id: string
+  user_id: string
+  subject: string
+  category: TicketCategory
+  priority: TicketPriority
+  status: TicketStatus
+  user_name: string | null
+  user_email: string | null
+  user_plan: string | null
+  created_at: string
+  updated_at: string
+  // Joined: última mensagem
+  last_message?: string
+  message_count?: number
+}
+
+export interface TicketMessage {
+  id: string
+  ticket_id: string
+  sender_type: 'user' | 'admin'
+  message: string
+  created_at: string
+}
+
+export interface TicketKpi {
+  totalOpen: number
+  totalAguardando: number
+  totalResolvido: number
+  totalHoje: number
+}

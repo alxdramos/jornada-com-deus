@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Crown, User, Mail, Calendar, Star, LogOut, Sparkles, CheckCircle } from "lucide-react";
+import { Crown, User, Mail, Calendar, Star, LogOut, Sparkles, CheckCircle, HelpCircle } from "lucide-react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useUserStore } from "@/stores/userStore";
 import { useProgressStore } from "@/stores/progressStore";
@@ -12,6 +12,7 @@ import { AppButton } from "./AppButton";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { useSubscription } from "@/hooks/useSubscription";
 import { PaywallModal } from "./PaywallModal";
+import { SupportSheet } from "./SupportSheet";
 import Image from "next/image";
 
 interface ProfileModalProps {
@@ -27,6 +28,7 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
   const router = useRouter();
   const [avatarError, setAvatarError] = useState(false);
   const [showPaywall, setShowPaywall] = useState(false);
+  const [showSupport, setShowSupport] = useState(false);
 
   const displayName = user?.name || authUser?.user_metadata?.full_name || "Usuário";
   const displayEmail = user?.email || authUser?.email;
@@ -176,6 +178,22 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                 )}
               </motion.div>
 
+              {/* Botão Ajuda & Suporte */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.55 }}
+                className="w-full"
+              >
+                <button
+                  onClick={() => setShowSupport(true)}
+                  className="w-full flex items-center justify-center gap-2 px-4 py-3 text-[#6B7280] hover:text-[#1F2937] hover:bg-[#F9F8F5] rounded-xl border border-[#E5E7EB] hover:border-[#E5E7EB] transition-all duration-200 font-medium"
+                >
+                  <HelpCircle className="w-4 h-4" />
+                  Ajuda & Suporte
+                </button>
+              </motion.div>
+
               {/* Botão sair */}
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
@@ -214,6 +232,10 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
       isOpen={showPaywall}
       onClose={() => setShowPaywall(false)}
       onUpgrade={() => setShowPaywall(false)}
+    />
+    <SupportSheet
+      isOpen={showSupport}
+      onClose={() => setShowSupport(false)}
     />
     </>
   );

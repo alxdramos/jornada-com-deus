@@ -4,7 +4,7 @@
  * MVP - features avançadas serão adicionadas depois
  */
 import { supabaseAdmin } from '@/lib/supabase'
-import type { AdminUser, KpiData, GrowthPoint, DauPoint, PlanPoint, RecentUser } from './types'
+import type { AdminUser, KpiData, GrowthPoint, DauPoint, PlanPoint, RecentUser, SupportTicket, TicketMessage, TicketKpi } from './types'
 
 // ── KPI Overview ─────────────────────────────────────────────────────────────
 export async function getKpiData(): Promise<KpiData> {
@@ -279,4 +279,87 @@ export async function getWebhookLogs(limit = 20): Promise<WebhookLog[]> {
     .limit(limit)
 
   return (data ?? []) as WebhookLog[]
+}
+
+// ── Support Tickets ────────────────────────────────────────────
+export async function getTicketKpis(): Promise<TicketKpi> {
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+
+  const [openResult, aguardandoResult, resolvidoResult, hojeResult] = await Promise.all([
+    supabaseAdmin.from('support_tickets').select('*', { count: 'exact', head: true }).eq('status', 'aberto'),
+    supabaseAdmin.from('support_tickets').select('*', { count: 'exact', head: true }).eq('status', 'aguardando'),
+    supabaseAdmin.from('support_tickets').select('*', { count: 'exact', head: true }).eq('status', 'resolvido'),
+    supabaseAdmin.from('support_tickets').select('*', { count: 'exact', head: true }).gte('created_at', today.toISOString()),
+  ])
+
+  return {
+    totalOpen: openResult.count ?? 0,
+    totalAguardando: aguardandoResult.count ?? 0,
+    totalResolvido: resolvidoResult.count ?? 0,
+    totalHoje: hojeResult.count ?? 0,
+  }
+}
+
+export async function getAdminTickets(
+  page = 1,
+  pageSize = 20,
+  status?: string
+): Promise<{ tickets: SupportTicket[]; total: number }> {
+  let query = supabaseAdmin
+    .from('support_tickets')
+    .select('*', { count: 'exact' })
+    .order('status', { ascending: true }) // aberto, aguardando antes de resolvido/fechado
+    .order('updated_at', { ascending: false })
+    .range((page - 1) * pageSize, page * pageSize - 1)
+
+  if (status) {
+    query = query.eq('status', status)
+  }
+
+  const { data: tickets, count, error } = await query
+
+  if (error) {
+    console.error('[getAdminTickets]', error)
+    return { tickets: [], total: 0 }
+  }
+
+  // Buscar contagem de mensagens para cada ticket
+  const ticketIds = (tickets ?? []).map((t) => t.id)
+  let msgCountMap: Record<string, number> = {}
+
+  if (ticketIds.length > 0) {
+    const { data: msgCounts } = await supabaseAdmin
+      .from('ticket_messages')
+      .select('ticket_id')
+      .in('ticket_id', ticketIds)
+
+    msgCountMap = (msgCounts ?? []).reduce((acc, m) => {
+      acc[m.ticket_id] = (acc[m.ticket_id] ?? 0) + 1
+      return acc
+    }, {} as Record<string, number>)
+  }
+
+  return {
+    tickets: (tickets ?? []).map((t) => ({
+      ...t,
+      message_count: msgCountMap[t.id] ?? 0,
+    })) as SupportTicket[],
+    total: count ?? 0,
+  }
+}
+
+export async function getTicketMessages(ticketId: string): Promise<TicketMessage[]> {
+  const { data, error } = await supabaseAdmin
+    .from('ticket_messages')
+    .select('*')
+    .eq('ticket_id', ticketId)
+    .order('created_at', { ascending: true })
+
+  if (error) {
+    console.error('[getTicketMessages]', error)
+    return []
+  }
+
+  return (data ?? []) as TicketMessage[]
 }
