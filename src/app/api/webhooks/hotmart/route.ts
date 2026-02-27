@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { createHmac, timingSafeEqual } from 'crypto';
+
+// ─── Supabase ────────────────────────────────────────────────────────────────
 
 function getSupabase() {
   return createClient(
@@ -8,7 +11,81 @@ function getSupabase() {
   );
 }
 
-// Hotmart webhook events we handle
+// ─── Rate Limiting (in-memory, por IP) ───────────────────────────────────────
+// Sem Redis necessário no Vercel — suficiente para o volume esperado.
+// Em caso de escala horizontal, migrar para Upstash/Redis.
+
+const RATE_LIMIT_WINDOW_MS = 60_000; // janela de 1 minuto
+const RATE_LIMIT_MAX = 30;           // máx. 30 eventos/min por IP
+
+interface RateLimitEntry {
+  count: number;
+  resetAt: number;
+}
+
+const rateLimitMap = new Map<string, RateLimitEntry>();
+
+function checkRateLimit(ip: string): boolean {
+  const now = Date.now();
+
+  // Lazy cleanup: remove entradas expiradas a cada 100 chamadas
+  if (rateLimitMap.size > 100) {
+    for (const [key, entry] of rateLimitMap) {
+      if (now > entry.resetAt) rateLimitMap.delete(key);
+    }
+  }
+
+  const entry = rateLimitMap.get(ip);
+
+  if (!entry || now > entry.resetAt) {
+    rateLimitMap.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
+    return true;
+  }
+
+  if (entry.count >= RATE_LIMIT_MAX) return false;
+
+  entry.count++;
+  return true;
+}
+
+// ─── Segurança: comparação timing-safe ───────────────────────────────────────
+
+/** Compara dois strings em tempo constante para evitar timing attacks. */
+function timingSafeCompare(a: string, b: string): boolean {
+  try {
+    const bufA = Buffer.from(a, 'utf8');
+    const bufB = Buffer.from(b, 'utf8');
+    // Buffers de comprimento diferente sempre retornam false, sem leak de tamanho
+    if (bufA.length !== bufB.length) return false;
+    return timingSafeEqual(bufA, bufB);
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Verifica assinatura HMAC-SHA256 opcional.
+ * Ativado quando HOTMART_WEBHOOK_SECRET está configurado.
+ * O header esperado é X-Hotmart-Signature (formato: sha256=<hex>).
+ */
+function verifyHmacSignature(rawBody: string, signatureHeader: string, secret: string): boolean {
+  try {
+    const expected = 'sha256=' + createHmac('sha256', secret)
+      .update(rawBody, 'utf8')
+      .digest('hex');
+
+    const bufExpected = Buffer.from(expected, 'utf8');
+    const bufProvided = Buffer.from(signatureHeader, 'utf8');
+
+    if (bufExpected.length !== bufProvided.length) return false;
+    return timingSafeEqual(bufExpected, bufProvided);
+  } catch {
+    return false;
+  }
+}
+
+// ─── Tipos ───────────────────────────────────────────────────────────────────
+
 const HANDLED_EVENTS = [
   'PURCHASE_COMPLETE',
   'PURCHASE_APPROVED',
@@ -59,7 +136,8 @@ interface HotmartWebhookPayload {
 
 type PlanInterval = 'mensal' | 'trimestral' | 'anual';
 
-// Detecta o intervalo do plano pelo nome que o produtor configurou na Hotmart
+// ─── Helpers de negócio ───────────────────────────────────────────────────────
+
 function detectPlanInterval(planName?: string): PlanInterval {
   if (!planName) return 'mensal';
   const name = planName.toLowerCase();
@@ -68,35 +146,74 @@ function detectPlanInterval(planName?: string): PlanInterval {
   return 'mensal';
 }
 
-// Calcula expires_at com margem de 5 dias por segurança
 function calcExpiresAt(interval: PlanInterval): string {
   const DAYS: Record<PlanInterval, number> = {
-    mensal: 35,        // 30 + 5
-    trimestral: 95,    // 90 + 5
-    anual: 370,        // 365 + 5
+    mensal: 35,
+    trimestral: 95,
+    anual: 370,
   };
   return new Date(Date.now() + DAYS[interval] * 24 * 60 * 60 * 1000).toISOString();
 }
 
-// POST /api/webhooks/hotmart — recebe eventos do Hotmart
+// ─── Handler principal ────────────────────────────────────────────────────────
+
 export async function POST(req: NextRequest) {
+  // ── 1. Rate limiting ──────────────────────────────────────────────────────
+  const ip =
+    req.headers.get('x-forwarded-for')?.split(',')[0].trim() ??
+    req.headers.get('x-real-ip') ??
+    'unknown';
+
+  if (!checkRateLimit(ip)) {
+    console.warn(`[hotmart/webhook] Rate limit excedido para IP: ${ip}`);
+    return NextResponse.json(
+      { error: 'Too Many Requests' },
+      { status: 429, headers: { 'Retry-After': '60' } }
+    );
+  }
+
+  // ── 2. Leitura do raw body (necessária para HMAC) ─────────────────────────
+  let rawBody: string;
+  let payload: HotmartWebhookPayload;
+
   try {
-    // 1. Validar HOTTOK (token de segurança Hotmart)
-    const hottok = req.headers.get('hottok') ?? req.headers.get('hotmart-hottok');
-    const expectedHottok = process.env.HOTMART_HOTTOK;
+    rawBody = await req.text();
+    payload = JSON.parse(rawBody) as HotmartWebhookPayload;
+  } catch {
+    console.warn('[hotmart/webhook] Payload inválido (não é JSON)');
+    return NextResponse.json({ error: 'Bad Request' }, { status: 400 });
+  }
 
-    if (!expectedHottok) {
-      console.error('[hotmart/webhook] HOTMART_HOTTOK não configurado');
-      return NextResponse.json({ error: 'Webhook não configurado' }, { status: 500 });
+  // ── 3. Validação HOTTOK (timing-safe) ────────────────────────────────────
+  const hottok = req.headers.get('hottok') ?? req.headers.get('hotmart-hottok') ?? '';
+  const expectedHottok = process.env.HOTMART_HOTTOK ?? '';
+
+  if (!expectedHottok) {
+    console.error('[hotmart/webhook] HOTMART_HOTTOK não configurado');
+    return NextResponse.json({ error: 'Webhook não configurado' }, { status: 500 });
+  }
+
+  if (!hottok || !timingSafeCompare(hottok, expectedHottok)) {
+    console.warn('[hotmart/webhook] HOTTOK inválido — IP:', ip);
+    return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
+  }
+
+  // ── 4. Validação HMAC-SHA256 (opcional — ativa com HOTMART_WEBHOOK_SECRET) ─
+  const webhookSecret = process.env.HOTMART_WEBHOOK_SECRET;
+  if (webhookSecret) {
+    const signatureHeader = req.headers.get('x-hotmart-signature') ?? '';
+    if (!signatureHeader) {
+      console.warn('[hotmart/webhook] HMAC esperado mas ausente — IP:', ip);
+      return NextResponse.json({ error: 'Assinatura ausente' }, { status: 401 });
     }
-
-    if (!hottok || hottok !== expectedHottok) {
-      console.warn('[hotmart/webhook] HOTTOK inválido:', hottok?.slice(0, 8) + '...');
-      return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
+    if (!verifyHmacSignature(rawBody, signatureHeader, webhookSecret)) {
+      console.warn('[hotmart/webhook] Assinatura HMAC inválida — IP:', ip);
+      return NextResponse.json({ error: 'Assinatura inválida' }, { status: 401 });
     }
+  }
 
-    // 2. Parsear payload
-    const payload: HotmartWebhookPayload = await req.json();
+  // ── 5. Extrair campos do payload ──────────────────────────────────────────
+  try {
     const event = payload.event as HotmartEvent;
     const supabase = getSupabase();
 
@@ -109,7 +226,22 @@ export async function POST(req: NextRequest) {
     const planName = payload.data?.subscription?.plan?.name;
     const planInterval = detectPlanInterval(planName);
 
-    // 3. Log do webhook
+    // ── 6. Idempotência: bloquear reprocessamento de transações já confirmadas ─
+    if (transaction) {
+      const { data: existingLog } = await supabase
+        .from('hotmart_webhook_logs')
+        .select('id, processed')
+        .eq('hotmart_transaction', transaction)
+        .eq('processed', true)
+        .maybeSingle();
+
+      if (existingLog) {
+        console.log(`[hotmart/webhook] Transação duplicada ignorada: ${transaction}`);
+        return NextResponse.json({ received: true, note: 'already_processed' });
+      }
+    }
+
+    // ── 7. Log do evento ──────────────────────────────────────────────────
     const { error: logError } = await supabase.from('hotmart_webhook_logs').insert({
       event,
       hotmart_transaction: transaction,
@@ -122,13 +254,19 @@ export async function POST(req: NextRequest) {
       console.error('[hotmart/webhook] Erro ao logar evento:', logError);
     }
 
-    // 4. Processar evento
-    if (!buyerEmail) {
-      console.warn('[hotmart/webhook] Evento sem email do comprador:', event);
-      return NextResponse.json({ received: true, warning: 'sem email' });
+    // ── 8. Validação de evento conhecido ──────────────────────────────────
+    if (!(HANDLED_EVENTS as readonly string[]).includes(event)) {
+      console.log('[hotmart/webhook] Evento não processado:', event);
+      return NextResponse.json({ received: true, note: 'evento_ignorado' });
     }
 
-    // Buscar usuário pelo email
+    // ── 9. Buyer obrigatório para eventos de pagamento ────────────────────
+    if (!buyerEmail) {
+      console.warn('[hotmart/webhook] Evento sem email do comprador:', event);
+      return NextResponse.json({ received: true, warning: 'sem_email' });
+    }
+
+    // ── 10. Buscar usuário ────────────────────────────────────────────────
     const { data: profile } = await supabase
       .from('profiles')
       .select('id')
@@ -136,20 +274,20 @@ export async function POST(req: NextRequest) {
       .maybeSingle();
 
     if (!profile?.id) {
-      // Usuário ainda não tem conta — log e aguarda (pode criar conta depois)
-      console.warn('[hotmart/webhook] Usuário não encontrado para email: [REDACTED]');
-      // Atualizar log como não processado (usuário não existe ainda)
-      await supabase
-        .from('hotmart_webhook_logs')
-        .update({ error: 'user_not_found' })
-        .eq('hotmart_transaction', transaction ?? '')
-        .eq('buyer_email', buyerEmail);
+      console.warn('[hotmart/webhook] Usuário não encontrado para o email recebido');
+      if (transaction) {
+        await supabase
+          .from('hotmart_webhook_logs')
+          .update({ error: 'user_not_found' })
+          .eq('hotmart_transaction', transaction)
+          .eq('buyer_email', buyerEmail);
+      }
       return NextResponse.json({ received: true, warning: 'user_not_found' });
     }
 
     const userId = profile.id;
 
-    // Processar por tipo de evento
+    // ── 11. Processar evento ──────────────────────────────────────────────
     let subscriptionData: Record<string, unknown> = {};
     let newStatus: string = 'inactive';
 
@@ -201,14 +339,10 @@ export async function POST(req: NextRequest) {
           updated_at: new Date().toISOString(),
         };
         break;
-
-      default:
-        console.log('[hotmart/webhook] Evento não processado:', event);
-        return NextResponse.json({ received: true, note: 'evento_ignorado' });
     }
 
-    // Upsert na tabela subscriptions
-    const isNewSubscription = ['PURCHASE_COMPLETE', 'PURCHASE_APPROVED'].includes(event);
+    // ── 12. Upsert/Update subscriptions ──────────────────────────────────
+    const isNewSubscription = event === 'PURCHASE_COMPLETE' || event === 'PURCHASE_APPROVED';
 
     if (isNewSubscription) {
       const { error: upsertError } = await supabase
@@ -231,7 +365,7 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Marcar log como processado
+    // ── 13. Marcar log como processado ────────────────────────────────────
     if (transaction) {
       await supabase
         .from('hotmart_webhook_logs')
@@ -240,15 +374,16 @@ export async function POST(req: NextRequest) {
         .eq('buyer_email', buyerEmail);
     }
 
-    console.log(`[hotmart/webhook] Evento ${event} processado → status: ${newStatus} | intervalo: ${planInterval ?? 'n/a'}`);
+    console.log(`[hotmart/webhook] Evento ${event} processado → status: ${newStatus} | intervalo: ${planInterval}`);
     return NextResponse.json({ received: true, event, status: newStatus });
+
   } catch (err) {
     console.error('[hotmart/webhook] Erro interno:', err);
     return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
   }
 }
 
-// GET — health check (útil para verificar se o endpoint está no ar)
+// GET — health check
 export async function GET() {
   return NextResponse.json({ status: 'ok', endpoint: 'hotmart-webhook' });
 }
