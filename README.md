@@ -124,6 +124,7 @@
 - `20260224_bible_verses.sql` — bible_verses com full-text search
 - `20260224_user_progress_favorites.sql` — user_progress, user_favorites
 - `20260224_enable_realtime_rls_consolidation.sql` — RLS idempotente + Realtime
+- `20260226_payment_system.sql` — subscriptions + hotmart_webhook_logs + colunas plan/expires_at em profiles + trigger sync_profile_plan
 - **RLS ativo** em todas as tabelas (`auth.uid() = user_id`)
 
 ### Sync Multi-Device (Tempo Real)
@@ -155,10 +156,30 @@
 
 ### Painel Administrativo (`/admin`)
 - Acesso restrito a usuários com `role = 'admin'` via RLS
-- **Disparo manual de push** para todos os assinantes
-- **Botão de teste** para enviar push ao próprio admin
-- Lista de assinaturas ativas
-- Listagem de usuários
+- **KPIs do app** — usuários ativos, assinantes Premium, métricas de retenção
+- **Disparo manual de push** para todos os assinantes + **botão de teste** individual
+- **Gestão de assinantes Hotmart** — lista com status (active/canceled/refunded), planos, datas e histórico
+- **Logs de webhooks Hotmart** — eventos processados em tempo real (PURCHASE_APPROVED, PURCHASE_REFUNDED, etc.)
+- **Listagem completa de usuários** com status de plano e data de cadastro
+- Componentes: `KpiCard`, `PushNotificationCard`, `SubscribersTable`, `WebhookLogsTable`, `UsersTable`, `charts/`
+
+### Monetização (Hotmart)
+- **Paywall** em conteúdo Premium: meditações, orações e estudos bíblicos com áudio narrado
+- **`PaywallModal`** — modal com 3 planos (mensal/trimestral/anual), checkout Hotmart via `NEXT_PUBLIC_HOTMART_CHECKOUT_URL`
+- **Webhook Hotmart** — `/api/webhooks/hotmart` valida `HOTTOK`, processa PURCHASE_APPROVED / PURCHASE_REFUNDED / PURCHASE_CANCELED
+- **`useSubscription`** — hook com Realtime listener, expõe `isPlusUser` derivado de `plan = 'plus'`
+- **Plan sync automático** — trigger SQL sincroniza `profiles.plan = 'plus'` imediatamente após compra aprovada
+- **Transições Premium** — `AnimatePresence` com slide direcional entre abas para UX fluido
+- **Compartilhamento social nativo** — Árvore da Vida e versículos via Web Share API
+
+### Acessibilidade (WCAG AA)
+- **100% WCAG AA** conforme auditoria em `ACCESSIBILITY_CHECKLIST.md` (verificado com axe DevTools)
+- Todos os botões e inputs têm `aria-label` ou texto descritivo
+- Ícones decorativos com `aria-hidden="true"`, ícones funcionais com `aria-label`
+- Razão de contraste ≥ 4.5:1 (texto normal) e ≥ 3:1 (texto grande e componentes de UI)
+- Navegação completa por teclado: Tab, Shift+Tab, Enter, Space, Escape, setas direcionais
+- `lang="pt-BR"` declarado no `<html>`, semântica HTML correta (`button`, `input`, `label`)
+- VoiceOver (iOS/Safari) e TalkBack (Android/Chrome) verificados
 
 ### Conteúdo em Áudio (Cloudflare R2)
 - 17 meditações guiadas com áudio
@@ -218,15 +239,16 @@ jornada-com-deus/
 │   │   │   └── register.ts             # Server Action de cadastro
 │   │   ├── admin/                      # Painel administrativo (role = admin)
 │   │   │   ├── layout.tsx              # Guard de admin
-│   │   │   ├── page.tsx                # Dashboard admin
-│   │   │   ├── assinaturas/            # Gerenciamento de push subscriptions
-│   │   │   └── usuarios/               # Lista de usuários
+│   │   │   ├── page.tsx                # Dashboard admin (KPIs + gráficos)
+│   │   │   ├── assinaturas/            # Assinaturas Hotmart + logs de webhook
+│   │   │   └── usuarios/               # Lista de usuários com status de plano
 │   │   ├── api/
 │   │   │   ├── audio/                  # Proxy CORS para áudios Cloudflare R2
 │   │   │   ├── push/
 │   │   │   │   ├── send/               # Disparo de push (Vercel Cron + manual)
 │   │   │   │   └── subscribe/          # Registro de subscription VAPID
-│   │   │   └── admin/push/test/        # Teste de push para o próprio admin
+│   │   │   ├── admin/push/test/        # Teste de push para o próprio admin
+│   │   │   └── webhooks/hotmart/       # Webhook Hotmart (valida HOTTOK + processa compras)
 │   │   ├── auth/callback/              # Callback OAuth + confirmação de e-mail
 │   │   ├── biblia/sobre/               # Aviso legal da tradução bíblica
 │   │   ├── login/                      # Tela de login (Google + e-mail/senha)
@@ -239,7 +261,13 @@ jornada-com-deus/
 │   │   │   ├── CredentialsLoginForm.tsx
 │   │   │   └── RegisterForm.tsx
 │   │   ├── admin/
-│   │   │   └── PushNotificationCard.tsx # Card de push c/ botão testar
+│   │   │   ├── KpiCard.tsx             # Card de métricas do dashboard
+│   │   │   ├── PushNotificationCard.tsx # Push manual + botão testar
+│   │   │   ├── SubscriptionsTable.tsx  # SubscribersTable + WebhookLogsTable (Hotmart)
+│   │   │   ├── UsersTable.tsx          # Lista de usuários
+│   │   │   ├── Sidebar.tsx             # Navegação lateral admin
+│   │   │   ├── Topbar.tsx              # Barra superior admin
+│   │   │   └── charts/                 # Componentes de gráficos (Recharts)
 │   │   ├── layout/
 │   │   │   └── UserHeader.tsx          # Header universal (avatar + ProfileModal)
 │   │   ├── providers/
@@ -278,9 +306,9 @@ jornada-com-deus/
 │   │   ├── ProfileModal.tsx            # Modal perfil c/ next/image avatar
 │   │   ├── ServiceWorkerRegistration.tsx # Registro SW + Background Sync tags
 │   │   ├── TreeGrowthVisual.tsx        # Visualização 11 estágios da árvore
-│   │   └── PaywallModal.tsx
+│   │   └── PaywallModal.tsx            # Modal de planos Premium (Hotmart checkout)
 │   ├── stores/
-│   │   ├── userStore.ts                # Perfil + isPlus
+│   │   ├── userStore.ts                # Perfil + plan (free/plus) + subscriptionStatus
 │   │   ├── progressStore.ts            # XP, streak, nível, árvore
 │   │   ├── tabStore.ts                 # Aba ativa + deep link (?tab=)
 │   │   └── oracaoStore.ts              # Estado das orações
@@ -299,6 +327,7 @@ jornada-com-deus/
 │   │   ├── usePrayerPlayer.ts          # Player de oração
 │   │   ├── usePrayerStorage.ts
 │   │   ├── usePushNotifications.ts     # Subscription VAPID + solicitação de permissão
+│   │   ├── useSubscription.ts          # Plan status + isPlusUser + Realtime listener
 │   │   ├── useSupabaseSync.ts          # Progress sync: hydrate + push debounced + realtime
 │   │   ├── useSyncManager.ts           # Offline data → Supabase (prayers + journal)
 │   │   └── useToast.ts
@@ -327,6 +356,14 @@ jornada-com-deus/
 │       ├── meditacoes/                 # 17 imagens de meditações (IA)
 │       ├── estudos/                    # 21 imagens de estudos bíblicos (IA)
 │       └── explore-cards/              # 6 cards da aba Explorar (IA)
+├── supabase/
+│   └── migrations/
+│       ├── 001_create_auth_tables.sql
+│       ├── 20260223_sync_offline_data.sql
+│       ├── 20260224_bible_verses.sql
+│       ├── 20260224_user_progress_favorites.sql
+│       ├── 20260224_enable_realtime_rls_consolidation.sql
+│       └── 20260226_payment_system.sql  # subscriptions + hotmart_webhook_logs + plan sync
 ├── vercel.json                         # Cron jobs: 3x/dia notificações push
 ├── next.config.ts                      # remotePatterns + AVIF/WebP + SW headers
 ├── package.json
@@ -429,6 +466,10 @@ SUPABASE_SERVICE_ROLE_KEY="..."
 NEXT_PUBLIC_VAPID_PUBLIC_KEY="..."
 VAPID_PRIVATE_KEY="..."
 VAPID_EMAIL="mailto:contato@minhajornadadiaria.com.br"
+
+# Hotmart — obrigatório para monetização
+HOTMART_HOTTOK="..."                                    # Token de validação de webhooks (Dashboard Hotmart)
+NEXT_PUBLIC_HOTMART_CHECKOUT_URL="https://pay.hotmart.com/..."   # Link do produto para checkout
 ```
 
 Gerar chaves VAPID:
@@ -474,7 +515,7 @@ npm run lint
 
 ---
 
-## Status MVP — 25/02/2026 (atualizado)
+## Status MVP — 27/02/2026 (atualizado)
 
 ### ✅ Implementado e em produção
 
@@ -485,7 +526,7 @@ npm run lint
 - ✅ Callback OAuth + confirm redirect para domínio de produção
 
 **Banco de Dados e Segurança:**
-- ✅ PostgreSQL Supabase com 5 migrations aplicadas
+- ✅ PostgreSQL Supabase com 6 migrations aplicadas (incluindo payment_system)
 - ✅ RLS ativo em todas as tabelas
 - ✅ Realtime publication habilitada
 
@@ -505,34 +546,51 @@ npm run lint
 - ✅ XP +100/dia + streak + níveis + Árvore da Vida (11 estágios — thresholds não-lineares)
 - ✅ Feedback háptico (`useHaptics`) em cada etapa, dia completo, level up e evolução da árvore
 - ✅ Animação de evolução "Árvore Evoluiu!" com overlay Framer Motion (3.5s)
+- ✅ Compartilhamento social nativo — Árvore da Vida e versículos via Web Share API
 - ✅ Persistência localStorage + Dexie + Supabase Realtime
 
 **PWA:**
 - ✅ Instalável em Android e iOS
-- ✅ Service Worker customizado (5 estratégias de cache)
-- ✅ Background Sync automático
-- ✅ Meta tags iOS completas (splash screens, status bar, apple-touch-icon)
-- ✅ Manifest com screenshots para UI de instalação (Android Chrome)
+- ✅ Service Worker customizado (5 estratégias de cache, sem next-pwa/Workbox)
+- ✅ Background Sync automático (3 sync tags: prayers, journal, progress)
+- ✅ Meta tags iOS completas — `apple-mobile-web-app-capable`, 5 splash screens para diferentes modelos iPhone
+- ✅ Manifest com 5 screenshots (narrow + wide), 4 shortcuts, categorias, `display_override`
 - ✅ Página offline com fallback
 
 **Push Notifications:**
-- ✅ Web Push com VAPID (permissão + subscription)
+- ✅ Web Push com VAPID (permissão + subscription salva no Supabase)
 - ✅ 3× ao dia via Vercel Cron (7h, 12h, 20h Brasília)
 - ✅ Mensagens personalizadas por horário e dia da semana
-- ✅ Deep links nas notificações (abre aba correta)
+- ✅ Deep links nas notificações (abre aba correta no app)
 
 **Painel Admin:**
-- ✅ Dashboard administrativo em `/admin`
-- ✅ Disparo manual de push + teste individual
-- ✅ Lista de assinaturas e usuários
+- ✅ Dashboard em `/admin` com KPIs (usuários ativos, assinantes Premium, métricas)
+- ✅ Disparo manual de push para todos os assinantes + botão de teste individual
+- ✅ Gestão de assinantes Hotmart com status, planos e histórico
+- ✅ Logs de webhooks Hotmart em tempo real
+- ✅ Listagem completa de usuários
 - ✅ Acesso protegido por `role = 'admin'` via RLS
 
+**Monetização (Hotmart):**
+- ✅ Paywall em meditações, orações e estudos bíblicos (conteúdo Premium)
+- ✅ PaywallModal com 3 planos (mensal/trimestral/anual) + checkout Hotmart
+- ✅ Webhook handler `/api/webhooks/hotmart` com validação HOTTOK
+- ✅ Sincronização automática de plan via trigger SQL
+- ✅ `useSubscription` hook com Realtime listener
+
 **Design e UX:**
-- ✅ Light mode como padrão + Dark mode opcional (paleta marrom-quente)
+- ✅ Light mode como padrão + Dark mode opcional (paleta marrom-quente `#1A1714`)
 - ✅ 9 abas com navegação por bottom nav
+- ✅ Transições Premium — AnimatePresence com slide direcional entre abas
 - ✅ Imagens espirituais únicas geradas por IA para todo o conteúdo
 - ✅ `next/image` em todos os componentes (WebP/AVIF automático)
 - ✅ Animações Framer Motion em todo o app
+
+**Acessibilidade:**
+- ✅ 100% WCAG AA (auditado com axe DevTools — ver `ACCESSIBILITY_CHECKLIST.md`)
+- ✅ Navegação completa por teclado, foco visível, semântica HTML correta
+- ✅ VoiceOver (iOS) e TalkBack (Android) verificados
+- ✅ `lang="pt-BR"`, contraste ≥ 4.5:1, `aria-label` em todos os elementos interativos
 
 **Páginas Legais:**
 - ✅ Política de Privacidade (LGPD, SSG)
@@ -546,19 +604,19 @@ npm run lint
 
 ### 🚧 Próximos Passos
 
-**Monetização:**
-- [ ] Pagamentos Stripe (tier Plus)
-- [ ] Integração Hotmart (alternativa)
+**Crescimento de Conteúdo:**
+- [ ] Dashboard de progresso espiritual (gráficos semanais/mensais de XP e streak)
+- [ ] Planos de leitura bíblica estruturados (21/30/90 dias)
+- [ ] Expansão do conteúdo Kids (meditações + estudos infantis)
 
-**Crescimento:**
-- [ ] Dashboard de progresso espiritual (gráficos de evolução)
-- [ ] Planos de leitura bíblica estruturados
-- [ ] Sistema social (compartilhamento de reflexões)
+**Distribuição Nativa:**
+- [ ] Build nativo via Capacitor (iOS/Android)
+- [ ] Publicação na Google Play Store
+- [ ] Publicação na Apple App Store
 
-**Técnico:**
-- [ ] Testes E2E (Playwright)
-- [ ] Build nativo Capacitor (iOS/Android)
-- [ ] Google Play / App Store
+**Qualidade e Infraestrutura:**
+- [ ] Testes E2E com Playwright (fluxos críticos: login, gamificação, push)
+- [ ] Cobertura de testes unitários para hooks principais
 
 ---
 

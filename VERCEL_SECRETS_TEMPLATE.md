@@ -1,6 +1,8 @@
-# Vercel Secrets Configuration Template
+# Vercel Environment Variables — Template Atual
 
-## Instruções de Setup
+> **Atualizado em 27/02/2026** — Sistema usa Supabase Auth (não mais NextAuth standalone).
+
+## Como Configurar
 
 1. Abrir: https://vercel.com/dashboard
 2. Selecionar projeto: `jornada-com-deus`
@@ -9,105 +11,91 @@
 
 ---
 
-## Variables Necessárias (Copiar + Colar)
+## ✅ Variáveis Necessárias (Estado Atual)
 
-### 1. AUTH_SECRET (NOVO - Gerar para Vercel)
+### Supabase (obrigatório)
 ```
-Nome: AUTH_SECRET
-Valor: [Gerar com: openssl rand -base64 32]
-Tipo: Secret (encriptado)
-Ambientes: Production, Preview, Development
+NEXT_PUBLIC_SUPABASE_URL         → https://[project-id].supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY    → eyJhbGc... (Project Settings > API > anon key)
+SUPABASE_SERVICE_ROLE_KEY        → eyJhbGc... (Secret — Server-side only, NUNCA expor)
 ```
 
-**Não copiar do `.env.local`** — gerar novo especificamente para Vercel.
+### Web Push VAPID (obrigatório para notificações)
+```
+NEXT_PUBLIC_VAPID_PUBLIC_KEY     → Chave pública VAPID (gerada com npx web-push generate-vapid-keys)
+VAPID_PRIVATE_KEY                → Chave privada VAPID (Secret)
+VAPID_EMAIL                      → mailto:contato@minhajornadadiaria.com.br
+```
 
-**Gerar via terminal**:
+Gerar chaves VAPID:
 ```bash
-openssl rand -base64 32
-# Saída ex: Yz1nRiWHkFqD5R0bZqKpL8/mT9XsP2jGhYtLpQwXaBE=
+npx web-push generate-vapid-keys
+```
+
+### Hotmart (obrigatório para monetização)
+```
+HOTMART_HOTTOK                   → Token de validação de webhooks (Hotmart Dashboard > Webhooks)
+NEXT_PUBLIC_HOTMART_CHECKOUT_URL → https://pay.hotmart.com/... (link do produto)
 ```
 
 ---
 
-### 2. AUTH_GOOGLE_ID (Do Google Cloud)
-```
-Nome: AUTH_GOOGLE_ID
-Valor: [SEU_GOOGLE_CLIENT_ID].apps.googleusercontent.com
-Tipo: Plain text (não é sensível, público)
-Ambientes: Production, Preview, Development
-```
+## Checklist de Configuração
 
-**Verificar em**: Google Cloud Console → OAuth 2.0 Client IDs
-
----
-
-### 3. AUTH_GOOGLE_SECRET (SENSÍVEL)
-```
-Nome: AUTH_GOOGLE_SECRET
-Valor: [SEU_GOOGLE_CLIENT_SECRET]
-Tipo: Secret (encriptado)
-Ambientes: Production, Preview, Development
-```
-
-**Verificar em**: Google Cloud Console → OAuth 2.0 Client IDs
-**⚠️ NEVER** commitar ao Git
-
----
-
-## Variáveis Pós-Supabase (Adicionar depois)
-
-```
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_ANON_KEY=eyJhbGc...
-SUPABASE_SERVICE_ROLE_KEY=eyJhbGc... (Server-only, Secret)
-```
-
----
-
-## Validação Checklist
-
-- [ ] AUTH_SECRET adicionada e novo (não copido de local)
-- [ ] AUTH_GOOGLE_ID configurada
-- [ ] AUTH_GOOGLE_SECRET configurada como Secret
-- [ ] Todos em "Production" se deploy é pra produção
+- [ ] NEXT_PUBLIC_SUPABASE_URL configurada (Production + Preview + Development)
+- [ ] NEXT_PUBLIC_SUPABASE_ANON_KEY configurada
+- [ ] SUPABASE_SERVICE_ROLE_KEY configurada como Secret (Production only)
+- [ ] NEXT_PUBLIC_VAPID_PUBLIC_KEY configurada
+- [ ] VAPID_PRIVATE_KEY configurada como Secret
+- [ ] VAPID_EMAIL configurada
+- [ ] HOTMART_HOTTOK configurada como Secret
+- [ ] NEXT_PUBLIC_HOTMART_CHECKOUT_URL configurada
 - [ ] Redeploy após adicionar variáveis
-- [ ] Teste de login em https://app.minhajornadadiaria.com.br
+- [ ] Testar login em https://app.minhajornadadiaria.com.br
+- [ ] Testar push notification no painel admin
+- [ ] Testar checkout Hotmart (sandbox)
 
 ---
 
-## Se Login Falhar
+## Onde obter os valores
 
-### Erro: "Invalid OAuth state"
-1. Ir pra Google Cloud Console
-2. Verificar OAuth 2.0 Client IDs
-3. Adicionar authorized origin:
-   ```
-   https://app.minhajornadadiaria.com.br
-   ```
-4. Adicionar redirect URI:
-   ```
-   https://app.minhajornadadiaria.com.br/api/auth/callback/google
-   ```
-5. Salvar e redeployar
-
-### Erro: "Uncaught Error: Session not found"
-- Supabase não está implementado ainda
-- Próximo passo: integrar database adapter
-- Por enquanto: testes em preview apenas
+| Variável | Onde encontrar |
+|---|---|
+| NEXT_PUBLIC_SUPABASE_URL | Supabase Dashboard → Project Settings → API |
+| NEXT_PUBLIC_SUPABASE_ANON_KEY | Supabase Dashboard → Project Settings → API |
+| SUPABASE_SERVICE_ROLE_KEY | Supabase Dashboard → Project Settings → API |
+| NEXT_PUBLIC_VAPID_PUBLIC_KEY | `npx web-push generate-vapid-keys` |
+| VAPID_PRIVATE_KEY | `npx web-push generate-vapid-keys` |
+| HOTMART_HOTTOK | Hotmart Dashboard → Ferramentas → Webhooks |
+| NEXT_PUBLIC_HOTMART_CHECKOUT_URL | Hotmart Dashboard → Produtos → Link de compra |
 
 ---
 
-## Segurança - Não Fazer
+## Webhook Hotmart — URL para configurar na Hotmart
 
 ```
-❌ Não commitar .env.local ao Git
-❌ Não reutilizar secrets development em produção
-❌ Não expor SUPABASE_SERVICE_ROLE_KEY (server-only)
-❌ Não usar CredentialsProvider (arquivo local) em produção
+https://app.minhajornadadiaria.com.br/api/webhooks/hotmart
 ```
+
+Eventos a ativar:
+- `PURCHASE_APPROVED`
+- `PURCHASE_REFUNDED`
+- `PURCHASE_CANCELED`
+- `PURCHASE_CHARGEBACK`
+- `SUBSCRIPTION_CANCELLATION`
 
 ---
 
-**Documento**: Referência para @devops ao configurar Vercel
-**Data**: 22/02/2026
-**Status**: Pre-deployment (aguardando Supabase)
+## Autenticação Google OAuth — Configuração no Supabase
+
+A autenticação Google é configurada **no Supabase Dashboard** (não no Vercel):
+
+1. Supabase Dashboard → Authentication → Providers → Google
+2. Habilitar Google OAuth
+3. Inserir Client ID e Client Secret do Google Cloud Console
+4. Callback URL: `https://[project-id].supabase.co/auth/v1/callback`
+5. No Google Cloud Console: adicionar `https://[project-id].supabase.co/auth/v1/callback` como Redirect URI
+
+---
+
+*Última atualização: 27/02/2026*

@@ -1,6 +1,21 @@
-# ✨ Implementação Completa - Sistema de Orações
+# Sistema de Orações — Arquivo Histórico
 
-## 🎉 Status: 100% Concluído!
+> **Estado atual (27/02/2026):** O sistema de orações está em produção com 40+ orações.
+> As orações usam áudio via **Cloudflare R2** (não mais Google Drive para imagens).
+> Para o estado atual completo, consulte o **README.md**.
+>
+> **Diferenças em relação a este documento histórico:**
+> - 40+ orações (não 35) com áudio Cloudflare R2
+> - Imagens de fundo geradas por IA (não landscape photos de Drive local)
+> - Aba integrada no app (não rota `/oracoes` separada)
+> - Paywall para conteúdo Premium via Hotmart
+> - Favoritos sincronizados via Supabase Realtime
+
+---
+
+# ✨ Implementação Inicial - Sistema de Orações (22/02/2026)
+
+## Status: 100% Concluído e em Produção
 
 ---
 

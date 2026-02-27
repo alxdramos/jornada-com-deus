@@ -1,9 +1,13 @@
-# Supabase + Vercel Auth Implementation - COMPLETE
+# Supabase + Vercel Auth Implementation — Arquivo Histórico
 
-**Data**: 22/02/2026
-**Status**: COMMITTED & READY FOR DEPLOYMENT
-**Commit**: 8fe2789
-**Timeline**: 30 min (setup) + 2 days (Supabase cloud) + 1 day (testing) = 3-4 days total
+> **Status atual (27/02/2026): EM PRODUÇÃO — https://app.minhajornadadiaria.com.br**
+> Este documento registra a implementação inicial do Supabase Auth em 22/02/2026.
+> Para o estado atual completo, consulte o **README.md**.
+
+**Data da implementação**: 22/02/2026
+**Status**: ✅ DEPLOYED E EM PRODUÇÃO
+**Commit inicial**: 8fe2789
+**Auth**: Supabase Auth (Google OAuth + email/senha) — ativo em produção
 
 ---
 
@@ -52,7 +56,11 @@ npm install @supabase/supabase-js @auth/supabase-adapter
 
 ---
 
-## Próximos Passos (Roadmap 3-4 Dias)
+## ✅ Todos os passos abaixo foram concluídos (em produção desde 22/02/2026)
+
+---
+
+## Registro Histórico — Roadmap de Deployment (3-4 Dias)
 
 ### Dia 1: Setup Supabase Cloud (4 horas)
 

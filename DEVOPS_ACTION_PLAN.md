@@ -1,8 +1,18 @@
-# DevOps Action Plan - Imediato
+# DevOps Action Plan — Arquivo Histórico
+
+> **Status atual (27/02/2026): APP EM PRODUÇÃO ✅**
+> Este documento foi criado em 22/02/2026 para guiar o setup inicial.
+> Todos os itens foram concluídos. App disponível em https://app.minhajornadadiaria.com.br
+>
+> Para variáveis de ambiente atuais (incluindo Hotmart), consulte **VERCEL_SECRETS_TEMPLATE.md**.
+> Para estado completo do projeto, consulte o **README.md**.
+
+---
+
+## Registro Histórico — Setup Inicial (22/02/2026)
 
 **Responsável**: @devops (Gage)
-**Urgência**: CRÍTICO - Não fazer deploy até resolver
-**Tempo Estimado**: 1h (verificação) + 2-3 dias (Supabase)
+**Status**: ✅ CONCLUÍDO
 
 ---
 
