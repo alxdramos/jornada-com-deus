@@ -1,8 +1,10 @@
 "use client";
 
 import { Suspense, useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { useSearchParams } from "next/navigation";
 import { useTabStore, type TabId } from "@/stores/tabStore";
+import { createTabVariants } from "@/lib/animations";
 import { Header } from "@/components/layout";
 import { TabHoje } from "@/components/tabs/TabHoje";
 import { TabExplorar } from "@/components/tabs/TabExplorar";
@@ -18,6 +20,21 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { InstallPromptModal } from "@/components/InstallPromptModal";
 import { useInstallPrompt } from "@/hooks/useInstallPrompt";
 import { useSyncManager } from "@/hooks/useSyncManager";
+
+function renderTab(tab: TabId) {
+  switch (tab) {
+    case "hoje":      return <TabHoje />;
+    case "explorar":  return <TabExplorar />;
+    case "biblia":    return <TabBiblia />;
+    case "oracoes":   return <TabOracoes />;
+    case "meditacoes":return <TabMeditacoes />;
+    case "estudos":   return <TabEstudos />;
+    case "diario":    return <TabDiario />;
+    case "devocional":return <TabDevocional />;
+    case "kids":      return <TabKids />;
+    default:          return null;
+  }
+}
 
 const VALID_TABS: TabId[] = ['hoje', 'explorar', 'biblia', 'meditacoes', 'oracoes', 'diario', 'estudos'];
 
@@ -37,6 +54,7 @@ function TabInitializer() {
 
 export function HomeContent() {
   const activeTab = useTabStore((s) => s.activeTab);
+  const tabDirection = useTabStore((s) => s.tabDirection);
   const [isLoadingInstall, setIsLoadingInstall] = useState(false);
   const { isOpen, platform, handleInstall, handleDismiss, closeModal } = useInstallPrompt();
 
@@ -59,33 +77,24 @@ export function HomeContent() {
         <TabInitializer />
       </Suspense>
       <Header />
-      <ErrorBoundary fallbackLabel="Erro na aba Hoje">
-        {activeTab === "hoje" && <TabHoje />}
-      </ErrorBoundary>
-      <ErrorBoundary fallbackLabel="Erro na aba Explorar">
-        {activeTab === "explorar" && <TabExplorar />}
-      </ErrorBoundary>
-      <ErrorBoundary fallbackLabel="Erro na aba Bíblia">
-        {activeTab === "biblia" && <TabBiblia />}
-      </ErrorBoundary>
-      <ErrorBoundary fallbackLabel="Erro na aba Orações">
-        {activeTab === "oracoes" && <TabOracoes />}
-      </ErrorBoundary>
-      <ErrorBoundary fallbackLabel="Erro na aba Meditações">
-        {activeTab === "meditacoes" && <TabMeditacoes />}
-      </ErrorBoundary>
-      <ErrorBoundary fallbackLabel="Erro na aba Estudos Bíblicos">
-        {activeTab === "estudos" && <TabEstudos />}
-      </ErrorBoundary>
-      <ErrorBoundary fallbackLabel="Erro na aba Diário">
-        {activeTab === "diario" && <TabDiario />}
-      </ErrorBoundary>
-      <ErrorBoundary fallbackLabel="Erro na aba Devocional">
-        {activeTab === "devocional" && <TabDevocional />}
-      </ErrorBoundary>
-      <ErrorBoundary fallbackLabel="Erro na aba Kids">
-        {activeTab === "kids" && <TabKids />}
-      </ErrorBoundary>
+
+      {/* Transição premium entre abas — AnimatePresence com slide direcional */}
+      <AnimatePresence mode="popLayout" initial={false}>
+        <motion.div
+          key={activeTab}
+          variants={createTabVariants(tabDirection)}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+          style={{ willChange: "transform, opacity" }}
+        >
+          {/* key={activeTab} reseta o ErrorBoundary em cada troca de aba */}
+          <ErrorBoundary key={activeTab} fallbackLabel={`Erro na aba ${activeTab}`}>
+            {renderTab(activeTab)}
+          </ErrorBoundary>
+        </motion.div>
+      </AnimatePresence>
+
       <BottomNav />
 
       {/* PWA Install Prompt */}

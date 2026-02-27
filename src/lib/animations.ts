@@ -1,5 +1,33 @@
 import { Variants } from "framer-motion";
 
+// ---------------------------------------------------------------------------
+// Transições de aba — premium, nativo, 60fps
+// ---------------------------------------------------------------------------
+// Usa apenas `transform` (x) e `opacity` — propriedades GPU-aceleradas.
+// Cubic-bezier [0.25, 0.46, 0.45, 0.94] = equivalente ao easeOut do iOS.
+// Saída só com opacity (sem x) → evita conflito de layout com AnimatePresence.
+// ---------------------------------------------------------------------------
+export function createTabVariants(direction: number): Variants {
+  return {
+    initial: {
+      opacity: 0,
+      x: direction * 20,
+    },
+    animate: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        x: { type: "tween", duration: 0.22, ease: [0.25, 0.46, 0.45, 0.94] },
+        opacity: { duration: 0.2, ease: "easeOut" },
+      },
+    },
+    exit: {
+      opacity: 0,
+      transition: { duration: 0.1, ease: "easeIn" },
+    },
+  };
+}
+
 // Animações de entrada
 export const fadeInUp: Variants = {
   initial: { opacity: 0, y: 20 },
