@@ -1,6 +1,6 @@
 # Vercel Environment Variables — Template Atual
 
-> **Atualizado em 27/02/2026** — Sistema usa Supabase Auth (não mais NextAuth standalone).
+> **Atualizado em 01/03/2026** — Sistema usa Supabase Auth (não mais NextAuth standalone).
 
 ## Como Configurar
 
@@ -36,6 +36,7 @@ npx web-push generate-vapid-keys
 ```
 HOTMART_HOTTOK                   → Token de validação de webhooks (Hotmart Dashboard > Webhooks)
 NEXT_PUBLIC_HOTMART_CHECKOUT_URL → https://pay.hotmart.com/... (link do produto)
+HOTMART_WEBHOOK_SECRET           → Secret HMAC-SHA256 opcional (X-Hotmart-Signature) — camada extra de segurança
 ```
 
 ---
@@ -50,6 +51,7 @@ NEXT_PUBLIC_HOTMART_CHECKOUT_URL → https://pay.hotmart.com/... (link do produt
 - [ ] VAPID_EMAIL configurada
 - [ ] HOTMART_HOTTOK configurada como Secret
 - [ ] NEXT_PUBLIC_HOTMART_CHECKOUT_URL configurada
+- [ ] HOTMART_WEBHOOK_SECRET configurada como Secret (opcional — HMAC-SHA256)
 - [ ] Redeploy após adicionar variáveis
 - [ ] Testar login em https://app.minhajornadadiaria.com.br
 - [ ] Testar push notification no painel admin
@@ -68,6 +70,7 @@ NEXT_PUBLIC_HOTMART_CHECKOUT_URL → https://pay.hotmart.com/... (link do produt
 | VAPID_PRIVATE_KEY | `npx web-push generate-vapid-keys` |
 | HOTMART_HOTTOK | Hotmart Dashboard → Ferramentas → Webhooks |
 | NEXT_PUBLIC_HOTMART_CHECKOUT_URL | Hotmart Dashboard → Produtos → Link de compra |
+| HOTMART_WEBHOOK_SECRET | Gerado manualmente — qualquer string segura aleatória (opcional) |
 
 ---
 
@@ -98,4 +101,4 @@ A autenticação Google é configurada **no Supabase Dashboard** (não no Vercel
 
 ---
 
-*Última atualização: 27/02/2026*
+*Última atualização: 01/03/2026*

@@ -210,24 +210,50 @@
 - Rota `/api/sentry-test` usada para validar a integração (removida após validação)
 
 ### Imagens Espirituais (geradas por IA)
-- **17 imagens únicas** para meditações (aquarela espiritual, luz dourada)
-- **21 imagens únicas** para estudos bíblicos (cenas temáticas sem texto)
-- **11 imagens** para os estágios da Árvore da Vida
-- **6 cards** da aba Explorar
-- Todas servidas via `next/image` com WebP/AVIF automático
+- **17 imagens únicas** para meditações em `public/images/meditacoes/` (aquarela espiritual, luz dourada)
+- **21 imagens únicas** para estudos bíblicos em `public/images/estudos/` (cenas temáticas sem texto)
+- **80+ imagens** para orações em `public/images/creation_*.webp` (paisagens espirituais únicas)
+- **11 imagens** para os estágios da Árvore da Vida em `public/images/tree-stages/`
+- **6 cards** da aba Explorar em `public/images/explore-cards/`
+- Todas em formato **WebP** (526MB originais → 49MB, 91% de redução)
+- Servidas via `next/image` com otimização AVIF/WebP automática
 
-### Performance (next/image)
-- **Todos os `<img>` substituídos** por `next/image` em componentes críticos
+### Performance de Imagens
+- **138 imagens convertidas para WebP** — 526MB → 49MB (91% de redução)
+- Todos os `<img>` substituídos por `next/image` em componentes críticos
 - `priority` nas imagens hero de login/register (LCP direto)
 - `fill + sizes` nos cards de grid (lazy load automático)
+- `imageSizes: [32, 56, 176, 352]` customizados para thumbnails da gamificação
 - AVIF e WebP servidos automaticamente conforme suporte do browser
-- Avatares Google com `width/height` explícitos + fallback via state (sem manipulação de DOM)
+- Avatares Google com `width/height` explícitos + fallback via state
+
+### Design Visual (Redesign Pro Max — 01/03/2026)
+- **Tipografia:** Lora (headings) + Raleway (body) via `next/font/google`
+- **Paleta brand:** Purple `#7C3AED` + Gold `#CA8A04` — tokens em `src/styles/tokens.css`
+- **BottomNav glassmorphism:** `rgba(255,255,255,0.88)` + `blur(20px)` + pill indicator violet com spring animation
+- **Cards glassmorphism:** `bg-white/80 backdrop-blur-[12px]` — PrayerCard, MeditationCard, EstudoCard
+- **GamificationCard redesign:** streak pill orange→red (Flame icon), level badge violet (Star), XP bar gradiente purple→gold
+- **Versículo do Dia:** `VerseOfDayCard` com 31 versículos, gradiente devotional, Lora itálica
+- **Saudação por horário:** Bom dia / Boa tarde / Boa noite no TabHoje
+- **Skeleton Screens:** `ImageCardSkeleton` + `StudyCardSkeleton` — hydration-aware (4 skeletons no SSR)
+
+### UX Android/iOS Imersiva (PWA)
+- **Players fullscreen:** `PrayerDetailModalWithPlayer`, `MeditationDetailModalWithPlayer`, `EstudoDetailModalWithPlayer` — `fixed inset-0 z-[10001]`
+  - Hero image: `clamp(240px, 42vh, 340px)` com gradiente escuro sobreposto
+  - ChevronDown no topo (padrão Spotify) — sem botão X
+  - `whileTap={{ scale: 0.88 }}` em todos os botões de ação
+  - `overscroll-contain` na área de conteúdo scrollável
+  - `padding-top: env(safe-area-inset-top)` para notch do iPhone
+- **Modais "Ver Tudo" fullscreen:** `OracoesModal`, `MeditacoesModal`, `EstudosModal` — `z-[10000]`
+  - Lista única scrollável — **paginação removida**
+  - Header com ChevronDown para fechar (padrão nativo)
+- **Transições de abas:** AnimatePresence + `motion.div` `key={activeTab}` — fade+slide 200ms ease-out
+- **Tap feedback:** `whileTap={{ scale: 0.88 }}` em botões críticos
 
 ### Dark Mode
-- **Light é padrão** — dark mode opcional via botão
+- **Light é padrão** — dark mode opcional via botão (Sun/Moon icons Lucide)
 - Paleta marrom-quente no dark: `#1A1714` (bg) / `#F0EDE8` (texto)
 - Não usa `prefers-color-scheme` automático (escolha explícita do usuário)
-- Cor primária laranja mantida igual em ambos os modos
 - Persistida em localStorage via `useDarkMode`
 
 ### Gamificação
@@ -318,16 +344,17 @@ jornada-com-deus/
 │   │   │   │   ├── PrayerDetailModalWithPlayer.tsx
 │   │   │   │   └── PrayerPlayerBar.tsx
 │   │   │   └── diario/
-│   │   ├── ui/                         # Componentes shadcn/ui customizados
+│   │   ├── ui/                         # Componentes shadcn/ui + Skeleton customizados
 │   │   ├── AuthSyncWrapper.tsx         # Supabase → Zustand → Dexie
 │   │   ├── BottomNav.tsx               # Navegação inferior (z-[9999])
-│   │   ├── GamificationCard.tsx        # XP / streak / Árvore da Vida
+│   │   ├── GamificationCard.tsx        # XP / streak / Árvore — redesign Purple+Gold
 │   │   ├── ImmersiveAudioPlayer.tsx    # Player fullscreen (z-[2000])
 │   │   ├── NotificationSheet.tsx       # UI de solicitação de push
 │   │   ├── OfflineIndicator.tsx
 │   │   ├── ProfileModal.tsx            # Modal perfil c/ next/image avatar
 │   │   ├── ServiceWorkerRegistration.tsx # Registro SW + Background Sync tags
 │   │   ├── TreeGrowthVisual.tsx        # Visualização 11 estágios da árvore
+│   │   ├── VerseOfDayCard.tsx          # Versículo do Dia (31 versículos, Lora itálica)
 │   │   └── PaywallModal.tsx            # Modal de planos Premium (Hotmart checkout)
 │   ├── stores/
 │   │   ├── userStore.ts                # Perfil + plan (free/plus) + subscriptionStatus
@@ -445,33 +472,45 @@ Vercel Cron (10h / 15h / 23h UTC)
 
 ## Design System
 
-### Cores (light / dark)
+### Tipografia
+
+| Fonte | Uso |
+|---|---|
+| **Lora** (Google Fonts) | Headings h1–h6, versículo do dia, títulos de seção |
+| **Raleway** (Google Fonts) | Body, labels, botões, navegação |
+
+### Paleta de Cores (light / dark)
 
 ```css
 /* Light (padrão) */
---background: #FAF9F6;
---foreground: #1F2937;
---primary:    #FB923C;   /* laranja — igual nos dois modos */
---accent:     #10B981;   /* verde — igual nos dois modos */
+--color-bg-primary:    #F8F7F4;
+--color-text-primary:  #1F2937;
+--color-brand:         #7C3AED;   /* roxo — cor principal da marca */
+--color-brand-light:   #A78BFA;
+--color-gold:          #CA8A04;   /* dourado — badges, XP bar */
+--color-gold-light:    #FCD34D;
 
 /* Dark (opcional) */
---background: #1A1714;   /* marrom escuro quente */
---foreground: #F0EDE8;   /* branco quente */
---card:       #231F1B;
---secondary:  #2E2924;
---border:     #3D3830;
+--color-bg-primary:    #1A1714;   /* marrom escuro quente */
+--color-text-primary:  #F0EDE8;   /* branco quente */
+--card:                #231F1B;
+--secondary:           #2E2924;
+--border:              #3D3830;
 ```
+
+> Orange (`#FB923C`) ainda usado em streak/fire e elementos de gamificação. Laranja não é o primary do brand.
 
 ### Z-Index (hierarquia)
 
 | Elemento | z-index |
 |---|---|
 | Conteúdo normal | 0–100 |
-| Modais bottom-sheet | z-[1000] |
 | ImmersiveAudioPlayer | z-[2000] |
 | BottomNav | z-[9999] |
 | Dialog overlay (ProfileModal) | z-[9999] |
 | Dialog content (ProfileModal) | z-[10000] |
+| Modais "Ver Tudo" (Orações/Meditações/Estudos) | z-[10000] |
+| Players de detalhe fullscreen | z-[10001] |
 
 ---
 
@@ -539,7 +578,7 @@ npm run lint
 
 ---
 
-## Status MVP — 27/02/2026 (atualizado — sessão noturna)
+## Status MVP — 01/03/2026
 
 ### ✅ Implementado e em produção
 
@@ -624,11 +663,17 @@ npm run lint
 
 **Design e UX:**
 - ✅ Light mode como padrão + Dark mode opcional (paleta marrom-quente `#1A1714`)
-- ✅ 9 abas com navegação por bottom nav
-- ✅ Transições Premium — AnimatePresence com slide direcional entre abas
-- ✅ Imagens espirituais únicas geradas por IA para todo o conteúdo
-- ✅ `next/image` em todos os componentes (WebP/AVIF automático)
-- ✅ Animações Framer Motion em todo o app
+- ✅ 9 abas com navegação por bottom nav (glassmorphism + pill indicator violet)
+- ✅ Transições de abas AnimatePresence fade+slide (200ms ease-out)
+- ✅ Imagens espirituais únicas geradas por IA (138 WebP, 91% menores que PNG original)
+- ✅ `next/image` em todos os componentes (WebP/AVIF automático, `imageSizes` customizados)
+- ✅ Animações Framer Motion + `whileTap scale(0.88)` em botões críticos
+- ✅ **Redesign visual Pro Max:** Lora+Raleway, paleta Purple+Gold, cards glassmorphism
+- ✅ **Players fullscreen imersivos** (z-[10001]) — padrão Spotify com ChevronDown
+- ✅ **Modais "Ver Tudo" fullscreen** (z-[10000]) — lista única sem paginação
+- ✅ **Versículo do Dia** — 31 versículos rotacionados com `VerseOfDayCard`
+- ✅ **Skeleton Screens** — `ImageCardSkeleton` + `StudyCardSkeleton` hydration-aware
+- ✅ **GamificationCard redesign** — streak pill orange→red, level badge violet, XP bar purple→gold
 
 **Acessibilidade:**
 - ✅ 100% WCAG AA (auditado com axe DevTools — ver `ACCESSIBILITY_CHECKLIST.md`)
