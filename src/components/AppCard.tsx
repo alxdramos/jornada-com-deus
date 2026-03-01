@@ -6,6 +6,7 @@ interface AppCardProps {
   title?: string;
   children: React.ReactNode;
   className?: string;
+  style?: React.CSSProperties;
   hover?: boolean;
   onClick?: () => void;
 }
@@ -14,6 +15,7 @@ export function AppCard({
   title,
   children,
   className,
+  style,
   hover = true,
   onClick
 }: AppCardProps) {
@@ -25,6 +27,7 @@ export function AppCard({
         onClick && "cursor-pointer",
         className
       )}
+      style={style}
       onClick={onClick}
     >
       {title && (

@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
-import { Inter } from "next/font/google";
+import { Lora, Raleway } from "next/font/google";
 import "./globals.css";
 import { OfflineIndicator } from "@/components/OfflineIndicator";
 import { ServiceWorkerRegistration } from "@/components/ServiceWorkerRegistration";
@@ -8,9 +8,21 @@ import { Toaster } from "sonner";
 import { SessionProvider } from "@/components/providers/SessionProvider";
 import { AuthSyncWrapper } from "@/components/AuthSyncWrapper";
 
-const inter = Inter({
+// Lora — headings elegantes com serifa espiritual
+const lora = Lora({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-lora",
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
+  style: ["normal", "italic"],
+});
+
+// Raleway — corpo moderno, clean e legível
+const raleway = Raleway({
+  subsets: ["latin"],
+  variable: "--font-raleway",
+  display: "swap",
+  weight: ["300", "400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -93,7 +105,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
-  themeColor: "#FB923C",
+  themeColor: "#7C3AED",
 };
 
 export default function RootLayout({
@@ -103,7 +115,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" suppressHydrationWarning>
-      <body className={`${inter.variable} font-sans antialiased bg-background text-foreground`}>
+      <body className={`${lora.variable} ${raleway.variable} font-sans antialiased bg-background text-foreground`}>
         <Suspense fallback={
           <div className="w-screen h-screen flex flex-col items-center justify-center bg-background gap-4">
             <div className="w-12 h-12 rounded-full border-4 border-amber-500 border-t-transparent animate-spin" />

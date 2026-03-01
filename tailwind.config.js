@@ -26,10 +26,41 @@ module.exports = {
           strong: '#9CA3AF',
         },
         orange: {
-          500: '#FB923C',
+          400: '#FB923C',
+          500: '#F97316',
+          600: '#EA580C',
         },
+        // Purple espiritual — identidade visual (Etapa 2)
         purple: {
+          100: '#EDE9FE',
+          200: '#DDD6FE',
+          300: '#C4B5FD',
+          400: '#A78BFA',
           500: '#8B5CF6',
+          600: '#7C3AED',
+          700: '#6D28D9',
+          900: '#4C1D95',
+        },
+        violet: {
+          100: '#EDE9FE',
+          200: '#DDD6FE',
+          400: '#A78BFA',
+          600: '#7C3AED',
+          900: '#4C1D95',
+        },
+        // Marca principal (Etapa 2)
+        brand: {
+          DEFAULT: '#7C3AED',
+          light: '#A78BFA',
+          dark: '#6D28D9',
+          muted: 'rgba(124, 58, 237, 0.12)',
+        },
+        // Gold sagrado (Etapa 2)
+        gold: {
+          DEFAULT: '#CA8A04',
+          light: '#FCD34D',
+          pale: '#FDE68A',
+          muted: 'rgba(202, 138, 4, 0.15)',
         },
       },
       borderRadius: {
@@ -54,12 +85,30 @@ module.exports = {
         xl: '0 8px 24px rgba(0, 0, 0, 0.2)',
       },
       fontFamily: {
+        // Body — Raleway (moderno, clean, espiritual)
         sans: [
+          'var(--font-raleway)',
+          'Raleway',
           '-apple-system',
           'BlinkMacSystemFont',
           '"Segoe UI"',
-          'Roboto',
           'sans-serif',
+        ],
+        // Headings — Lora (serifa elegante, evoca livro sagrado)
+        heading: [
+          'var(--font-lora)',
+          'Lora',
+          'Georgia',
+          '"Times New Roman"',
+          'serif',
+        ],
+        // Mono — fallback
+        mono: [
+          'ui-monospace',
+          'SFMono-Regular',
+          'Menlo',
+          'Monaco',
+          'monospace',
         ],
       },
       fontSize: {

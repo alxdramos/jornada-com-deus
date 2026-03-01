@@ -11,7 +11,9 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  /* Tipografia — Lora (heading) + Raleway (body) */
+  --font-sans: var(--font-raleway);
+  --font-heading: var(--font-lora);
   --font-mono: var(--font-geist-mono);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -59,8 +61,10 @@
   --card-foreground: #1F2937;
   --popover: #FFFFFF;
   --popover-foreground: #1F2937;
+  /* Primary = laranja (CTA, botões de ação) */
   --primary: #F97316;
   --primary-foreground: #FFFFFF;
+  /* Secondary = purple espiritual (brand identity, active states) */
   --secondary: #F1F5F9;
   --secondary-foreground: #1F2937;
   --muted: #FAF9F6;
@@ -71,7 +75,13 @@
   --destructive-foreground: #FFFFFF;
   --border: #E5E7EB;
   --input: #E5E7EB;
-  --ring: #F97316;
+  --ring: #7C3AED;
+  /* Brand colors (Etapa 2) */
+  --brand: #7C3AED;
+  --brand-light: #A78BFA;
+  --brand-muted: rgba(124, 58, 237, 0.12);
+  --gold: #CA8A04;
+  --gold-light: #FCD34D;
 }
 
 .dark {
@@ -121,12 +131,19 @@
   /* Sidebar */
   --sidebar: #231F1B;
   --sidebar-foreground: #F0EDE8;
-  --sidebar-primary: #F97316;
+  --sidebar-primary: #7C3AED;
   --sidebar-primary-foreground: #FFFFFF;
   --sidebar-accent: #2E2924;
   --sidebar-accent-foreground: #F0EDE8;
   --sidebar-border: #3D3830;
-  --sidebar-ring: #F97316;
+  --sidebar-ring: #7C3AED;
+
+  /* Brand colors dark mode */
+  --brand: #A78BFA;
+  --brand-light: #C4B5FD;
+  --brand-muted: rgba(167, 139, 250, 0.15);
+  --gold: #FCD34D;
+  --gold-light: #FDE68A;
 }
 
 @layer base {
@@ -134,10 +151,22 @@
     @apply border-border outline-ring/50;
   }
 
+  /* ── Tipografia base (Etapa 1) ── */
   body {
     @apply bg-background text-foreground;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-raleway), 'Raleway', -apple-system, BlinkMacSystemFont, sans-serif;
     line-height: 1.6;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Headings com Lora — serifa espiritual e elegante */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-lora), 'Lora', Georgia, 'Times New Roman', serif;
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
   }
 
   /* Sensação de paz e serenidade */
@@ -147,28 +176,34 @@
 
   /* Animações suaves para melhor UX */
   button, a {
-    transition: all 0.2s ease-in-out;
+    transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
   }
 
-  /* Estilos para criar atmosfera de paz */
-  .peaceful-glow {
-    box-shadow: 0 0 20px rgba(107, 76, 230, 0.1);
-  }
-
-  .serene-transition {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  /* Gradientes suaves */
+  /* ── Gradientes (Etapas 1 + 2) ── */
   .gradient-primary {
-    background: linear-gradient(135deg, #6B4CE6 0%, #5A3BC7 100%);
+    background: linear-gradient(135deg, #7C3AED 0%, #5A3BC7 100%);
   }
 
   .gradient-accent {
     background: linear-gradient(135deg, #10B981 0%, #059669 100%);
   }
 
-  /* Sombras personalizadas para cards */
+  /* Gradiente brand espiritual — purple → gold */
+  .gradient-brand {
+    background: linear-gradient(135deg, #7C3AED 0%, #CA8A04 100%);
+  }
+
+  /* Gradiente espiritual suave — aurora espiritual */
+  .gradient-spiritual {
+    background: linear-gradient(135deg, #7C3AED 0%, #A78BFA 60%, #CA8A04 100%);
+  }
+
+  /* Gradiente hero devocional */
+  .gradient-devotional {
+    background: linear-gradient(160deg, #4C1D95 0%, #7C3AED 40%, #CA8A04 100%);
+  }
+
+  /* ── Sombras de cards ── */
   .card-shadow {
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
   }
@@ -177,12 +212,51 @@
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
   }
 
-  /* Estilos para elementos interativos */
+  /* Glow espiritual — roxo suave */
+  .peaceful-glow {
+    box-shadow: 0 0 24px rgba(124, 58, 237, 0.15);
+  }
+
+  /* Glow dourado — acento divino */
+  .gold-glow {
+    box-shadow: 0 0 24px rgba(202, 138, 4, 0.2);
+  }
+
+  .serene-transition {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* ── Glassmorphism (Etapa 3) ── */
+  .glass {
+    background: var(--nav-glass-bg);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid var(--nav-glass-border);
+  }
+
+  .glass-card {
+    background: var(--card-glass-bg);
+    backdrop-filter: blur(12px) saturate(160%);
+    -webkit-backdrop-filter: blur(12px) saturate(160%);
+    border: 1px solid var(--card-glass-border);
+  }
+
+  /* ── Elementos interativos ── */
   .interactive-element {
     @apply cursor-pointer transition-all duration-200;
   }
 
   .interactive-element:hover {
     @apply transform -translate-y-0.5;
+  }
+
+  /* Font utility para Lora */
+  .font-heading {
+    font-family: var(--font-lora), 'Lora', Georgia, serif;
+  }
+
+  /* Font utility para Raleway */
+  .font-body {
+    font-family: var(--font-raleway), 'Raleway', sans-serif;
   }
 }

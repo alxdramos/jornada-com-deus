@@ -29,9 +29,25 @@
   --color-blue: #3B82F6;
   --color-yellow: #FBBF24;
 
+  /* ========== COLORS — BRAND IDENTIDADE (Etapa 2) ========== */
+  /* Purple espiritual — identidade visual do app */
+  --color-brand: #7C3AED;
+  --color-brand-light: #A78BFA;
+  --color-brand-muted: rgba(124, 58, 237, 0.12);
+  /* Gold sagrado — acento divino */
+  --color-gold: #CA8A04;
+  --color-gold-light: #FCD34D;
+  --color-gold-muted: rgba(202, 138, 4, 0.15);
+
+  /* ========== GLASS — BottomNav & Superfícies (Etapa 3) ========== */
+  --nav-glass-bg: rgba(255, 255, 255, 0.88);
+  --nav-glass-border: rgba(255, 255, 255, 0.45);
+  --card-glass-bg: rgba(255, 255, 255, 0.75);
+  --card-glass-border: rgba(255, 255, 255, 0.6);
+
   /* ========== TYPOGRAPHY — FONT FAMILY ========== */
-  --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    sans-serif;
+  --font-family-heading: 'Lora', Georgia, 'Times New Roman', serif;
+  --font-family-base: 'Raleway', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
   /* ========== TYPOGRAPHY — FONT SIZES ========== */
   --font-size-xs: 12px;
@@ -126,4 +142,10 @@
   --shadow-md: 0 1px 3px rgba(0, 0, 0, 0.4);
   --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.5);
   --shadow-xl: 0 8px 24px rgba(0, 0, 0, 0.6);
+
+  /* ========== GLASS — Dark mode ========== */
+  --nav-glass-bg: rgba(26, 23, 20, 0.92);
+  --nav-glass-border: rgba(255, 255, 255, 0.06);
+  --card-glass-bg: rgba(35, 31, 27, 0.78);
+  --card-glass-border: rgba(255, 255, 255, 0.06);
 }

@@ -70,6 +70,38 @@ export function PrayerCardSkeleton() {
   );
 }
 
+// Skeleton para cards de mídia com imagem (Orações, Meditações, Estudos)
+export function ImageCardSkeleton() {
+  return (
+    <div className="rounded-2xl overflow-hidden bg-white/80 dark:bg-[#231F1B]/80 border border-white/60 dark:border-white/[0.06] shadow-sm">
+      <Skeleton className="h-40 w-full rounded-none bg-gray-200 dark:bg-gray-700" />
+      <div className="p-3 space-y-2">
+        <Skeleton className="h-4 w-full bg-gray-200 dark:bg-gray-700" />
+        <Skeleton className="h-3 w-2/3 bg-gray-200 dark:bg-gray-700" />
+        <div className="flex gap-1.5 pt-0.5">
+          <Skeleton className="h-5 w-16 rounded-full bg-gray-200 dark:bg-gray-700" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Skeleton para card compacto de estudo (imagem menor)
+export function StudyCardSkeleton() {
+  return (
+    <div className="rounded-2xl overflow-hidden bg-white/80 dark:bg-[#231F1B]/80 border border-white/60 dark:border-white/[0.06] shadow-sm">
+      <Skeleton className="h-24 w-full rounded-none bg-gray-200 dark:bg-gray-700" />
+      <div className="p-3 space-y-2">
+        <Skeleton className="h-4 w-full bg-gray-200 dark:bg-gray-700" />
+        <div className="flex items-center justify-between pt-0.5">
+          <Skeleton className="h-5 w-20 rounded-full bg-gray-200 dark:bg-gray-700" />
+          <Skeleton className="h-4 w-12 bg-gray-200 dark:bg-gray-700" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function BibleBookSkeleton() {
   return (
     <div className="bg-white rounded-2xl px-4 py-4 shadow-sm">

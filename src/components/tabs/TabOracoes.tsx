@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ORACOES, Prayer } from "@/data/oracoes";
 import { UserHeader } from "@/components/layout/UserHeader";
 import { Chip } from "@/components/atoms/Chip";
@@ -10,10 +10,12 @@ import { PrayerDetailModalWithPlayer } from "./oracoes/PrayerDetailModalWithPlay
 import { PrayerCard } from "./oracoes/PrayerCard";
 import { PaywallModal } from "@/components/PaywallModal";
 import { useSubscription } from "@/hooks/useSubscription";
+import { ImageCardSkeleton } from "@/components/ui/Skeleton";
 import { Bird } from "lucide-react";
 
 export function TabOracoes() {
   const { isPlusUser: isPlus } = useSubscription();
+  const [hydrated, setHydrated] = useState(false);
   const [showAllModal, setShowAllModal] = useState(false);
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedPrayer, setSelectedPrayer] = useState<Prayer | null>(null);
@@ -60,6 +62,8 @@ export function TabOracoes() {
 
   const isFavorite = (id: string) => favorites.has(id);
 
+  useEffect(() => { setHydrated(true); }, []);
+
   return (
     <>
       <div className="min-h-screen bg-bg-primary p-6 pb-36">
@@ -91,25 +95,27 @@ export function TabOracoes() {
             title="Orações"
             onViewAll={() => setShowAllModal(true)}
           >
-            {inicialOracoes.map((oracao) => (
-              <PrayerCard
-                key={oracao.id}
-                prayer={{
-                  id: oracao.id,
-                  title: oracao.titulo,
-                  content: oracao.texto,
-                  category: oracao.theme && oracao.theme !== "default" ? oracao.theme : "Geral",
-                  isCustom: false,
-                  createdAt: new Date(oracao.createdAt),
-                  audioUrl: oracao.audioUrl,
-                  duration: oracao.duration,
-                  imagem: oracao.imagem,
-                }}
-                isFavorite={isFavorite(oracao.id)}
-                onToggleFavorite={toggleFavorite}
-                onViewDetails={handleViewDetails}
-              />
-            ))}
+            {!hydrated
+              ? [1, 2, 3, 4].map((i) => <ImageCardSkeleton key={i} />)
+              : inicialOracoes.map((oracao) => (
+                  <PrayerCard
+                    key={oracao.id}
+                    prayer={{
+                      id: oracao.id,
+                      title: oracao.titulo,
+                      content: oracao.texto,
+                      category: oracao.theme && oracao.theme !== "default" ? oracao.theme : "Geral",
+                      isCustom: false,
+                      createdAt: new Date(oracao.createdAt),
+                      audioUrl: oracao.audioUrl,
+                      duration: oracao.duration,
+                      imagem: oracao.imagem,
+                    }}
+                    isFavorite={isFavorite(oracao.id)}
+                    onToggleFavorite={toggleFavorite}
+                    onViewDetails={handleViewDetails}
+                  />
+                ))}
           </ContentSection>
         </div>
       </div>

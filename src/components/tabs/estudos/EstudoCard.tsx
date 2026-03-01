@@ -36,13 +36,13 @@ const STUDY_IMAGES: Record<string, string> = {
 };
 
 const CATEGORY_COLORS: Record<string, string> = {
-  Salmos: "bg-blue-100 text-blue-700",
-  Evangelhos: "bg-green-100 text-green-700",
-  "Epístolas": "bg-purple-100 text-purple-700",
-  Sabedoria: "bg-yellow-100 text-yellow-700",
-  "Proféticos": "bg-red-100 text-red-700",
-  "Antigo Testamento": "bg-orange-100 text-orange-700",
-  Geral: "bg-gray-100 text-gray-700",
+  Salmos: "bg-blue-100/80 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
+  Evangelhos: "bg-green-100/80 text-green-700 dark:bg-green-900/30 dark:text-green-300",
+  "Epístolas": "bg-violet-100/80 text-violet-700 dark:bg-violet-900/30 dark:text-violet-300",
+  Sabedoria: "bg-amber-100/80 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
+  "Proféticos": "bg-rose-100/80 text-rose-700 dark:bg-rose-900/30 dark:text-rose-300",
+  "Antigo Testamento": "bg-orange-100/80 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300",
+  Geral: "bg-gray-100/80 text-gray-600 dark:bg-gray-800/50 dark:text-gray-400",
 };
 
 export function EstudoCard({ estudo, isFavorite, onPlay, onFavorite }: EstudoCardProps) {
@@ -50,50 +50,69 @@ export function EstudoCard({ estudo, isFavorite, onPlay, onFavorite }: EstudoCar
 
   return (
     <div
-      className="rounded-2xl overflow-hidden bg-white shadow-sm hover:shadow-md transition-all border border-gray-100 cursor-pointer"
+      className={cn(
+        "rounded-2xl overflow-hidden cursor-pointer group",
+        "border border-white/60 dark:border-white/[0.06]",
+        "bg-white/80 dark:bg-[#231F1B]/80",
+        "shadow-sm hover:shadow-md",
+        "transition-all duration-200 ease-out",
+        "hover:-translate-y-0.5"
+      )}
+      style={{
+        backdropFilter: "blur(12px)",
+        WebkitBackdropFilter: "blur(12px)",
+      }}
       onClick={() => onPlay(estudo)}
     >
-      <div className="h-24 relative overflow-hidden">
+      <div className="h-24 relative overflow-hidden bg-gray-200 dark:bg-gray-800">
         {STUDY_IMAGES[estudo.id] ? (
           <Image
             src={STUDY_IMAGES[estudo.id]}
             alt={estudo.shortTitle}
             fill
-            className="object-cover"
+            className="object-cover group-hover:scale-105 transition-transform duration-300"
             sizes="(max-width: 768px) 50vw, 33vw"
           />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-[#D97706] to-[#92400E] flex items-center justify-center">
+          <div className="w-full h-full bg-gradient-to-br from-amber-500 to-orange-700 flex items-center justify-center">
             <BookOpen className="w-10 h-10 text-white/80" />
           </div>
         )}
-        <div className="absolute inset-0 bg-black/20" />
+        <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors duration-200" />
+
+        {/* Referência bíblica */}
         {estudo.reference && (
-          <span className="absolute bottom-2 left-3 text-white/90 text-xs font-medium bg-black/20 px-2 py-0.5 rounded-full">
+          <span className="absolute bottom-2 left-3 text-white/90 text-xs font-semibold bg-black/25 backdrop-blur-sm px-2 py-0.5 rounded-full">
             {estudo.reference}
           </span>
         )}
+
+        {/* Favorito */}
         <button
           onClick={(e) => { e.stopPropagation(); onFavorite(estudo.id); }}
           className={cn(
-            "absolute top-2 right-2 p-1.5 rounded-full transition-colors backdrop-blur-sm",
-            isFavorite ? "text-red-400 bg-white/20" : "text-white/70 hover:bg-white/20"
+            "absolute top-2 right-2 p-1.5 rounded-full transition-all duration-200",
+            isFavorite
+              ? "text-rose-400 bg-white/30 backdrop-blur-sm"
+              : "text-white/70 hover:bg-white/20 backdrop-blur-sm"
           )}
+          aria-label={isFavorite ? "Remover dos favoritos" : "Adicionar aos favoritos"}
         >
-          <Heart className={cn("w-4 h-4", isFavorite && "fill-current")} />
+          <Heart className={cn("w-4 h-4", isFavorite && "fill-current text-rose-400")} />
         </button>
       </div>
+
       <div className="p-3 space-y-2">
-        <h3 className="font-semibold text-sm text-[#1F2937] line-clamp-2 leading-snug">
+        <h3 className="font-semibold text-sm text-text-primary dark:text-[#F0EDE8] line-clamp-2 leading-snug">
           {estudo.shortTitle}
         </h3>
         <div className="flex items-center justify-between">
           <span className={cn("text-xs px-2 py-0.5 rounded-full font-medium", categoryColor)}>
             {estudo.category}
           </span>
-          <div className="flex items-center gap-1 text-[#D97706]">
+          <div className="flex items-center gap-1 text-amber-600 dark:text-amber-400">
             <Headphones className="w-3.5 h-3.5" />
-            <span className="text-xs text-[#6B7280]">Áudio</span>
+            <span className="text-xs text-text-secondary dark:text-[#8A8078]">Áudio</span>
           </div>
         </div>
       </div>

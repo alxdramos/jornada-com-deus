@@ -6,6 +6,7 @@ import { useUserStore } from "@/stores/userStore";
 import { ProfileModal } from "@/components/ProfileModal";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { useDarkMode } from "@/hooks/useDarkMode";
+import { Sun, Moon } from "lucide-react";
 import Image from "next/image";
 
 interface UserHeaderProps {
@@ -26,12 +27,22 @@ export function UserHeader({ title, subtitleElement, rightElement }: UserHeaderP
 
   return (
     <>
-      <div className="flex items-center justify-between">
+      {/* Gradient aura — topo da página */}
+      <div
+        className="absolute -top-6 -left-6 -right-6 h-28 pointer-events-none"
+        style={{
+          background: "linear-gradient(180deg, rgba(124, 58, 237, 0.07) 0%, transparent 100%)",
+        }}
+        aria-hidden="true"
+      />
+
+      <div className="relative flex items-center justify-between">
         <div className="flex items-center gap-3">
+          {/* Avatar com anel brand */}
           <button
             onClick={() => setProfileOpen(true)}
             aria-label="Abrir perfil"
-            className="w-10 h-10 rounded-full overflow-hidden shrink-0 border-2 border-white shadow-md focus:outline-none focus:ring-2 focus:ring-[#FB923C] focus:ring-offset-1"
+            className="w-10 h-10 rounded-full overflow-hidden shrink-0 border-2 border-violet-300/60 dark:border-violet-600/40 shadow-md focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-1 transition-all hover:border-violet-400/80"
           >
             {loading ? (
               <Skeleton className="w-full h-full rounded-full" />
@@ -45,14 +56,14 @@ export function UserHeader({ title, subtitleElement, rightElement }: UserHeaderP
                 onError={() => setAvatarError(true)}
               />
             ) : (
-              <div className="w-full h-full bg-[#FB923C] flex items-center justify-center text-white font-bold text-base">
+              <div className="w-full h-full bg-gradient-to-br from-violet-500 to-violet-700 flex items-center justify-center text-white font-bold text-base">
                 {displayName.charAt(0).toUpperCase()}
               </div>
             )}
           </button>
 
           <div>
-            <h1 className="text-xl font-bold text-text-primary">{title}</h1>
+            <h1 className="text-xl font-bold text-text-primary leading-tight">{title}</h1>
             {subtitleElement && (
               <div className="mt-0.5">{subtitleElement}</div>
             )}
@@ -61,13 +72,19 @@ export function UserHeader({ title, subtitleElement, rightElement }: UserHeaderP
 
         <div className="flex items-center gap-2">
           {rightElement}
+
+          {/* Dark mode toggle — ícones Lucide, sem emojis */}
           {mounted && (
             <button
               onClick={toggle}
               aria-label={isDark ? "Ativar modo claro" : "Ativar modo escuro"}
-              className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-bg-secondary transition-colors text-lg"
+              className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-violet-100 dark:hover:bg-violet-900/20 transition-colors text-text-secondary hover:text-violet-600 dark:hover:text-violet-400"
             >
-              {isDark ? "☀️" : "🌙"}
+              {isDark ? (
+                <Sun className="w-5 h-5" />
+              ) : (
+                <Moon className="w-5 h-5" />
+              )}
             </button>
           )}
         </div>

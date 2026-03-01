@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { MEDITACOES, MeditationCard as MeditationCardType } from '@/data/meditacoes';
 import { UserHeader } from '@/components/layout/UserHeader';
 import { Chip } from '@/components/atoms/Chip';
@@ -11,11 +11,13 @@ import { MeditacoesModal } from './meditacoes/MeditacoesModal';
 import { PaywallModal } from '@/components/PaywallModal';
 import { useSubscription } from '@/hooks/useSubscription';
 import { useFavorites } from '@/hooks/useFavorites';
+import { ImageCardSkeleton } from '@/components/ui/Skeleton';
 import { Music } from 'lucide-react';
 
 export function TabMeditacoes() {
   const { isPlusUser: isPlus } = useSubscription();
   const { toggleFavorite, isFavorite } = useFavorites();
+  const [hydrated, setHydrated] = useState(false);
 
   const [showAllModal, setShowAllModal] = useState(false);
   const [showDetailModal, setShowDetailModal] = useState(false);
@@ -32,6 +34,8 @@ export function TabMeditacoes() {
 
   // Apenas os 4 primeiros na lista principal
   const iniciais = meditacoesFiltradas.slice(0, 4);
+
+  useEffect(() => { setHydrated(true); }, []);
 
   const handleViewDetails = (meditation: MeditationCardType) => {
     if (meditation.plus && !isPlus) {
@@ -72,16 +76,18 @@ export function TabMeditacoes() {
             onViewAll={() => setShowAllModal(true)}
             emptyState="Nenhuma meditação encontrada com esses filtros"
           >
-            {iniciais.map((meditacao) => (
-              <MeditationCard
-                key={meditacao.id}
-                meditation={meditacao}
-                isPlus={isPlus}
-                isFavorite={isFavorite(meditacao.id)}
-                onPlay={handleViewDetails}
-                onFavorite={toggleFavorite}
-              />
-            ))}
+            {!hydrated
+              ? [1, 2, 3, 4].map((i) => <ImageCardSkeleton key={i} />)
+              : iniciais.map((meditacao) => (
+                  <MeditationCard
+                    key={meditacao.id}
+                    meditation={meditacao}
+                    isPlus={isPlus}
+                    isFavorite={isFavorite(meditacao.id)}
+                    onPlay={handleViewDetails}
+                    onFavorite={toggleFavorite}
+                  />
+                ))}
           </ContentSection>
         </div>
       </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ESTUDOS, EstudoBiblico, CATEGORIAS_ESTUDOS } from '@/data/estudos';
 import { UserHeader } from '@/components/layout/UserHeader';
 import { Chip } from '@/components/atoms/Chip';
@@ -11,11 +11,13 @@ import { EstudosModal } from './estudos/EstudosModal';
 import { PaywallModal } from '@/components/PaywallModal';
 import { useSubscription } from '@/hooks/useSubscription';
 import { useFavorites } from '@/hooks/useFavorites';
+import { StudyCardSkeleton } from '@/components/ui/Skeleton';
 import { BookOpen } from 'lucide-react';
 
 export function TabEstudos() {
   const { isPlusUser: isPlus } = useSubscription();
   const { toggleFavorite, isFavorite } = useFavorites();
+  const [hydrated, setHydrated] = useState(false);
   const [selectedEstudo, setSelectedEstudo] = useState<EstudoBiblico | null>(null);
   const [showAllModal, setShowAllModal] = useState(false);
   const [chipAtivo, setChipAtivo] = useState("TUDO");
@@ -33,6 +35,8 @@ export function TabEstudos() {
 
   // Apenas os 4 primeiros na lista principal
   const iniciais = estudosFiltrados.slice(0, 4);
+
+  useEffect(() => { setHydrated(true); }, []);
 
   const handleViewDetails = (estudo: EstudoBiblico) => {
     if (estudo.plus && !isPlus) {
@@ -72,15 +76,17 @@ export function TabEstudos() {
             onViewAll={() => setShowAllModal(true)}
             emptyState="Nenhum estudo encontrado com esses filtros"
           >
-            {iniciais.map((estudo) => (
-              <EstudoCard
-                key={estudo.id}
-                estudo={estudo}
-                isFavorite={isFavorite(estudo.id)}
-                onPlay={handleViewDetails}
-                onFavorite={toggleFavorite}
-              />
-            ))}
+            {!hydrated
+              ? [1, 2, 3, 4].map((i) => <StudyCardSkeleton key={i} />)
+              : iniciais.map((estudo) => (
+                  <EstudoCard
+                    key={estudo.id}
+                    estudo={estudo}
+                    isFavorite={isFavorite(estudo.id)}
+                    onPlay={handleViewDetails}
+                    onFavorite={toggleFavorite}
+                  />
+                ))}
           </ContentSection>
         </div>
       </div>
