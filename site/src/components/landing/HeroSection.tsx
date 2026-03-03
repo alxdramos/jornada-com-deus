@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, type Variants } from 'framer-motion';
-import { ArrowRight, Star } from 'lucide-react';
+import { ArrowRight, Star, BookOpen, Music2, TreeDeciduous, WifiOff } from 'lucide-react';
 import Image from 'next/image';
 
 const APP_URL = 'https://app.minhajornadadiaria.com.br';
@@ -16,26 +16,49 @@ const stagger: Variants = {
   show:   { transition: { staggerChildren: 0.12 } },
 };
 
+const avatars = [
+  { letter: 'M', color: '#FB923C' },
+  { letter: 'A', color: '#10B981' },
+  { letter: 'L', color: '#C98989' },
+  { letter: 'G', color: '#3FDFB8' },
+  { letter: 'R', color: '#F97316' },
+];
+
+const floatingChips = [
+  { icon: BookOpen,      label: 'Bíblia Offline',   color: '#3B82F6', pale: '#EFF6FF', delay: 0.9 },
+  { icon: Music2,        label: 'Meditação Guiada',  color: '#8B5CF6', pale: '#F5F3FF', delay: 1.05 },
+  { icon: TreeDeciduous, label: 'Árvore da Vida',    color: '#10B981', pale: '#ECFDF5', delay: 1.2 },
+  { icon: WifiOff,       label: 'Modo Offline',      color: '#6B7280', pale: '#F9FAFB', delay: 1.35 },
+];
+
 export function HeroSection() {
   return (
     <section
       id="hero"
-      className="gradient-hero min-h-screen flex flex-col justify-center pt-20 pb-16 overflow-hidden"
+      className="gradient-hero min-h-screen flex flex-col justify-center pt-20 pb-12 overflow-hidden"
     >
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+        <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 xl:gap-20 items-center">
 
-          {/* ── Texto ── */}
+          {/* ── Col esquerda: Texto ── */}
           <motion.div
             variants={stagger}
             initial="hidden"
             animate="show"
             className="flex flex-col gap-6 text-center lg:text-left"
           >
+            {/* Badge pill */}
+            <motion.div variants={fadeUp} className="flex justify-center lg:justify-start">
+              <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#FEF3E2] border border-[#FB923C]/30 text-[#FB923C] text-xs font-semibold tracking-wide">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#FB923C] animate-pulse" />
+                100% Gratuito · PWA · Funciona Offline
+              </span>
+            </motion.div>
+
             {/* Headline */}
             <motion.h1
               variants={fadeUp}
-              className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-[1.08] tracking-tight text-[#1F2937]"
+              className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-[1.06] tracking-tight text-[#1F2937]"
             >
               Minha{' '}
               <span className="text-[#FB923C]">Jornada</span>
@@ -49,7 +72,7 @@ export function HeroSection() {
               className="text-lg sm:text-xl text-[#6B7280] leading-relaxed max-w-md mx-auto lg:mx-0"
             >
               Encontre paz no seu dia a dia. Transforme seus momentos
-              com a Palavra, oração e reflexão.
+              com a Palavra, oração e reflexão guiada.
             </motion.p>
 
             {/* CTAs */}
@@ -77,16 +100,16 @@ export function HeroSection() {
             {/* Social proof */}
             <motion.div
               variants={fadeUp}
-              className="flex items-center gap-3 pt-2 justify-center lg:justify-start"
+              className="flex items-center gap-3 pt-1 justify-center lg:justify-start"
             >
               <div className="flex -space-x-2">
-                {['#FB923C','#10B981','#C98989','#3FDFB8','#F97316'].map((c, i) => (
+                {avatars.map((a, i) => (
                   <div
                     key={i}
                     className="w-8 h-8 rounded-full border-2 border-white flex items-center justify-center text-white text-xs font-bold shrink-0"
-                    style={{ backgroundColor: c }}
+                    style={{ backgroundColor: a.color }}
                   >
-                    {['M','A','L','G','R'][i]}
+                    {a.letter}
                   </div>
                 ))}
               </div>
@@ -99,46 +122,109 @@ export function HeroSection() {
                 <p className="text-xs text-[#6B7280]">+2.400 pessoas em jornada</p>
               </div>
             </motion.div>
+
+            {/* Feature chips — mobile list */}
+            <motion.div
+              variants={fadeUp}
+              className="flex flex-wrap gap-2 justify-center lg:hidden"
+            >
+              {floatingChips.map((chip) => {
+                const Icon = chip.icon;
+                return (
+                  <div
+                    key={chip.label}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-[#E5E7EB] shadow-sm"
+                  >
+                    <div
+                      className="w-5 h-5 rounded flex items-center justify-center"
+                      style={{ backgroundColor: chip.pale }}
+                    >
+                      <Icon size={11} style={{ color: chip.color }} />
+                    </div>
+                    <span className="text-xs font-medium text-[#4B5563]">{chip.label}</span>
+                  </div>
+                );
+              })}
+            </motion.div>
           </motion.div>
 
-          {/* ── Mockups ── */}
-          <div className="relative flex justify-center items-center h-[480px] sm:h-[540px] lg:h-[620px] w-full">
+          {/* ── Col direita: Mockups ── */}
+          <div className="relative flex justify-center items-center h-[460px] sm:h-[560px] lg:h-[660px] xl:h-[700px] w-full">
 
             {/* Glow de fundo */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <div className="w-64 h-64 sm:w-80 sm:h-80 rounded-full bg-[#FB923C]/10 blur-3xl" />
-              <div className="absolute w-40 h-40 sm:w-52 sm:h-52 rounded-full bg-[#10B981]/10 blur-2xl translate-x-16 translate-y-8" />
+              <div className="w-72 h-72 sm:w-96 sm:h-96 lg:w-[440px] lg:h-[440px] rounded-full bg-[#FB923C]/10 blur-3xl" />
+              <div className="absolute w-48 h-48 sm:w-64 sm:h-64 rounded-full bg-[#10B981]/10 blur-2xl translate-x-16 translate-y-8" />
             </div>
 
-            {/* Phone 2 — Estudo Bíblico (esq/atrás) — oculto no mobile */}
+            {/* Phone 2 — Estudo Bíblico (esq/atrás) */}
             <PhoneMockup
               className="absolute z-20 hidden sm:block"
-              style={{ left: '2%', top: '10%', transform: 'scale(0.80)', transformOrigin: 'top left', opacity: 0.88 }}
+              positionClass="left-0 top-[8%]"
+              sizeClass="w-[168px] h-[336px] lg:w-[190px] lg:h-[380px]"
               delay={0.2}
-              floatOffset={12}
+              floatOffset={10}
               imageSrc="/images/mockup-estudo-biblico.png"
               imageAlt="Estudo Bíblico"
+              scale={0.9}
+              opacity={0.85}
             />
 
             {/* Phone 1 — Oração (centro/frente) */}
             <PhoneMockup
               className="absolute z-30"
-              style={{ left: '50%', top: '50%', transform: 'translate(-50%, -52%)' }}
+              positionClass="left-1/2 top-1/2 -translate-x-1/2 -translate-y-[52%]"
+              sizeClass="w-[200px] h-[400px] lg:w-[224px] lg:h-[448px] xl:w-[240px] xl:h-[480px]"
               delay={0}
               floatOffset={-14}
               imageSrc="/images/mockup-oracao-prayer.png"
               imageAlt="Oração"
+              scale={1}
+              opacity={1}
             />
 
-            {/* Phone 3 — Bíblia (dir/atrás) — oculto no mobile */}
+            {/* Phone 3 — Bíblia (dir/atrás) */}
             <PhoneMockup
               className="absolute z-20 hidden sm:block"
-              style={{ right: '2%', top: '18%', transform: 'scale(0.80)', transformOrigin: 'top right', opacity: 0.88 }}
+              positionClass="right-0 top-[16%]"
+              sizeClass="w-[168px] h-[336px] lg:w-[190px] lg:h-[380px]"
               delay={0.35}
               floatOffset={18}
               imageSrc="/images/mockup-biblia-scripture.png"
               imageAlt="Bíblia"
+              scale={0.9}
+              opacity={0.85}
             />
+
+            {/* Floating chips — desktop only */}
+            {floatingChips.map((chip, i) => {
+              const Icon = chip.icon;
+              const positions = [
+                'right-[-10px] top-[18%]',
+                'right-[-24px] top-[48%]',
+                'right-[-8px] bottom-[18%]',
+                'left-[-24px] top-[38%]',
+              ];
+              return (
+                <motion.div
+                  key={chip.label}
+                  initial={{ opacity: 0, x: i < 3 ? 16 : -16 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: chip.delay, duration: 0.45 }}
+                  className={`absolute hidden lg:flex items-center gap-2 px-3 py-2 rounded-xl bg-white shadow-lg border border-[#E5E7EB] z-40 ${positions[i]}`}
+                >
+                  <div
+                    className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
+                    style={{ backgroundColor: chip.pale }}
+                  >
+                    <Icon size={14} style={{ color: chip.color }} />
+                  </div>
+                  <span className="text-xs font-semibold text-[#1F2937] whitespace-nowrap">
+                    {chip.label}
+                  </span>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </div>
@@ -147,8 +233,8 @@ export function HeroSection() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.5 }}
-        className="flex flex-col items-center gap-2 mt-10"
+        transition={{ delay: 1.6 }}
+        className="flex flex-col items-center gap-2 mt-8"
       >
         <p className="text-xs text-[#9CA3AF]">Role para conhecer</p>
         <motion.div
@@ -163,24 +249,27 @@ export function HeroSection() {
   );
 }
 
-/* ── Phone frame com imagem real ── */
+/* ── Phone frame ── */
 function PhoneMockup({
-  imageSrc, imageAlt, delay, floatOffset, className, style,
+  imageSrc, imageAlt, delay, floatOffset, className, positionClass, sizeClass, scale, opacity,
 }: {
   imageSrc: string;
   imageAlt: string;
   delay: number;
   floatOffset: number;
   className?: string;
-  style?: React.CSSProperties;
+  positionClass: string;
+  sizeClass: string;
+  scale: number;
+  opacity: number;
 }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 30, scale: 0.95 }}
       animate={{
-        opacity: 1,
+        opacity,
         y: [0, floatOffset, 0],
-        scale: 1,
+        scale,
       }}
       transition={{
         opacity: { duration: 0.6, delay },
@@ -192,22 +281,17 @@ function PhoneMockup({
           delay,
         },
       }}
-      className={className}
-      style={style}
+      className={`${className} ${positionClass}`}
     >
-      {/* Frame do telefone */}
-      <div className="w-[180px] h-[360px] rounded-[32px] bg-[#1F2937] p-[6px] shadow-2xl shadow-black/30">
-        {/* Tela */}
+      <div className={`${sizeClass} rounded-[32px] bg-[#1F2937] p-[6px] shadow-2xl shadow-black/30`}>
         <div className="w-full h-full rounded-[28px] overflow-hidden bg-[#1F2937] relative">
-          {/* Notch */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-14 h-4 bg-[#1F2937] rounded-b-xl z-10" />
-          {/* Imagem real */}
           <Image
             src={imageSrc}
             alt={imageAlt}
             fill
             className="object-cover object-top"
-            sizes="180px"
+            sizes="240px"
           />
         </div>
       </div>

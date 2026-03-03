@@ -1,114 +1,161 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Heart } from 'lucide-react';
+import { Heart, Instagram, Twitter } from 'lucide-react';
 
 const APP_URL = 'https://app.minhajornadadiaria.com.br';
 
-const footerLinks = [
-  { label: 'Início',      href: '#hero' },
-  { label: 'Missão',      href: '#missao' },
-  { label: 'Recursos',    href: '#recursos' },
-  { label: 'Depoimentos', href: '#depoimentos' },
-  { label: 'Acessar o App', href: APP_URL, external: true },
+const navLinks = [
+  { label: 'Início',       href: '#hero' },
+  { label: 'Missão',       href: '#missao' },
+  { label: 'Recursos',     href: '#recursos' },
+  { label: 'Depoimentos',  href: '#depoimentos' },
+  { label: 'Começar',      href: '#comecar' },
+];
+
+const legalLinks = [
+  { label: 'Política de Privacidade', href: '/privacidade' },
+  { label: 'Termos de Uso',           href: '/termos' },
+];
+
+const socialLinks = [
+  {
+    label: 'Instagram',
+    href:  'https://instagram.com/senier451',
+    icon:  Instagram,
+  },
+  {
+    label: 'X (Twitter)',
+    href:  'https://x.com/senier451',
+    icon:  Twitter,
+  },
 ];
 
 export function Footer() {
   return (
-    <footer className="bg-[#1F2937] text-white py-12">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+    <footer className="bg-[#1F2937] text-white">
+      {/* Main footer */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 lg:py-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8">
 
-        <div className="grid sm:grid-cols-3 gap-8 mb-10">
-          {/* Logo + tagline */}
-          <div className="sm:col-span-1">
-            <div className="flex items-center gap-2.5 mb-3">
+          {/* ── Col 1: Logo + Tagline ── */}
+          <div className="sm:col-span-2 lg:col-span-1">
+            <a href="#hero" className="flex items-center gap-2.5 mb-4 group w-fit">
               <FooterLogo />
               <div>
-                <p className="font-semibold text-white text-sm">Minha Jornada</p>
-                <p className="text-[#FB923C] text-sm font-semibold">Diária</p>
+                <p className="font-bold text-white text-sm">Minha Jornada</p>
+                <p className="text-[#FB923C] text-xs font-semibold">Diária</p>
               </div>
-            </div>
-            <p className="text-[#9CA3AF] text-sm leading-relaxed max-w-xs">
+            </a>
+            <p className="text-[#9CA3AF] text-sm leading-relaxed max-w-xs mb-6">
               Transformando dias com a Palavra, oração e meditação.
               Uma jornada que floresce dia a dia.
             </p>
+            {/* Social links */}
+            <div className="flex items-center gap-3">
+              {socialLinks.map(({ label, href, icon: Icon }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  className="w-9 h-9 rounded-xl bg-[#374151] hover:bg-[#4B5563] flex items-center justify-center transition-colors duration-200"
+                >
+                  <Icon size={16} className="text-[#9CA3AF] hover:text-white" />
+                </a>
+              ))}
+            </div>
           </div>
 
-          {/* Links */}
+          {/* ── Col 2: Navegação ── */}
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-[#6B7280] mb-4">
+            <p className="text-xs font-semibold uppercase tracking-widest text-[#6B7280] mb-5">
               Navegação
             </p>
-            <ul className="space-y-2.5">
-              {footerLinks.map((link) => (
+            <ul className="space-y-3">
+              {navLinks.map((link) => (
                 <li key={link.label}>
                   <a
                     href={link.href}
-                    target={link.external ? '_blank' : undefined}
-                    rel={link.external ? 'noopener noreferrer' : undefined}
-                    className="text-sm text-[#9CA3AF] hover:text-white transition-colors"
+                    className="text-sm text-[#9CA3AF] hover:text-white transition-colors duration-150"
                   >
                     {link.label}
-                    {link.external && ' ↗'}
                   </a>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Legal */}
+          {/* ── Col 3: Recursos ── */}
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-[#6B7280] mb-4">
-              Legal & Contato
+            <p className="text-xs font-semibold uppercase tracking-widest text-[#6B7280] mb-5">
+              Recursos
             </p>
-            <ul className="space-y-2.5">
-              <li>
-                <a href="/privacidade" className="text-sm text-[#9CA3AF] hover:text-white transition-colors">
-                  Política de Privacidade
-                </a>
-              </li>
-              <li>
-                <a href="/termos" className="text-sm text-[#9CA3AF] hover:text-white transition-colors">
-                  Termos de Uso
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://instagram.com/senier451"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-[#9CA3AF] hover:text-white transition-colors"
-                >
-                  Instagram @senier451 ↗
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://x.com/senier451"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-[#9CA3AF] hover:text-white transition-colors"
-                >
-                  X (Twitter) @senier451 ↗
-                </a>
-              </li>
+            <ul className="space-y-3">
+              {[
+                'Devocional Diário',
+                'Meditação Guiada',
+                'Bíblia Offline',
+                'Diário de Oração',
+                'Árvore da Vida',
+              ].map((item) => (
+                <li key={item}>
+                  <a
+                    href={APP_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-[#9CA3AF] hover:text-white transition-colors duration-150"
+                  >
+                    {item}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
+
+          {/* ── Col 4: Legal + CTA ── */}
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-widest text-[#6B7280] mb-5">
+              Legal & Contato
+            </p>
+            <ul className="space-y-3 mb-7">
+              {legalLinks.map((link) => (
+                <li key={link.label}>
+                  <a
+                    href={link.href}
+                    className="text-sm text-[#9CA3AF] hover:text-white transition-colors duration-150"
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+
+            {/* Mini CTA */}
+            <a
+              href={APP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#FB923C] hover:bg-[#F97316] text-white text-sm font-semibold transition-all duration-200 shadow-md hover:shadow-lg hover:-translate-y-0.5"
+            >
+              Acessar o App ↗
+            </a>
+          </div>
+
         </div>
+      </div>
 
-        {/* Divider */}
-        <div className="h-px bg-[#374151] mb-6" />
-
-        {/* Bottom row */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+      {/* Bottom bar */}
+      <div className="border-t border-[#374151]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-[#6B7280] text-sm">
             © {new Date().getFullYear()} Minha Jornada Diária. Todos os direitos reservados.
           </p>
           <div className="flex items-center gap-1.5 text-[#6B7280] text-sm">
             <span>Feito com</span>
             <Heart size={13} className="fill-[#C98989] text-[#C98989]" aria-hidden="true" />
-            <span>e muita oração</span>
-            <span className="ml-1">🌱</span>
+            <span>e muita oração 🌱</span>
           </div>
         </div>
       </div>

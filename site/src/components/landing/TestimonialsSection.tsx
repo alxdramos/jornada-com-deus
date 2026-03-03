@@ -47,7 +47,7 @@ const containerVariants: Variants = {
 
 const cardVariants: Variants = {
   hidden: { opacity: 0, y: 24 },
-  show:   { opacity: 1, y: 0 },
+  show:   { opacity: 1, y: 0, transition: { duration: 0.55 } },
 };
 
 export function TestimonialsSection() {
@@ -55,8 +55,8 @@ export function TestimonialsSection() {
   const inView = useInView(ref, { once: true, margin: '-60px' });
 
   return (
-    <section id="depoimentos" className="py-24 sm:py-32 bg-white scroll-mt-16">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+    <section id="depoimentos" className="py-24 sm:py-32 bg-[#FAF9F6] scroll-mt-16">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Header */}
         <div className="text-center mb-16" ref={ref}>
@@ -83,60 +83,80 @@ export function TestimonialsSection() {
           >
             Histórias de quem fez da Jornada um hábito diário de fé.
           </motion.p>
+
+          {/* Stats de prova social */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ delay: 0.3, duration: 0.5 }}
+            className="flex flex-wrap items-center justify-center gap-6 mt-8"
+          >
+            {[
+              { value: '+2.400', label: 'usuários ativos' },
+              { value: '4.9★',  label: 'avaliação média' },
+              { value: '94%',   label: 'mantêm o hábito' },
+            ].map((s) => (
+              <div key={s.label} className="flex items-center gap-2 text-sm">
+                <span className="font-bold text-[#FB923C] text-base">{s.value}</span>
+                <span className="text-[#9CA3AF]">{s.label}</span>
+              </div>
+            ))}
+          </motion.div>
         </div>
 
-        {/* Cards */}
+        {/* Cards: 1-col mobile, 2-col tablet, 4-col desktop */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
           animate={inView ? 'show' : 'hidden'}
-          className="grid sm:grid-cols-2 gap-6"
+          className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5"
         >
           {testimonials.map((t) => (
             <motion.div
               key={t.name}
               variants={cardVariants}
-              whileHover={{ y: -3, transition: { duration: 0.2 } }}
-              className="bg-white rounded-2xl border border-[#E5E7EB] p-6 shadow-sm hover:shadow-md transition-all relative overflow-hidden"
+              whileHover={{ y: -4, transition: { duration: 0.2 } }}
+              className="bg-white rounded-2xl border border-[#E5E7EB] p-5 shadow-sm hover:shadow-md transition-all relative overflow-hidden flex flex-col"
             >
               {/* Quote decorativo */}
               <Quote
-                size={48}
-                className="absolute top-4 right-4 opacity-5 text-[#1F2937]"
+                size={40}
+                className="absolute top-3 right-3 opacity-[0.06] text-[#1F2937]"
                 aria-hidden="true"
               />
 
               {/* Stars */}
               <div className="flex gap-0.5 mb-4">
                 {[...Array(t.stars)].map((_, i) => (
-                  <Star
-                    key={i}
-                    size={14}
-                    className="fill-[#FB923C] text-[#FB923C]"
-                  />
+                  <Star key={i} size={13} className="fill-[#FB923C] text-[#FB923C]" />
                 ))}
               </div>
 
               {/* Texto */}
-              <p className="text-[#4B5563] leading-relaxed text-base mb-5">
-                "{t.text}"
+              <p className="text-[#4B5563] leading-relaxed text-sm flex-1 mb-5">
+                &ldquo;{t.text}&rdquo;
               </p>
 
               {/* Autor */}
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2.5 mt-auto">
                 <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0"
+                  className="w-9 h-9 rounded-full flex items-center justify-center text-white font-bold text-xs shrink-0"
                   style={{ backgroundColor: t.color }}
                 >
                   {t.initials}
                 </div>
-                <div>
-                  <p className="font-semibold text-[#1F2937] text-sm">{t.name}</p>
-                  <p className="text-xs text-[#9CA3AF]">{t.role}</p>
+                <div className="min-w-0">
+                  <p className="font-semibold text-[#1F2937] text-xs truncate">{t.name}</p>
+                  <p className="text-[10px] text-[#9CA3AF] truncate">{t.role}</p>
                 </div>
-                <div className="ml-auto text-[10px] text-[#9CA3AF] bg-[#F9FAFB] px-2 py-1 rounded-full border border-[#E5E7EB]">
-                  Usuário da Minha Jornada Diária
-                </div>
+              </div>
+
+              {/* Badge verificado */}
+              <div className="mt-3 inline-flex items-center gap-1 text-[10px] text-[#10B981] font-medium">
+                <span className="w-3 h-3 rounded-full bg-[#ECFDF5] flex items-center justify-center">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#10B981]" />
+                </span>
+                Usuário verificado
               </div>
             </motion.div>
           ))}
