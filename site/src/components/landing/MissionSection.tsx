@@ -7,7 +7,7 @@ import { useRef } from 'react';
 const stats = [
   { value: '66',   label: 'Livros da Bíblia',    emoji: '📖' },
   { value: '30+',  label: 'Meditações guiadas',   emoji: '🎧' },
-  { value: '100%', label: 'Gratuito e offline',   emoji: '🌐' },
+  { value: '5min', label: 'Por dia transforma',   emoji: '⏱️' },
 ];
 
 export function MissionSection() {

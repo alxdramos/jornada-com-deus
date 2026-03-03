@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, type Variants } from 'framer-motion';
-import { ArrowRight, Star, BookOpen, Music2, TreeDeciduous, WifiOff } from 'lucide-react';
+import { ArrowRight, Star, BookOpen, Music2, TreeDeciduous, NotebookPen } from 'lucide-react';
 import Image from 'next/image';
 
 const APP_URL = 'https://app.minhajornadadiaria.com.br';
@@ -25,10 +25,10 @@ const avatars = [
 ];
 
 const floatingChips = [
-  { icon: BookOpen,      label: 'Bíblia Offline',   color: '#3B82F6', pale: '#EFF6FF', delay: 0.9 },
-  { icon: Music2,        label: 'Meditação Guiada',  color: '#8B5CF6', pale: '#F5F3FF', delay: 1.05 },
-  { icon: TreeDeciduous, label: 'Árvore da Vida',    color: '#10B981', pale: '#ECFDF5', delay: 1.2 },
-  { icon: WifiOff,       label: 'Modo Offline',      color: '#6B7280', pale: '#F9FAFB', delay: 1.35 },
+  { icon: BookOpen,      label: 'Bíblia Completa',  color: '#3B82F6', pale: '#EFF6FF', delay: 0.9 },
+  { icon: Music2,        label: 'Meditação Guiada', color: '#8B5CF6', pale: '#F5F3FF', delay: 1.05 },
+  { icon: TreeDeciduous, label: 'Árvore da Vida',   color: '#10B981', pale: '#ECFDF5', delay: 1.2 },
+  { icon: NotebookPen,   label: 'Diário de Oração', color: '#C98989', pale: '#FDF2F2', delay: 1.35 },
 ];
 
 export function HeroSection() {
@@ -51,7 +51,7 @@ export function HeroSection() {
             <motion.div variants={fadeUp} className="flex justify-center lg:justify-start">
               <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#FEF3E2] border border-[#FB923C]/30 text-[#FB923C] text-xs font-semibold tracking-wide">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#FB923C] animate-pulse" />
-                100% Gratuito · PWA · Funciona Offline
+                Devocional · Meditação · Bíblia · Oração
               </span>
             </motion.div>
 

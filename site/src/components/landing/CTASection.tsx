@@ -4,19 +4,19 @@ import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import Image from 'next/image';
-import { Download, Wifi, Gift, Heart, CheckCircle2 } from 'lucide-react';
+import { Download, Heart, CheckCircle2, Sparkles, Shield } from 'lucide-react';
 
 const APP_URL = 'https://app.minhajornadadiaria.com.br';
 
 const perks = [
-  { icon: Gift,  text: '100% gratuito' },
-  { icon: Wifi,  text: 'Funciona offline' },
-  { icon: Heart, text: 'Sem anúncios' },
+  { icon: Heart,    text: 'Sem anúncios' },
+  { icon: Sparkles, text: 'Conteúdo exclusivo' },
+  { icon: Shield,   text: 'Privacidade protegida' },
 ];
 
 const checks = [
   'Devocional diário com versículo e reflexão',
-  'Bíblia offline com todos os 66 livros',
+  'Bíblia com todos os 66 livros',
   'Meditações em áudio e diário de oração',
   'Gamificação espiritual — Árvore da Vida',
 ];
@@ -174,7 +174,7 @@ export function CTASection() {
               {/* Badge flutuante sob o phone */}
               <div className="mt-4 bg-white/20 backdrop-blur-sm border border-white/30 rounded-2xl px-4 py-3 text-center">
                 <p className="text-white font-semibold text-sm">🌱 Comece hoje</p>
-                <p className="text-white/70 text-xs mt-0.5">Grátis para sempre</p>
+                <p className="text-white/70 text-xs mt-0.5">Transforme sua rotina espiritual</p>
               </div>
             </motion.div>
           </motion.div>

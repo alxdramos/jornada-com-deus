@@ -5,7 +5,7 @@ import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import Image from 'next/image';
 import {
-  Sun, Music2, BookOpen, NotebookPen, TreeDeciduous, WifiOff,
+  Sun, Music2, BookOpen, NotebookPen, TreeDeciduous, Bell,
 } from 'lucide-react';
 
 const features = [
@@ -20,15 +20,15 @@ const features = [
   {
     icon:        Music2,
     title:       'Meditação Guiada',
-    description: 'Áudios de meditação cristã com temas como paz, ansiedade, sono e motivação. Player completo com suporte offline — onde você estiver.',
+    description: 'Áudios de meditação cristã com temas como paz, ansiedade, sono e motivação. Player completo com controle de velocidade e timer.',
     accent:      '#8B5CF6',
     pale:        '#F5F3FF',
     image:       '/images/site-feature-meditacao.png',
   },
   {
     icon:        BookOpen,
-    title:       'Bíblia Offline',
-    description: 'Todos os 66 livros disponíveis sem internet. Leitura fluida, versículo favorito e busca inteligente para aprofundar sua fé.',
+    title:       'Bíblia Completa',
+    description: 'Todos os 66 livros à disposição. Leitura fluida, versículos favoritos e busca inteligente para aprofundar sua fé.',
     accent:      '#3B82F6',
     pale:        '#EFF6FF',
     image:       '/images/site-feature-biblia.png',
@@ -50,11 +50,11 @@ const features = [
     image:       '/images/site-feature-arvore.png',
   },
   {
-    icon:        WifiOff,
-    title:       'Modo Offline Total',
-    description: 'Instale o app no celular (PWA) e use tudo sem internet — aviões, viagens, serras e praias. Fé sem limites.',
-    accent:      '#6B7280',
-    pale:        '#F9FAFB',
+    icon:        Bell,
+    title:       'Lembretes Diários',
+    description: 'Configure notificações personalizadas para manter sua rotina espiritual. Lembretes gentis que convidam você a pausar e se conectar com Deus.',
+    accent:      '#F59E0B',
+    pale:        '#FFFBEB',
     image:       '/images/site-feature-offline.png',
   },
 ];

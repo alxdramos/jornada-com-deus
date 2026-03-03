@@ -75,7 +75,7 @@ export function Navbar() {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#FB923C] hover:bg-[#F97316] text-white text-sm font-semibold transition-all duration-200 shadow-sm hover:shadow-md hover:-translate-y-0.5"
           >
-            Começar grátis
+            Começar agora
             <ArrowRight size={14} />
           </a>
         </div>
@@ -117,7 +117,7 @@ export function Navbar() {
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-2 mt-1 px-4 py-3.5 rounded-2xl bg-[#FB923C] text-white font-semibold text-sm"
               >
-                Começar grátis
+                Começar agora
                 <ArrowRight size={15} />
               </a>
             </div>
