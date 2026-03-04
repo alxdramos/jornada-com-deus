@@ -13,8 +13,8 @@ export function SlideWelcome() {
           className="object-cover"
           priority
         />
-        {/* Gradiente suave na base da imagem */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/90" />
+        {/* Gradiente forte na base para garantir legibilidade do texto */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/30 to-black/80" />
       </div>
 
       {/* Conteúdo sobreposto */}
@@ -25,10 +25,10 @@ export function SlideWelcome() {
         transition={{ delay: 0.3, duration: 0.5 }}
       >
         <p className="text-3xl mb-1">🌿</p>
-        <h1 className="text-2xl font-bold text-foreground mb-3 leading-tight">
+        <h1 className="text-2xl font-bold text-white mb-3 leading-tight drop-shadow-md">
           Sua jornada<br />começa aqui
         </h1>
-        <p className="text-sm text-muted-foreground leading-relaxed max-w-xs mx-auto">
+        <p className="text-sm text-white/85 leading-relaxed max-w-xs mx-auto drop-shadow-sm">
           Um espaço diário de paz, fé e crescimento espiritual — feito para você criar um hábito com Deus.
         </p>
       </motion.div>
