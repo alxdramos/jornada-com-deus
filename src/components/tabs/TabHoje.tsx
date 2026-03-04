@@ -5,7 +5,7 @@ import { HojeSteps } from "@/components/HojeSteps";
 import { CalendarioFavoritosModal } from "@/components/CalendarioFavoritosModal";
 import { JourneyDetailsModal } from "@/components/JourneyDetailsModal";
 import { UserHeader } from "@/components/layout/UserHeader";
-import { VerseOfDayCard, getGreeting } from "@/components/VerseOfDayCard";
+import { getGreeting } from "@/components/VerseOfDayCard";
 import { useUserStore } from "@/stores/userStore";
 import { useProgressStore } from "@/stores/progressStore";
 import { useAuth } from "@/contexts/AuthContext";
@@ -69,9 +69,6 @@ export function TabHoje() {
             })}
           </p>
         </div>
-
-        {/* Versículo do dia — card hero com gradiente devotional */}
-        <VerseOfDayCard />
 
         {/* 4 etapas do dia + botão Concluir */}
         <HojeSteps />
