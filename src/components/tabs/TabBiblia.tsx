@@ -15,6 +15,8 @@ import { BibleSearchBar } from "./biblia/BibleSearchBar";
 import { BibleBooksList } from "./biblia/BibleBooksList";
 import { BibleChapterGrid } from "./biblia/BibleChapterGrid";
 import { BibleChapterNavigation } from "./biblia/BibleChapterNavigation";
+import { ReadingPlanBanner } from "./biblia/ReadingPlanBanner";
+import { ReadingPlanModal } from "./biblia/ReadingPlanModal";
 
 // Dados
 import { Testamento, ViewState, LIVROS_AT, LIVROS_NT, ALL_BOOKS } from "@/data/biblia";
@@ -42,6 +44,7 @@ export function TabBiblia() {
   const [showSearch, setShowSearch] = useState(false);
   const [accessedChapters, setAccessedChapters] = useState<Set<string>>(new Set());
   const [searchMode, setSearchMode] = useState<"reference" | "word">("reference");
+  const [showPlanModal, setShowPlanModal] = useState(false);
 
   // Livros por testamento
   const livros = getBooksByTestament(testamento);
@@ -109,6 +112,20 @@ export function TabBiblia() {
     }
   };
 
+  // Abrir capítulo direto via plano de leitura
+  const openChapterFromPlan = (bookId: string, bookName: string, chapter: number) => {
+    const bookData = BIBLE_BOOKS.find(
+      (b) => b.id === bookId || b.name === bookName
+    );
+    const name = bookData?.name ?? bookName;
+    setSelectedBook(name);
+    setSelectedChapter(chapter);
+    setViewState("verses");
+    const chapterKey = `${name}-${chapter}`;
+    setAccessedChapters((prev) => new Set([...prev, chapterKey]));
+    fetchChapter(bookId, chapter);
+  };
+
   // Reset ao mudar testamento
   useEffect(() => {
     setViewState("books");
@@ -160,6 +177,9 @@ export function TabBiblia() {
               exit={{ opacity: 0, y: -20 }}
               className="space-y-6"
             >
+              {/* Banner de Planos de Leitura */}
+              <ReadingPlanBanner onOpenPlan={() => setShowPlanModal(true)} />
+
               <BibleTestamentToggle
                 value={testamento}
                 onChange={setTestamento}
@@ -324,6 +344,13 @@ export function TabBiblia() {
           )}
         </AnimatePresence>
       </div>
+
+      {/* Modal de Planos de Leitura */}
+      <ReadingPlanModal
+        isOpen={showPlanModal}
+        onClose={() => setShowPlanModal(false)}
+        onReadChapter={openChapterFromPlan}
+      />
     </div>
   );
 }

@@ -248,7 +248,6 @@ export const CARDS_NOVO: MeditationCard[] = [
   { id: "crente-excecao", title: "O Crente é uma Exceção", duration: "3 min", plus: false, category: "ESTUDOS", tags: ["NOVO", "INSPIRAÇÃO"], image: "https://images.unsplash.com/photo-1511295742362-92c96b1cf68?w=400&h=300&fit=crop", audioUrl: "https://pub-561f3fcecd8945ba90a5b9c1683fac22.r2.dev/Med_crente_excecao.mp3" },
   { id: "palavra-final", title: "Uma Palavra Final", duration: "8 min", plus: true, category: "ESTUDOS", tags: ["NOVO", "REFLEXÃO"], image: "https://images.unsplash.com/photo-1511295742362-92c96b1cf68?w=400&h=300&fit=crop", audioUrl: "https://pub-561f3fcecd8945ba90a5b9c1683fac22.r2.dev/Med_palavra_final.mp3" },
   { id: "deus-fiel", title: "Deus É Fiel", duration: "5 min", plus: false, category: "ESTUDOS", tags: ["NOVO", "FÉ"], image: "https://images.unsplash.com/photo-1511295742362-92c96b1cf68?w=400&h=300&fit=crop", audioUrl: "https://pub-561f3fcecd8945ba90a5b9c1683fac22.r2.dev/Med_deus_fiel.mp3" },
-,
   {
     "id": "med_17",
     "title": "Processando luto com esperança (Romanos 8:28)",

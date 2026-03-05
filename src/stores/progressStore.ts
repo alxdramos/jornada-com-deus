@@ -44,6 +44,7 @@ interface Progress {
 interface ProgressStore {
   progress: Progress;
   completeDay: () => void;
+  addXp: (amount: number) => void; // XP bonus (leitura bíblica, etc.)
   isTodayCompleted: () => boolean;
   getXpForNextLevel: () => number;
   getTreeProgress: () => number; // 0-100 para barra de progresso da árvore
@@ -89,6 +90,20 @@ export const useProgressStore = create<ProgressStore>()(
       isTodayCompleted: () => {
         const { progress } = get();
         return progress.lastCompletedDate === getTodayStr();
+      },
+
+      addXp: (amount: number) => {
+        const { progress } = get();
+        const newTotalXp = progress.totalXp + amount;
+        const newLevel = getLevelFromXp(newTotalXp);
+        set({
+          progress: {
+            ...progress,
+            totalXp: newTotalXp,
+            level: newLevel,
+            treeLevel: newLevel,
+          },
+        });
       },
 
       completeDay: () => {
