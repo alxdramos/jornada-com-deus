@@ -23,7 +23,7 @@
 - **Paleta:** fundo `#FAF9F6`, primary `#FB923C` (laranja), accent `#10B981` (verde), texto `#1F2937`
 - **Dark mode:** disponível (paleta marrom-quente `#1A1714` — não azul frio)
 - **Freemium:** conteúdo base gratuito + áudio narrado = tier Plus
-- **Gamificação:** streak diário, XP (+100/dia), níveis, **Árvore da Vida** (11 estágios visuais), feedback háptico e animação de evolução
+- **Gamificação:** streak diário, XP (+100/dia + leitura bíblica), níveis, **Árvore da Vida** (11 estágios visuais), feedback háptico e animação de evolução
 - **Offline-first:** funciona sem internet via IndexedDB + Service Worker
 
 ---
@@ -98,7 +98,7 @@
 | **Explorar** | `TabExplorar.tsx` | Hub de navegação — cards para todas as seções |
 | **Meditações** | `TabMeditacoes.tsx` | 28 meditações com áudio + imagens espirituais únicas |
 | **Estudos Bíblicos** | `TabEstudos.tsx` | 31 estudos com áudio + imagens espirituais únicas |
-| **Bíblia** | `TabBiblia.tsx` | 66 livros, busca, navegação AT/NT via bible-api.com |
+| **Bíblia** | `TabBiblia.tsx` | 66 livros, busca, navegação AT/NT + 6 planos de leitura com XP |
 | **Orações** | `TabOracoes.tsx` | 47 orações com áudio + criação personalizada |
 | **Diário** | `TabDiario.tsx` | 4 tipos de entrada espiritual + busca + tags |
 | **Devocional** | `TabDevocional.tsx` | Devocionais diários com versículo e reflexão |
@@ -215,7 +215,7 @@
 - **21 imagens únicas** para estudos bíblicos em `public/images/estudos/` (cenas temáticas sem texto) — novos estudos herdam fallback dinâmico
 - **80+ imagens** para orações em `public/images/creation_*.webp` (paisagens espirituais únicas)
 - **11 imagens** para os estágios da Árvore da Vida em `public/images/tree-stages/`
-- **6 cards** da aba Explorar em `public/images/explore-cards/`
+- **7 cards** da aba Explorar em `public/images/explore-cards/` (inclui Planos de Leitura)
 - Todas em formato **WebP** (526MB originais → 49MB, 91% de redução)
 - Servidas via `next/image` com otimização AVIF/WebP automática
 
@@ -359,7 +359,8 @@ jornada-com-deus/
 │   │   └── PaywallModal.tsx            # Modal de planos Premium (Hotmart checkout)
 │   ├── stores/
 │   │   ├── userStore.ts                # Perfil + plan (free/plus) + subscriptionStatus
-│   │   ├── progressStore.ts            # XP, streak, nível, árvore
+│   │   ├── progressStore.ts            # XP, streak, nível, árvore + addXp() para planos
+│   │   ├── readingPlanStore.ts         # Planos de leitura — activePlan + pendingChapter
 │   │   ├── tabStore.ts                 # Aba ativa + deep link (?tab=)
 │   │   └── oracaoStore.ts              # Estado das orações
 │   ├── hooks/
@@ -391,6 +392,7 @@ jornada-com-deus/
 │   │   ├── estudos.ts                  # 31 estudos bíblicos com áudio R2
 │   │   ├── meditacoes.ts               # 28 meditações com áudio R2
 │   │   ├── oracoes.ts                  # 47 orações com áudio R2
+│   │   ├── planos-leitura.ts           # 6 planos de leitura bíblica (7/10/15/21/30/90 dias)
 │   │   └── ...
 │   └── styles/
 │       ├── tokens.css                  # Design tokens (cores, espaçamento, tipografia)
@@ -580,7 +582,7 @@ npm run lint
 
 ---
 
-## Status MVP — 04/03/2026
+## Status MVP — 05/03/2026
 
 ### ✅ Implementado e em produção
 
@@ -605,7 +607,17 @@ npm run lint
 - ✅ 31 estudos bíblicos com áudio (Cloudflare R2)
 - ✅ 47 orações com áudio (Cloudflare R2)
 - ✅ Bíblia completa online (66 livros, busca, navegação AT/NT)
+- ✅ **6 planos de leitura bíblica** com progresso e XP por capítulo (7/10/15/21/30/90 dias)
 - ✅ Devocional diário + Kids
+
+**Planos de Leitura Bíblica:**
+- ✅ 6 planos com estrutura de dias, leituras e temas — 🕊️ Salmos & Paz (7d), ⛰️ Fé (10d), 🌱 Começando com Deus (15d), ✨ Conheça Jesus (21d), 📖 Sabedoria Viva (30d), 🌿 NT Completo (90d)
+- ✅ XP +25 por capítulo lido (integrado ao pool global de XP + nível + árvore)
+- ✅ `ReadingPlanBanner` na aba Bíblia — convite ou barra de progresso do dia atual
+- ✅ `ReadingPlanModal` com 3 views: lista de planos, detalhes/início, leituras do dia com checkboxes
+- ✅ Card "Planos de Leitura" na aba Explorar com navegação cross-tab direta ao capítulo
+- ✅ `pendingChapter` ephemeral no store — Explorar define, Bíblia consome e limpa no mount
+- ✅ Persistência via Zustand `persist` com `partialize` (exclui `pendingChapter` do localStorage)
 
 **Gamificação:**
 - ✅ XP +100/dia + streak + níveis + Árvore da Vida (11 estágios — thresholds não-lineares)
@@ -697,7 +709,6 @@ npm run lint
 
 **Crescimento de Conteúdo:**
 - [ ] Dashboard de progresso espiritual (gráficos semanais/mensais de XP e streak)
-- [ ] Planos de leitura bíblica estruturados (21/30/90 dias)
 - [ ] Expansão do conteúdo Kids (meditações + estudos infantis)
 
 **Distribuição Nativa:**
