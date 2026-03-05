@@ -159,6 +159,11 @@ export function TabBiblia() {
           }
         />
 
+        {/* Banner de Planos de Leitura — fixo no topo da view de livros */}
+        {viewState === "books" && (
+          <ReadingPlanBanner onOpenPlan={() => setShowPlanModal(true)} />
+        )}
+
         {/* Navigation */}
         <BibleChapterNavigation
           book={selectedBook}
@@ -177,9 +182,6 @@ export function TabBiblia() {
               exit={{ opacity: 0, y: -20 }}
               className="space-y-6"
             >
-              {/* Banner de Planos de Leitura */}
-              <ReadingPlanBanner onOpenPlan={() => setShowPlanModal(true)} />
-
               <BibleTestamentToggle
                 value={testamento}
                 onChange={setTestamento}

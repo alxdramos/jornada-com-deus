@@ -95,7 +95,7 @@ export function ReadingPlanModal({ isOpen, onClose, onReadChapter }: ReadingPlan
             exit={{ y: "100%", opacity: 0 }}
             transition={{ type: "spring", damping: 28, stiffness: 320 }}
             className="w-full sm:max-w-lg bg-white rounded-t-3xl sm:rounded-3xl flex flex-col"
-            style={{ maxHeight: "92dvh" }}
+            style={{ height: "88dvh", maxHeight: "88dvh" }}
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header fixo */}
