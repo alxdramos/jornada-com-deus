@@ -96,10 +96,10 @@
 |---|---|---|
 | **Hoje** | `TabHoje.tsx` | 4 etapas diárias + gamificação (XP/streak/árvore) |
 | **Explorar** | `TabExplorar.tsx` | Hub de navegação — cards para todas as seções |
-| **Meditações** | `TabMeditacoes.tsx` | 17 meditações com áudio + imagens espirituais únicas |
-| **Estudos Bíblicos** | `TabEstudos.tsx` | 21 estudos com áudio + imagens espirituais únicas |
+| **Meditações** | `TabMeditacoes.tsx` | 28 meditações com áudio + imagens espirituais únicas |
+| **Estudos Bíblicos** | `TabEstudos.tsx` | 31 estudos com áudio + imagens espirituais únicas |
 | **Bíblia** | `TabBiblia.tsx` | 66 livros, busca, navegação AT/NT via bible-api.com |
-| **Orações** | `TabOracoes.tsx` | 40+ orações com áudio + criação personalizada |
+| **Orações** | `TabOracoes.tsx` | 47 orações com áudio + criação personalizada |
 | **Diário** | `TabDiario.tsx` | 4 tipos de entrada espiritual + busca + tags |
 | **Devocional** | `TabDevocional.tsx` | Devocionais diários com versículo e reflexão |
 | **Kids** | `TabKids.tsx` | Conteúdo adaptado para crianças |
@@ -125,6 +125,7 @@
 - `20260224_user_progress_favorites.sql` — user_progress, user_favorites
 - `20260224_enable_realtime_rls_consolidation.sql` — RLS idempotente + Realtime
 - `20260226_payment_system.sql` — subscriptions + hotmart_webhook_logs + colunas plan/expires_at em profiles + trigger sync_profile_plan
+- `20260304_security_fixes.sql` — hardening de segurança adicional
 - **RLS ativo** em todas as tabelas (`auth.uid() = user_id`)
 
 ### Sync Multi-Device (Tempo Real)
@@ -182,9 +183,9 @@
 - VoiceOver (iOS/Safari) e TalkBack (Android/Chrome) verificados
 
 ### Conteúdo em Áudio (Cloudflare R2)
-- 17 meditações guiadas com áudio
-- 21 estudos bíblicos com áudio
-- 40+ orações com áudio
+- 28 meditações guiadas com áudio
+- 31 estudos bíblicos com áudio
+- 47 orações com áudio
 - Proxy CORS em `/api/audio` para todas as URLs R2
 
 ### Players de Áudio — MediaSession API (lock screen + background)
@@ -210,8 +211,8 @@
 - Rota `/api/sentry-test` usada para validar a integração (removida após validação)
 
 ### Imagens Espirituais (geradas por IA)
-- **17 imagens únicas** para meditações em `public/images/meditacoes/` (aquarela espiritual, luz dourada)
-- **21 imagens únicas** para estudos bíblicos em `public/images/estudos/` (cenas temáticas sem texto)
+- **17 imagens únicas** para meditações em `public/images/meditacoes/` (aquarela espiritual, luz dourada) — novas meditações herdam fallback dinâmico
+- **21 imagens únicas** para estudos bíblicos em `public/images/estudos/` (cenas temáticas sem texto) — novos estudos herdam fallback dinâmico
 - **80+ imagens** para orações em `public/images/creation_*.webp` (paisagens espirituais únicas)
 - **11 imagens** para os estágios da Árvore da Vida em `public/images/tree-stages/`
 - **6 cards** da aba Explorar em `public/images/explore-cards/`
@@ -387,9 +388,9 @@ jornada-com-deus/
 │   │   ├── supabase-server.ts          # Cliente server (factory com cookies)
 │   │   └── utils.ts
 │   ├── data/
-│   │   ├── estudos.ts                  # 21 estudos bíblicos com áudio R2
-│   │   ├── meditacoes.ts               # 17 meditações com áudio R2
-│   │   ├── oracoes.ts                  # 40+ orações com áudio R2
+│   │   ├── estudos.ts                  # 31 estudos bíblicos com áudio R2
+│   │   ├── meditacoes.ts               # 28 meditações com áudio R2
+│   │   ├── oracoes.ts                  # 47 orações com áudio R2
 │   │   └── ...
 │   └── styles/
 │       ├── tokens.css                  # Design tokens (cores, espaçamento, tipografia)
@@ -413,7 +414,8 @@ jornada-com-deus/
 │       ├── 20260224_bible_verses.sql
 │       ├── 20260224_user_progress_favorites.sql
 │       ├── 20260224_enable_realtime_rls_consolidation.sql
-│       └── 20260226_payment_system.sql  # subscriptions + hotmart_webhook_logs + plan sync
+│       ├── 20260226_payment_system.sql  # subscriptions + hotmart_webhook_logs + plan sync
+│       └── 20260304_security_fixes.sql  # hardening de segurança adicional
 ├── vercel.json                         # Cron jobs: 3x/dia notificações push
 ├── next.config.ts                      # remotePatterns + AVIF/WebP + SW headers
 ├── package.json
@@ -578,7 +580,7 @@ npm run lint
 
 ---
 
-## Status MVP — 01/03/2026
+## Status MVP — 04/03/2026
 
 ### ✅ Implementado e em produção
 
@@ -599,9 +601,9 @@ npm run lint
 - ✅ Realtime multi-device: progress, favorites
 
 **Conteúdo:**
-- ✅ 17 meditações guiadas com áudio (Cloudflare R2)
-- ✅ 21 estudos bíblicos com áudio (Cloudflare R2)
-- ✅ 40+ orações com áudio (Cloudflare R2)
+- ✅ 28 meditações guiadas com áudio (Cloudflare R2)
+- ✅ 31 estudos bíblicos com áudio (Cloudflare R2)
+- ✅ 47 orações com áudio (Cloudflare R2)
 - ✅ Bíblia completa online (66 livros, busca, navegação AT/NT)
 - ✅ Devocional diário + Kids
 
