@@ -6,6 +6,7 @@ import { UserHeader } from '@/components/layout/UserHeader';
 import { SearchBar } from '@/components/molecules/SearchBar';
 import { useTabStore, TabId } from '@/stores/tabStore';
 import { ReadingPlanModal } from '@/components/tabs/biblia/ReadingPlanModal';
+import { useReadingPlanStore } from '@/stores/readingPlanStore';
 
 interface ExploreCard {
   id: TabId | 'planos';
@@ -55,11 +56,18 @@ const EXPLORE_CARDS: ExploreCard[] = [
 
 export function TabExplorar() {
   const setActiveTab = useTabStore((s) => s.setActiveTab);
+  const setPendingChapter = useReadingPlanStore((s) => s.setPendingChapter);
   const [planModalOpen, setPlanModalOpen] = useState(false);
 
   const handleSearch = (query: string) => {
     console.log('Search query:', query);
   };
+
+  function handleOpenChapterFromExplorer(bookId: string, bookName: string, chapter: number) {
+    setPendingChapter({ bookId, bookName, chapter });
+    setPlanModalOpen(false);
+    setActiveTab('biblia');
+  }
 
   return (
     <div className="min-h-screen bg-bg-primary p-6 pb-36">
@@ -105,6 +113,7 @@ export function TabExplorar() {
       <ReadingPlanModal
         isOpen={planModalOpen}
         onClose={() => setPlanModalOpen(false)}
+        onReadChapter={handleOpenChapterFromExplorer}
       />
     </div>
   );

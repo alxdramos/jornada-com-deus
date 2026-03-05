@@ -11,13 +11,21 @@ export interface ActivePlan {
   isCompleted: boolean;
 }
 
+export interface PendingChapter {
+  bookId: string;
+  bookName: string;
+  chapter: number;
+}
+
 interface ReadingPlanStore {
   activePlan: ActivePlan | null;
+  pendingChapter: PendingChapter | null;
 
   // Actions
   startPlan: (planId: string) => void;
   abandonPlan: () => void;
   markChapterRead: (bookId: string, chapter: number) => void;
+  setPendingChapter: (ch: PendingChapter | null) => void;
 
   // Selectors
   isChapterRead: (bookId: string, chapter: number) => boolean;
@@ -50,6 +58,9 @@ export const useReadingPlanStore = create<ReadingPlanStore>()(
   persist(
     (set, get) => ({
       activePlan: null,
+      pendingChapter: null,
+
+      setPendingChapter: (ch) => set({ pendingChapter: ch }),
 
       startPlan: (planId: string) => {
         set({
@@ -161,6 +172,7 @@ export const useReadingPlanStore = create<ReadingPlanStore>()(
     }),
     {
       name: 'reading-plan-storage',
+      partialize: (state) => ({ activePlan: state.activePlan }),
     }
   )
 );

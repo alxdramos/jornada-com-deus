@@ -20,6 +20,7 @@ import { ReadingPlanModal } from "./biblia/ReadingPlanModal";
 
 // Dados
 import { Testamento, ViewState, LIVROS_AT, LIVROS_NT, ALL_BOOKS } from "@/data/biblia";
+import { useReadingPlanStore } from "@/stores/readingPlanStore";
 
 export function TabBiblia() {
   const user = useUserStore((s) => s.user);
@@ -46,6 +47,9 @@ export function TabBiblia() {
   const [searchMode, setSearchMode] = useState<"reference" | "word">("reference");
   const [showPlanModal, setShowPlanModal] = useState(false);
 
+  const pendingChapter = useReadingPlanStore((s) => s.pendingChapter);
+  const setPendingChapter = useReadingPlanStore((s) => s.setPendingChapter);
+
   // Livros por testamento
   const livros = getBooksByTestament(testamento);
 
@@ -67,6 +71,11 @@ export function TabBiblia() {
 
     await new Promise((resolve) => setTimeout(resolve, 150));
     await fetchChapter(selectedBook, chapter);
+  };
+
+  const navigateChapter = async (chapter: number) => {
+    window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
+    await selectChapter(chapter);
   };
 
   const goBack = () => {
@@ -121,10 +130,26 @@ export function TabBiblia() {
     setSelectedBook(name);
     setSelectedChapter(chapter);
     setViewState("verses");
-    const chapterKey = `${name}-${chapter}`;
-    setAccessedChapters((prev) => new Set([...prev, chapterKey]));
+    const key = `${name}-${chapter}`;
+    setAccessedChapters((prev) => new Set([...prev, key]));
     fetchChapter(bookId, chapter);
   };
+
+  // Scroll to top ao montar (tab foi reativada) + processar pendingChapter do Explorar
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
+    if (pendingChapter) {
+      setPendingChapter(null);
+      openChapterFromPlan(pendingChapter.bookId, pendingChapter.bookName, pendingChapter.chapter);
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Scroll to top sempre que mudar para a view de versículos
+  useEffect(() => {
+    if (viewState === "verses") {
+      window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
+    }
+  }, [viewState]);
 
   // Reset ao mudar testamento
   useEffect(() => {
@@ -320,7 +345,7 @@ export function TabBiblia() {
 
                   <div className="flex justify-between items-center gap-2">
                     <button
-                      onClick={() => selectChapter(Math.max(1, selectedChapter - 1))}
+                      onClick={() => navigateChapter(Math.max(1, selectedChapter - 1))}
                       disabled={selectedChapter <= 1 || loading}
                       className="flex items-center gap-1 px-4 py-2 bg-white rounded-lg border disabled:opacity-50"
                     >
@@ -333,7 +358,7 @@ export function TabBiblia() {
                     </div>
 
                     <button
-                      onClick={() => selectChapter(Math.min(totalChapters, selectedChapter + 1))}
+                      onClick={() => navigateChapter(Math.min(totalChapters, selectedChapter + 1))}
                       disabled={selectedChapter >= totalChapters || loading}
                       className="flex items-center gap-1 px-4 py-2 bg-white rounded-lg border disabled:opacity-50"
                     >
