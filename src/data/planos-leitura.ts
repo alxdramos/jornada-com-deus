@@ -17,7 +17,7 @@ export interface PlanDay {
 }
 
 export interface ReadingPlan {
-  id: 'nt21' | 'sabedoria30' | 'nt90';
+  id: 'nt21' | 'sabedoria30' | 'nt90' | 'paz7' | 'fe10' | 'inicio15';
   title: string;
   subtitle: string;
   description: string;
@@ -160,6 +160,59 @@ function generateNT90Days(): PlanDay[] {
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
+// PLANO 4 — 7 dias "Salmos & Paz Interior"
+// Versículos de conforto, fé e tranquilidade
+// ──────────────────────────────────────────────────────────────────────────────
+const PLAN_PAZ_7_DAYS: PlanDay[] = [
+  { day: 1,  title: "O Senhor é meu pastor",                theme: "Confiança",         readings: [{ bookId: "salmos",     bookName: "Salmos",     chapter: 23 }] },
+  { day: 2,  title: "A paz que excede o entendimento",       theme: "Paz",               readings: [{ bookId: "filipenses", bookName: "Filipenses", chapter: 4  }] },
+  { day: 3,  title: "Deus é nosso refúgio",                  theme: "Proteção",          readings: [{ bookId: "salmos",     bookName: "Salmos",     chapter: 46 }] },
+  { day: 4,  title: "Não se turbe o vosso coração",          theme: "Serenidade",        readings: [{ bookId: "joao",       bookName: "João",       chapter: 14 }] },
+  { day: 5,  title: "Renovar as forças como águias",         theme: "Renovação",         readings: [{ bookId: "isaias",     bookName: "Isaías",     chapter: 40 }] },
+  { day: 6,  title: "Debaixo da sombra do Altíssimo",        theme: "Refúgio",           readings: [{ bookId: "salmos",     bookName: "Salmos",     chapter: 91 }] },
+  { day: 7,  title: "Nada nos separará do amor de Deus",     theme: "Amor de Deus",      readings: [{ bookId: "romanos",    bookName: "Romanos",    chapter: 8  }] },
+];
+
+// ──────────────────────────────────────────────────────────────────────────────
+// PLANO 5 — 10 dias "Fé que Move Montanhas"
+// Versículos sobre fé, oração e confiança em Deus
+// ──────────────────────────────────────────────────────────────────────────────
+const PLAN_FE_10_DAYS: PlanDay[] = [
+  { day: 1,  title: "A definição da fé",                    theme: "Fé",                readings: [{ bookId: "hebreus",    bookName: "Hebreus",    chapter: 11 }] },
+  { day: 2,  title: "Pedi e recebereis",                    theme: "Oração",            readings: [{ bookId: "marcos",     bookName: "Marcos",     chapter: 11 }] },
+  { day: 3,  title: "A fé que persevera",                   theme: "Perseverança",      readings: [{ bookId: "tiago",      bookName: "Tiago",      chapter: 1  }] },
+  { day: 4,  title: "O Pai Nosso — como orar",              theme: "Oração",            readings: [{ bookId: "mateus",     bookName: "Mateus",     chapter: 6  }] },
+  { day: 5,  title: "A fé vem pelo ouvir",                  theme: "Palavra",           readings: [{ bookId: "romanos",    bookName: "Romanos",    chapter: 10 }, { bookId: "josue", bookName: "Josué", chapter: 1 }] },
+  { day: 6,  title: "Fé diante do fogo",                    theme: "Coragem",           readings: [{ bookId: "daniel",     bookName: "Daniel",     chapter: 3  }] },
+  { day: 7,  title: "O amor como fundamento da fé",         theme: "Amor",              readings: [{ bookId: "1corintios", bookName: "1 Coríntios", chapter: 13 }] },
+  { day: 8,  title: "Confiar e descansar em Deus",          theme: "Descanso",          readings: [{ bookId: "salmos",     bookName: "Salmos",     chapter: 37 }] },
+  { day: 9,  title: "Pedro anda sobre as águas",            theme: "Fé em ação",        readings: [{ bookId: "mateus",     bookName: "Mateus",     chapter: 14 }] },
+  { day: 10, title: "A armadura de Deus",                   theme: "Batalha espiritual",readings: [{ bookId: "efesios",    bookName: "Efésios",    chapter: 6  }] },
+];
+
+// ──────────────────────────────────────────────────────────────────────────────
+// PLANO 6 — 15 dias "Começando com Deus"
+// Panorama essencial da Bíblia para novos crentes ou quem quer recomeçar
+// ──────────────────────────────────────────────────────────────────────────────
+const PLAN_INICIO_15_DAYS: PlanDay[] = [
+  { day: 1,  title: "No princípio — a criação",              theme: "Criação",           readings: [{ bookId: "genesis",    bookName: "Gênesis",    chapter: 1  }, { bookId: "genesis",    bookName: "Gênesis",    chapter: 2  }] },
+  { day: 2,  title: "A queda",                               theme: "Salvação",          readings: [{ bookId: "genesis",    bookName: "Gênesis",    chapter: 3  }] },
+  { day: 3,  title: "A grandeza de Deus revelada",           theme: "Louvor",            readings: [{ bookId: "salmos",     bookName: "Salmos",     chapter: 8  }, { bookId: "salmos",     bookName: "Salmos",     chapter: 19 }] },
+  { day: 4,  title: "O começo da sabedoria",                 theme: "Sabedoria",         readings: [{ bookId: "proverbios", bookName: "Provérbios", chapter: 1  }, { bookId: "proverbios", bookName: "Provérbios", chapter: 3  }] },
+  { day: 5,  title: "O Servo Sofredor — profecia de Jesus",  theme: "Profecia",          readings: [{ bookId: "isaias",     bookName: "Isaías",     chapter: 53 }] },
+  { day: 6,  title: "O nascimento de Jesus",                 theme: "Encarnação",        readings: [{ bookId: "lucas",      bookName: "Lucas",      chapter: 1  }, { bookId: "lucas",      bookName: "Lucas",      chapter: 2  }] },
+  { day: 7,  title: "Nascer de novo — João 3:16",            theme: "Salvação",          readings: [{ bookId: "joao",       bookName: "João",       chapter: 3  }] },
+  { day: 8,  title: "As Bem-aventuranças",                   theme: "Reino de Deus",     readings: [{ bookId: "mateus",     bookName: "Mateus",     chapter: 5  }] },
+  { day: 9,  title: "Sal, luz e o bom samaritano",           theme: "Amor ao próximo",   readings: [{ bookId: "lucas",      bookName: "Lucas",      chapter: 10 }] },
+  { day: 10, title: "A ressurreição de Lázaro",              theme: "Vida eterna",       readings: [{ bookId: "joao",       bookName: "João",       chapter: 11 }] },
+  { day: 11, title: "A paixão de Cristo",                    theme: "Cruz",              readings: [{ bookId: "lucas",      bookName: "Lucas",      chapter: 22 }, { bookId: "lucas",      bookName: "Lucas",      chapter: 23 }] },
+  { day: 12, title: "A ressurreição",                        theme: "Ressurreição",      readings: [{ bookId: "lucas",      bookName: "Lucas",      chapter: 24 }, { bookId: "joao",       bookName: "João",       chapter: 20 }] },
+  { day: 13, title: "O nascimento da Igreja",                theme: "Igreja",            readings: [{ bookId: "atos",       bookName: "Atos",       chapter: 2  }] },
+  { day: 14, title: "A justificação pela fé",                theme: "Graça",             readings: [{ bookId: "romanos",    bookName: "Romanos",    chapter: 3  }, { bookId: "romanos",    bookName: "Romanos",    chapter: 5  }] },
+  { day: 15, title: "A promessa do novo céu e nova terra",   theme: "Esperança",         readings: [{ bookId: "apocalipse", bookName: "Apocalipse", chapter: 21 }, { bookId: "apocalipse", bookName: "Apocalipse", chapter: 22 }] },
+];
+
+// ──────────────────────────────────────────────────────────────────────────────
 // Catálogo de Planos
 // ──────────────────────────────────────────────────────────────────────────────
 export const READING_PLANS: ReadingPlan[] = [
@@ -198,6 +251,42 @@ export const READING_PLANS: ReadingPlan[] = [
     accentColor: '#10B981',
     icon: '🌿',
     days: generateNT90Days(),
+  },
+  {
+    id: 'paz7',
+    title: 'Salmos & Paz Interior',
+    subtitle: '7 dias',
+    description: 'Versículos de conforto, fé e tranquilidade para momentos de ansiedade. Uma semana de paz com Deus.',
+    duration: 7,
+    xpPerChapter: 25,
+    color: 'from-sky-400 to-blue-600',
+    accentColor: '#0EA5E9',
+    icon: '🕊️',
+    days: PLAN_PAZ_7_DAYS,
+  },
+  {
+    id: 'fe10',
+    title: 'Fé que Move Montanhas',
+    subtitle: '10 dias',
+    description: 'Versículos sobre fé, oração e confiança em Deus. Para quem quer fortalecer a vida de oração.',
+    duration: 10,
+    xpPerChapter: 25,
+    color: 'from-rose-500 to-red-700',
+    accentColor: '#F43F5E',
+    icon: '⛰️',
+    days: PLAN_FE_10_DAYS,
+  },
+  {
+    id: 'inicio15',
+    title: 'Começando com Deus',
+    subtitle: '15 dias',
+    description: 'Um panorama essencial da Bíblia para novos crentes ou quem quer recomeçar. Da criação à promessa eterna.',
+    duration: 15,
+    xpPerChapter: 25,
+    color: 'from-amber-400 to-yellow-600',
+    accentColor: '#F59E0B',
+    icon: '🌱',
+    days: PLAN_INICIO_15_DAYS,
   },
 ];
 
