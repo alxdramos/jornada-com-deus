@@ -72,6 +72,10 @@ export function ReadingPlanModal({ isOpen, onClose, onReadChapter }: ReadingPlan
   }
 
   function goBack() {
+    if (effectiveView === "active") {
+      onClose();
+      return;
+    }
     setView("list");
     setPreviewPlan(null);
   }
@@ -135,7 +139,7 @@ export function ReadingPlanModal({ isOpen, onClose, onReadChapter }: ReadingPlan
                 >
                   {/* ── LISTA ── */}
                   {effectiveView === "list" && (
-                    <div className="p-5 space-y-4">
+                    <div className="p-5 space-y-4 pb-24">
                       <p className="text-sm text-[#6B7280]">
                         Leia a Bíblia com consistência. Ganhe{" "}
                         <span className="font-semibold text-violet-600">+25 XP</span> por capítulo lido.
@@ -187,7 +191,7 @@ export function ReadingPlanModal({ isOpen, onClose, onReadChapter }: ReadingPlan
 
                   {/* ── DETALHE (preview) ── */}
                   {effectiveView === "detail" && previewPlan && (
-                    <div className="p-5 space-y-5">
+                    <div className="p-5 space-y-5 pb-24">
                       {/* Hero */}
                       <div className={cn("rounded-2xl p-5 text-white bg-gradient-to-br", previewPlan.color)}>
                         <div className="text-4xl mb-3">{previewPlan.icon}</div>
@@ -254,7 +258,7 @@ export function ReadingPlanModal({ isOpen, onClose, onReadChapter }: ReadingPlan
 
                   {/* ── PLANO ATIVO ── */}
                   {effectiveView === "active" && currentPlan && activePlan && (
-                    <div className="p-5 space-y-5">
+                    <div className="p-5 space-y-5 pb-24">
                       {/* Progresso geral */}
                       <div className={cn("rounded-2xl p-4 text-white bg-gradient-to-br", currentPlan.color)}>
                         <div className="flex items-center justify-between mb-3">
