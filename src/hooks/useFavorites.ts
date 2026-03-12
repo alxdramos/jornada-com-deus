@@ -9,6 +9,7 @@ const LS_KEY = 'meditation-favorites'
 function getItemType(id: string): string {
   if (id.startsWith('est_')) return 'estudo'
   if (id.startsWith('med_') || id.startsWith('m_')) return 'meditation'
+  if (id.startsWith('dev_')) return 'devocional'
   return 'oracao'
 }
 
