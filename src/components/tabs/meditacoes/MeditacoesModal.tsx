@@ -2,10 +2,12 @@
 
 import { ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MEDITACOES, MeditationCard as MeditationCardType } from "@/data/meditacoes";
+import { MEDITACOES, CARDS_ESCRITURAS, CARDS_NOVO, MeditationCard as MeditationCardType } from "@/data/meditacoes";
 import { MeditationCard } from "../explorar/MeditationCard";
 import { useFavorites } from "@/hooks/useFavorites";
 import { useUserStore } from "@/stores/userStore";
+
+const TODAS_MEDITACOES: MeditationCardType[] = [...MEDITACOES, ...CARDS_ESCRITURAS, ...CARDS_NOVO];
 
 interface MeditacoesModalProps {
   isOpen: boolean;
@@ -40,7 +42,7 @@ export function MeditacoesModal({ isOpen, onClose, onViewDetails }: MeditacoesMo
               <ChevronDown className="w-5 h-5 text-gray-600" />
             </motion.button>
             <h2 className="text-base font-semibold text-[#1F2937]">
-              Todas as Meditações ({MEDITACOES.length})
+              Todas as Meditações ({TODAS_MEDITACOES.length})
             </h2>
             <div className="w-9" />
           </div>
@@ -50,7 +52,7 @@ export function MeditacoesModal({ isOpen, onClose, onViewDetails }: MeditacoesMo
             className="flex-1 overflow-y-auto overscroll-contain p-4 space-y-3"
             style={{ paddingBottom: "max(env(safe-area-inset-bottom), 24px)" }}
           >
-            {MEDITACOES.map((med) => (
+            {TODAS_MEDITACOES.map((med) => (
               <MeditationCard
                 key={med.id}
                 meditation={med}

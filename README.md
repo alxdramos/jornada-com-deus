@@ -248,6 +248,7 @@
 - **Modais "Ver Tudo" fullscreen:** `OracoesModal`, `MeditacoesModal`, `EstudosModal` — `z-[10000]`
   - Lista única scrollável — **paginação removida**
   - Header com ChevronDown para fechar (padrão nativo)
+  - `MeditacoesModal` exibe TODAS as meditações: `MEDITACOES + CARDS_ESCRITURAS + CARDS_NOVO` (inclui itens Plus)
 - **Transições de abas:** AnimatePresence + `motion.div` `key={activeTab}` — fade+slide 200ms ease-out
 - **Tap feedback:** `whileTap={{ scale: 0.88 }}` em botões críticos
 
@@ -582,7 +583,7 @@ npm run lint
 
 ---
 
-## Status MVP — 05/03/2026
+## Status MVP — 12/03/2026
 
 ### ✅ Implementado e em produção
 
@@ -663,6 +664,7 @@ npm run lint
   - Rate limiting 30 req/min por IP (in-memory, 429 + Retry-After)
   - Idempotência por `hotmart_transaction` (anti-replay de eventos duplicados)
   - HMAC-SHA256 opcional via `HOTMART_WEBHOOK_SECRET` (header `X-Hotmart-Signature`)
+  - Helpers (`timingSafeCompare`, `detectPlanInterval`, `calcExpiresAt`) em `utils.ts` separado (testável + compatível Next.js route exports)
 - ✅ Sincronização automática de plan via trigger SQL
 - ✅ `useSubscription` hook com Realtime listener
 
@@ -717,8 +719,11 @@ npm run lint
 - [ ] Publicação na Apple App Store
 
 **Qualidade e Infraestrutura:**
-- [ ] Testes E2E com Playwright (fluxos críticos: login, gamificação, push)
-- [ ] Cobertura de testes unitários para hooks principais
+- ✅ Testes unitários com Vitest — 26 testes do webhook Hotmart passando
+- ✅ Testes E2E com Playwright — auth, paywall, gamificação (estrutura completa)
+- ✅ `playwright.config.ts` configurado para WSL2 (projeto `paywall` com Firefox)
+- [ ] Instalar dependências do sistema no WSL2 para rodar E2E localmente: `sudo apt-get install libnspr4 libnss3 libasound2t64 libatk1.0-0 libatk-bridge2.0-0 libcups2 libxkbcommon0 libgbm1`
+- [ ] Dashboard de progresso espiritual (gráficos semanais/mensais de XP e streak)
 
 ---
 

@@ -7,6 +7,10 @@
 *.key
 *.pem
 
+# Google Cloud Credentials (nunca commitar)
+credentials/
+*.json.key
+
 # Dependencies (AIOS)
 node_modules/
 node_modules
@@ -51,6 +55,11 @@ jornadacomdeus-ce9c0e55fc3e.json
 # Test coverage (generated)
 coverage/
 
+# Playwright
+playwright-report/
+test-results/
+e2e/.auth/
+
 # Local asset folders (generated images, AI output)
 Imagens Paisagem/
 
@@ -62,3 +71,11 @@ Imagens Paisagem/
 
 supabase/.temp
 .vercel
+
+# Internal docs & scripts (não vão para produção)
+AGENTS.md
+VERCEL_SECRETS_TEMPLATE.md
+gerar-videos-veo3.mjs
+
+# Squad configs locais
+squads/

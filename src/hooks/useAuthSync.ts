@@ -13,7 +13,7 @@ type StoreProgress = ReturnType<typeof useProgressStore.getState>['progress'];
 
 // Normaliza uma data qualquer para 'YYYY-MM-DD' (timezone local)
 // Trata o formato antigo bugado "Wed Feb 25" que vinha do String(Date).slice(0,10)
-function normalizeDateStr(raw: string | null): string | null {
+export function normalizeDateStr(raw: string | null): string | null {
   if (!raw) return null;
   // Já está no formato correto
   if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) return raw;
@@ -176,6 +176,14 @@ export function useAuthSync() {
               lastCompletedDate: undefined,
             });
 
+            // Busca flags de onboarding do Supabase também para novos usuários Dexie
+            // (usuário que já completou onboarding em outro dispositivo não deve ver de novo)
+            const { data: newUserProfile } = await supabase
+              .from('profiles')
+              .select('has_completed_onboarding, interests')
+              .eq('id', supabaseUser.id)
+              .maybeSingle();
+
             setUser({
               id: newUserId,
               name,
@@ -186,8 +194,8 @@ export function useAuthSync() {
               subscriptionExpiresAt: null,
               avatar,
               createdAt: new Date(),
-              hasCompletedOnboarding: false,
-              interests: [],
+              hasCompletedOnboarding: newUserProfile?.has_completed_onboarding ?? false,
+              interests: newUserProfile?.interests ?? [],
             });
           }
         } catch (error) {

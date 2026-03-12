@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { createHmac, timingSafeEqual } from 'crypto';
+import { timingSafeCompare, detectPlanInterval, calcExpiresAt, type PlanInterval } from './utils';
 
 // ─── Supabase ────────────────────────────────────────────────────────────────
 
@@ -46,21 +47,6 @@ function checkRateLimit(ip: string): boolean {
 
   entry.count++;
   return true;
-}
-
-// ─── Segurança: comparação timing-safe ───────────────────────────────────────
-
-/** Compara dois strings em tempo constante para evitar timing attacks. */
-function timingSafeCompare(a: string, b: string): boolean {
-  try {
-    const bufA = Buffer.from(a, 'utf8');
-    const bufB = Buffer.from(b, 'utf8');
-    // Buffers de comprimento diferente sempre retornam false, sem leak de tamanho
-    if (bufA.length !== bufB.length) return false;
-    return timingSafeEqual(bufA, bufB);
-  } catch {
-    return false;
-  }
 }
 
 /**
@@ -132,27 +118,6 @@ interface HotmartWebhookPayload {
       status?: string;
     };
   };
-}
-
-type PlanInterval = 'mensal' | 'trimestral' | 'anual';
-
-// ─── Helpers de negócio ───────────────────────────────────────────────────────
-
-function detectPlanInterval(planName?: string): PlanInterval {
-  if (!planName) return 'mensal';
-  const name = planName.toLowerCase();
-  if (name.includes('anual') || name.includes('annual') || name.includes('12')) return 'anual';
-  if (name.includes('trimestral') || name.includes('quarterly') || name.includes('3 mes') || name.includes('3mes')) return 'trimestral';
-  return 'mensal';
-}
-
-function calcExpiresAt(interval: PlanInterval): string {
-  const DAYS: Record<PlanInterval, number> = {
-    mensal: 35,
-    trimestral: 95,
-    anual: 370,
-  };
-  return new Date(Date.now() + DAYS[interval] * 24 * 60 * 60 * 1000).toISOString();
 }
 
 // ─── Handler principal ────────────────────────────────────────────────────────
