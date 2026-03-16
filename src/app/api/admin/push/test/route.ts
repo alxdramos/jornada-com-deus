@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import webpush from 'web-push';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
+import { AdminPushTestBodySchema, zodErrorResponse } from '@/lib/validation/schemas';
 
 function getSupabaseAdmin() {
   return createClient(
@@ -19,17 +20,6 @@ function getWebPush() {
     process.env.VAPID_PRIVATE_KEY!
   );
   return webpush;
-}
-
-interface PushSubscriptionKeys {
-  p256dh: string;
-  auth: string;
-}
-
-interface TestPushBody {
-  subscription: { endpoint: string; keys: PushSubscriptionKeys };
-  title?: string;
-  body?: string;
 }
 
 // POST /api/admin/push/test — envia notificação push somente para o admin (auto-teste)
@@ -54,13 +44,15 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Acesso negado' }, { status: 403 });
   }
 
-  // 3. Ler dados
-  const { subscription, title, body } = await req.json() as TestPushBody;
+  // 3. Validar dados da requisição
+  const rawBody = await req.json();
+  const parsed = AdminPushTestBodySchema.safeParse(rawBody);
 
-  if (!subscription?.endpoint || !subscription?.keys?.p256dh || !subscription?.keys?.auth) {
-    return NextResponse.json({ error: 'Subscription inválida' }, { status: 400 });
+  if (!parsed.success) {
+    return NextResponse.json(zodErrorResponse(parsed.error), { status: 400 });
   }
 
+  const { subscription, title, body } = parsed.data;
   const testTitle = title?.trim() || '🧪 Teste de notificação';
   const testBody = body?.trim() || 'Notificação de teste enviada com sucesso pelo painel admin!';
 

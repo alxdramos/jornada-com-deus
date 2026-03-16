@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
+import { UpdateTicketStatusBodySchema, zodErrorResponse } from '@/lib/validation/schemas';
 
 function getSupabaseAdmin() {
   return createClient(
@@ -10,9 +11,6 @@ function getSupabaseAdmin() {
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
 }
-
-const VALID_STATUSES = ['aberto', 'aguardando', 'resolvido', 'fechado'] as const;
-type TicketStatus = typeof VALID_STATUSES[number];
 
 // PATCH /api/support/tickets/[id]/status — atualizar status (admin only)
 export async function PATCH(
@@ -41,15 +39,14 @@ export async function PATCH(
     }
 
     const { id: ticketId } = await params;
-    const body = await req.json();
-    const { status } = body as { status: TicketStatus };
+    const rawBody = await req.json();
+    const parsed = UpdateTicketStatusBodySchema.safeParse(rawBody);
 
-    if (!VALID_STATUSES.includes(status)) {
-      return NextResponse.json(
-        { error: `Status inválido. Valores aceitos: ${VALID_STATUSES.join(', ')}` },
-        { status: 400 }
-      );
+    if (!parsed.success) {
+      return NextResponse.json(zodErrorResponse(parsed.error), { status: 400 });
     }
+
+    const { status } = parsed.data;
 
     const { data: updated, error } = await admin
       .from('support_tickets')

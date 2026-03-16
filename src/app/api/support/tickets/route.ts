@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
+import { CreateTicketBodySchema, zodErrorResponse } from '@/lib/validation/schemas';
 
 function getSupabaseAdmin() {
   return createClient(
@@ -76,15 +77,14 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
     }
 
-    const body = await req.json();
-    const { subject, category, message } = body;
+    const rawBody = await req.json();
+    const parsed = CreateTicketBodySchema.safeParse(rawBody);
 
-    if (!subject?.trim() || !message?.trim()) {
-      return NextResponse.json(
-        { error: 'Assunto e mensagem são obrigatórios' },
-        { status: 400 }
-      );
+    if (!parsed.success) {
+      return NextResponse.json(zodErrorResponse(parsed.error), { status: 400 });
     }
+
+    const { subject, category, message } = parsed.data;
 
     const admin = getSupabaseAdmin();
 
@@ -103,8 +103,8 @@ export async function POST(req: NextRequest) {
       .from('support_tickets')
       .insert({
         user_id: user.id,
-        subject: subject.trim(),
-        category: category ?? 'outro',
+        subject,
+        category,
         priority,
         status: 'aberto',
         user_name: profile?.name ?? null,
@@ -125,7 +125,7 @@ export async function POST(req: NextRequest) {
       .insert({
         ticket_id: ticket.id,
         sender_type: 'user',
-        message: message.trim(),
+        message,
       });
 
     if (msgError) {

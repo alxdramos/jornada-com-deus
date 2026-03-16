@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import webpush from 'web-push';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
+import { AdminPushBodySchema, zodErrorResponse } from '@/lib/validation/schemas';
 
 function getSupabaseAdmin() {
   return createClient(
@@ -43,12 +44,15 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Acesso negado' }, { status: 403 });
   }
 
-  // 3. Ler título e corpo da requisição
-  const { title, body } = await req.json() as { title: string; body: string };
+  // 3. Validar título e corpo da requisição
+  const rawBody = await req.json();
+  const parsed = AdminPushBodySchema.safeParse(rawBody);
 
-  if (!title?.trim() || !body?.trim()) {
-    return NextResponse.json({ error: 'Título e corpo são obrigatórios' }, { status: 400 });
+  if (!parsed.success) {
+    return NextResponse.json(zodErrorResponse(parsed.error), { status: 400 });
   }
+
+  const { title, body } = parsed.data;
 
   console.log(`[admin/push] Disparo manual por ${user.email} — "${title}"`);
 
@@ -68,8 +72,8 @@ export async function POST(req: NextRequest) {
   }
 
   const payload = JSON.stringify({
-    title: title.trim(),
-    body: body.trim(),
+    title,
+    body,
     icon: '/icon-192x192.png',
     badge: '/icon-192x192.png',
     url: '/',

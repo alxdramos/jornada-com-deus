@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { PushSubscribeBodySchema, PushUnsubscribeBodySchema, zodErrorResponse } from '@/lib/validation/schemas';
 
 function getSupabase() {
   return createClient(
@@ -8,27 +9,17 @@ function getSupabase() {
   );
 }
 
-// Representação serializada de PushSubscription (resultado de .toJSON())
-interface SerializedPushSubscription {
-  endpoint: string;
-  keys: {
-    p256dh: string;
-    auth: string;
-  };
-}
-
 // POST /api/push/subscribe — salva ou atualiza subscription
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-    const { subscription, userId } = body as {
-      subscription: SerializedPushSubscription;
-      userId?: string;
-    };
+    const rawBody = await req.json();
+    const parsed = PushSubscribeBodySchema.safeParse(rawBody);
 
-    if (!subscription?.endpoint || !subscription?.keys?.p256dh || !subscription?.keys?.auth) {
-      return NextResponse.json({ error: 'Subscription inválida' }, { status: 400 });
+    if (!parsed.success) {
+      return NextResponse.json(zodErrorResponse(parsed.error), { status: 400 });
     }
+
+    const { subscription, userId } = parsed.data;
 
     const supabase = getSupabase();
     const { error } = await supabase
@@ -60,11 +51,14 @@ export async function POST(req: NextRequest) {
 // DELETE /api/push/subscribe — remove subscription
 export async function DELETE(req: NextRequest) {
   try {
-    const { endpoint } = await req.json();
+    const rawBody = await req.json();
+    const parsed = PushUnsubscribeBodySchema.safeParse(rawBody);
 
-    if (!endpoint) {
-      return NextResponse.json({ error: 'endpoint obrigatório' }, { status: 400 });
+    if (!parsed.success) {
+      return NextResponse.json(zodErrorResponse(parsed.error), { status: 400 });
     }
+
+    const { endpoint } = parsed.data;
 
     const supabase = getSupabase();
     const { error } = await supabase

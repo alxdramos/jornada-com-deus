@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
+import { AddTicketMessageBodySchema, zodErrorResponse } from '@/lib/validation/schemas';
 
 function getSupabaseAdmin() {
   return createClient(
@@ -82,15 +83,14 @@ export async function POST(
     }
 
     const { id: ticketId } = await params;
-    const { message } = await req.json();
+    const rawBody = await req.json();
+    const parsed = AddTicketMessageBodySchema.safeParse(rawBody);
 
-    if (!message?.trim()) {
-      return NextResponse.json(
-        { error: 'Mensagem não pode estar vazia' },
-        { status: 400 }
-      );
+    if (!parsed.success) {
+      return NextResponse.json(zodErrorResponse(parsed.error), { status: 400 });
     }
 
+    const { message } = parsed.data;
     const admin = getSupabaseAdmin();
 
     // Verificar role do usuário
@@ -126,7 +126,7 @@ export async function POST(
       .insert({
         ticket_id: ticketId,
         sender_type: senderType,
-        message: message.trim(),
+        message,
       })
       .select()
       .single();

@@ -30,11 +30,11 @@ export default defineConfig({
     {
       name: 'setup',
       testMatch: /.*\.setup\.ts/,
-      use: {
-        ...(process.env.WSL_DISTRO_NAME ? {
+      use: process.env.WSL_DISTRO_NAME ? {
+        launchOptions: {
           executablePath: '/mnt/c/Program Files/Google/Chrome/Application/chrome.exe',
-        } : {}),
-      },
+        },
+      } : {},
     },
 
     // Testes autenticados (reutilizam o estado de auth)

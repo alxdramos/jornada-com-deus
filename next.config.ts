@@ -60,6 +60,25 @@ const nextConfig: NextConfig = {
           { key: "Referrer-Policy",              value: "strict-origin-when-cross-origin" },
           { key: "Permissions-Policy",           value: "camera=(), microphone=(), geolocation=()" },
           { key: "Strict-Transport-Security",    value: "max-age=63072000; includeSubDomains; preload" },
+          {
+            key: "Content-Security-Policy",
+            // 'unsafe-inline' em script-src é necessário para o Next.js App Router (hydration inline scripts)
+            // 'unsafe-inline' em style-src é necessário para Tailwind CSS
+            // worker-src blob: é necessário para o Service Worker
+            // wss://*.supabase.co é necessário para o Realtime WebSocket
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-inline' https://browser.sentry-cdn.com https://accounts.google.com",
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+              "font-src 'self' https://fonts.gstatic.com",
+              "img-src 'self' data: blob: https://lh3.googleusercontent.com https://*.r2.dev https://images.unsplash.com",
+              "media-src 'self' https://*.r2.dev blob:",
+              "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.sentry.io https://browser.sentry-cdn.com https://accounts.google.com",
+              "worker-src 'self' blob:",
+              "frame-src https://accounts.google.com",
+              "manifest-src 'self'",
+            ].join("; "),
+          },
         ],
       },
     ];

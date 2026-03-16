@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { createHmac, timingSafeEqual } from 'crypto';
 import { timingSafeCompare, detectPlanInterval, calcExpiresAt, type PlanInterval } from './utils';
+import { HotmartWebhookPayloadSchema } from '@/lib/validation/schemas';
 
 // ─── Supabase ────────────────────────────────────────────────────────────────
 
@@ -82,43 +83,7 @@ const HANDLED_EVENTS = [
 ] as const;
 
 type HotmartEvent = (typeof HANDLED_EVENTS)[number];
-
-interface HotmartWebhookPayload {
-  id: string;
-  creation_date: number;
-  event: string;
-  version: string;
-  data: {
-    product?: {
-      id: string | number;
-      name: string;
-    };
-    purchase?: {
-      transaction: string;
-      order_date?: string;
-      approved_date?: string;
-      status: string;
-      payment?: {
-        value: number;
-        currency_value: string;
-        type: string;
-      };
-    };
-    buyer?: {
-      name: string;
-      email: string;
-    };
-    subscription?: {
-      subscriber?: {
-        code: string;
-      };
-      plan?: {
-        name: string;
-      };
-      status?: string;
-    };
-  };
-}
+type HotmartWebhookPayload = import('@/lib/validation/schemas').HotmartWebhookPayload;
 
 // ─── Handler principal ────────────────────────────────────────────────────────
 
@@ -143,7 +108,12 @@ export async function POST(req: NextRequest) {
 
   try {
     rawBody = await req.text();
-    payload = JSON.parse(rawBody) as HotmartWebhookPayload;
+    const parsed = HotmartWebhookPayloadSchema.safeParse(JSON.parse(rawBody));
+    if (!parsed.success) {
+      console.warn('[hotmart/webhook] Payload inválido:', parsed.error.issues);
+      return NextResponse.json({ error: 'Bad Request' }, { status: 400 });
+    }
+    payload = parsed.data;
   } catch {
     console.warn('[hotmart/webhook] Payload inválido (não é JSON)');
     return NextResponse.json({ error: 'Bad Request' }, { status: 400 });
