@@ -88,7 +88,7 @@ export function ImmersiveContentPlayer({
         className="fixed inset-0 z-[10001] bg-black"
         style={{ paddingTop: "env(safe-area-inset-top)" }}
       >
-        {/* Background com overlay mais escuro para melhor legibilidade */}
+        {/* Background */}
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={
@@ -97,16 +97,7 @@ export function ImmersiveContentPlayer({
               : { background: `linear-gradient(135deg, ${gradientFrom}, ${gradientTo})` }
           }
         >
-          {/* Overlay gradiente: mais escuro no topo e bottom, médio no centro */}
-          <div className="absolute inset-0 bg-black/70" />
-          {imageUrl && (
-            <div
-              className="absolute inset-0"
-              style={{
-                background: `linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.3) 40%, rgba(0,0,0,0.6) 100%)`,
-              }}
-            />
-          )}
+          <div className="absolute inset-0 bg-black/50" />
         </div>
 
         {/* Audio element */}
@@ -249,13 +240,13 @@ export function ImmersiveContentPlayer({
             transition={{ delay: 0.15 }}
             className="flex-1 overflow-y-auto overscroll-contain"
           >
-            {/* Painel escuro atrás do texto para melhor legibilidade */}
-            <div className="bg-black/45 backdrop-blur-sm rounded-2xl px-5 py-4 border border-white/10">
-              <div className="max-w-2xl mx-auto space-y-4">
+            <div className="bg-black/30 backdrop-blur-sm rounded-2xl px-5 py-6 border border-white/10">
+              <div className="max-w-2xl mx-auto">
                 {paragraphs.map((p, i) => (
                   <p
                     key={i}
-                    className="text-[15px] text-white leading-relaxed text-center"
+                    className="text-[16px] text-white/95 leading-[1.9] text-center mb-6 last:mb-0"
+                    style={{ textShadow: "0 1px 4px rgba(0,0,0,0.7)" }}
                   >
                     {p}
                   </p>

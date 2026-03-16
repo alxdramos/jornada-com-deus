@@ -21,7 +21,7 @@ export function PlayerControls({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.4 }}
-      className="flex items-center gap-6 mb-8"
+      className="flex items-center justify-center gap-6 mb-8"
     >
       <button
         onClick={() => onSkip('backward')}
