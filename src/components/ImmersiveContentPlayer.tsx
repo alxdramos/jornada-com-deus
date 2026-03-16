@@ -88,7 +88,7 @@ export function ImmersiveContentPlayer({
         className="fixed inset-0 z-[10001] bg-black"
         style={{ paddingTop: "env(safe-area-inset-top)" }}
       >
-        {/* Background */}
+        {/* Background com overlay mais escuro para melhor legibilidade */}
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={
@@ -97,7 +97,16 @@ export function ImmersiveContentPlayer({
               : { background: `linear-gradient(135deg, ${gradientFrom}, ${gradientTo})` }
           }
         >
-          <div className="absolute inset-0 bg-black/50" />
+          {/* Overlay gradiente: mais escuro no topo e bottom, médio no centro */}
+          <div className="absolute inset-0 bg-black/70" />
+          {imageUrl && (
+            <div
+              className="absolute inset-0"
+              style={{
+                background: `linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.3) 40%, rgba(0,0,0,0.6) 100%)`,
+              }}
+            />
+          )}
         </div>
 
         {/* Audio element */}
@@ -141,21 +150,23 @@ export function ImmersiveContentPlayer({
         </div>
 
         {/* Main content */}
-        <div className="relative z-10 flex flex-col h-[calc(100%-60px)] px-6 pb-6">
-          {/* Title + badges */}
+        <div className="relative z-10 flex flex-col h-[calc(100%-60px)] px-5 pb-4">
+
+          {/* ── SEÇÃO DO PLAYER (topo, sempre visível) ── */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-4"
+            className="shrink-0 mb-4"
           >
+            {/* Title + badges */}
             <h1
-              className="text-2xl font-bold text-white leading-tight mb-2"
-              style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}
+              className="text-xl font-bold text-white leading-tight mb-2"
+              style={{ textShadow: "0 2px 12px rgba(0,0,0,0.9)" }}
             >
               {titulo}
             </h1>
             {badges && badges.length > 0 && (
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2 mb-4">
                 {badges.map((b, i) => (
                   <span
                     key={i}
@@ -169,92 +180,89 @@ export function ImmersiveContentPlayer({
                 ))}
               </div>
             )}
-          </motion.div>
 
-          {/* Scrollable text */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="flex-1 overflow-y-auto overscroll-contain mb-6"
-          >
-            <div className="max-w-2xl mx-auto space-y-4">
-              {paragraphs.map((p, i) => (
-                <p
-                  key={i}
-                  className="text-base text-white/95 leading-relaxed text-center"
-                  style={{ textShadow: "0 1px 3px rgba(0,0,0,0.8)" }}
-                >
-                  {p}
-                </p>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Progress bar */}
-          {audioUrl && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="mb-6"
-            >
-              <div
-                ref={progressRef}
-                onClick={handleProgressClick}
-                className="w-full h-1 bg-white/30 rounded-full cursor-pointer mb-2"
-              >
+            {/* Progress bar */}
+            {audioUrl && (
+              <div className="mb-3">
                 <div
-                  className="h-full bg-gradient-to-r from-[#FB923C] to-[#10B981] rounded-full transition-all"
-                  style={{ width: `${progress}%` }}
+                  ref={progressRef}
+                  onClick={handleProgressClick}
+                  className="w-full h-1.5 bg-white/25 rounded-full cursor-pointer mb-1.5"
+                >
+                  <div
+                    className="h-full bg-gradient-to-r from-[#FB923C] to-[#10B981] rounded-full transition-all"
+                    style={{ width: `${progress}%` }}
+                  />
+                </div>
+                <div className="flex justify-between text-xs text-white/60">
+                  <span>{formatTime(currentTime)}</span>
+                  <span>{formatTime(duration)}</span>
+                </div>
+              </div>
+            )}
+
+            {/* Controles de player */}
+            {audioUrl ? (
+              <>
+                <PlayerControls
+                  playing={playing}
+                  audioLoading={audioLoading}
+                  audioError={audioError}
+                  onTogglePlay={togglePlay}
+                  onSkip={skip}
                 />
-              </div>
-              <div className="flex justify-between text-xs text-white/70">
-                <span>{formatTime(currentTime)}</span>
-                <span>{formatTime(duration)}</span>
-              </div>
-            </motion.div>
-          )}
 
-          {/* Player controls */}
-          {audioUrl ? (
-            <>
-              <PlayerControls
-                playing={playing}
-                audioLoading={audioLoading}
-                audioError={audioError}
-                onTogglePlay={togglePlay}
-                onSkip={skip}
-              />
-
-              <SecondaryControls
-                muted={muted}
-                isFavorite={isFavorite}
-                repeat={repeat}
-                onToggleMute={() => setMuted(!muted)}
-                onToggleFavorite={onToggleFavorite}
-                onToggleRepeat={() => setRepeat(!repeat)}
-                onShare={() =>
-                  share({
-                    title: titulo,
-                    text: `🙏 Ouvi "${titulo}" na Jornada com Deus.\n\nVenha ouvir também!`,
-                  })
-                }
-              />
-
-              <div className="mt-4">
-                <SpeedControls
-                  speeds={speeds}
-                  currentSpeed={speed}
-                  onSpeedChange={setSpeed}
+                <SecondaryControls
+                  muted={muted}
+                  isFavorite={isFavorite}
+                  repeat={repeat}
+                  onToggleMute={() => setMuted(!muted)}
+                  onToggleFavorite={onToggleFavorite}
+                  onToggleRepeat={() => setRepeat(!repeat)}
+                  onShare={() =>
+                    share({
+                      title: titulo,
+                      text: `🙏 Ouvi "${titulo}" na Jornada com Deus.\n\nVenha ouvir também!`,
+                    })
+                  }
                 />
+
+                <div className="mt-3">
+                  <SpeedControls
+                    speeds={speeds}
+                    currentSpeed={speed}
+                    onSpeedChange={setSpeed}
+                  />
+                </div>
+              </>
+            ) : (
+              <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 text-center">
+                <p className="text-white/70 text-sm">Áudio não disponível</p>
               </div>
-            </>
-          ) : (
-            <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 text-center">
-              <p className="text-white/70 text-sm">Áudio não disponível</p>
+            )}
+          </motion.div>
+
+          {/* ── SEÇÃO DE TEXTO (rola abaixo do player) ── */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15 }}
+            className="flex-1 overflow-y-auto overscroll-contain"
+          >
+            {/* Painel escuro atrás do texto para melhor legibilidade */}
+            <div className="bg-black/45 backdrop-blur-sm rounded-2xl px-5 py-4 border border-white/10">
+              <div className="max-w-2xl mx-auto space-y-4">
+                {paragraphs.map((p, i) => (
+                  <p
+                    key={i}
+                    className="text-[15px] text-white leading-relaxed text-center"
+                  >
+                    {p}
+                  </p>
+                ))}
+              </div>
             </div>
-          )}
+          </motion.div>
         </div>
       </motion.div>
     </AnimatePresence>
