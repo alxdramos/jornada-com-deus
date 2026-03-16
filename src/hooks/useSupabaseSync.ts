@@ -7,6 +7,17 @@ import { supabase } from '@/lib/supabase'
 
 type Progress = ReturnType<typeof useProgressStore.getState>['progress']
 
+/** Gera e persiste um device_id único por browser (localStorage). */
+function getDeviceId(): string {
+  const key = 'jornada_device_id'
+  let id = localStorage.getItem(key)
+  if (!id) {
+    id = crypto.randomUUID()
+    localStorage.setItem(key, id)
+  }
+  return id
+}
+
 function debounce<T extends unknown[]>(fn: (...args: T) => void, delay: number) {
   let timer: ReturnType<typeof setTimeout>
   return (...args: T) => {
@@ -15,7 +26,12 @@ function debounce<T extends unknown[]>(fn: (...args: T) => void, delay: number) 
   }
 }
 
-async function pushProgress(userId: string, progress: Progress) {
+async function pushProgress(
+  userId: string,
+  progress: Progress,
+  deviceId: string,
+  version: number,
+) {
   const { error } = await supabase
     .from('user_progress')
     .upsert(
@@ -29,6 +45,8 @@ async function pushProgress(userId: string, progress: Progress) {
         completed_days:      progress.completedDays,
         last_completed_date: progress.lastCompletedDate ?? null,
         completed_dates:     progress.completedDates,
+        device_id:           deviceId,
+        version:             version,
       },
       { onConflict: 'user_id' }
     )
@@ -38,15 +56,22 @@ async function pushProgress(userId: string, progress: Progress) {
 /**
  * useSupabaseSync
  *
- * 1. No login — hidrata progressStore do Supabase (dados mais recentes vencen)
- * 2. Em mudanças do progressStore — push debounced (2s) para user_progress
- * 3. Realtime subscription — atualiza estado local se outro device avançar
+ * 1. No login — hidrata progressStore do Supabase (dados mais recentes vencem)
+ * 2. Em mudanças do progressStore — push debounced (2s) com device_id + version
+ * 3. Realtime subscription — ignora echo (mesmo device_id), aplica só se XP maior
  *
- * Montar uma vez por sessão (AuthSyncWrapper).
+ * A7: device_id evita echo no Realtime; version evita sobrescrever progresso mais recente.
  */
 export function useSupabaseSync() {
   const { user: supabaseUser } = useAuth()
   const hydratedRef = useRef(false)
+  const versionRef  = useRef(0)
+  const deviceIdRef = useRef('')
+
+  // Inicializa device_id no cliente (localStorage não disponível no SSR)
+  useEffect(() => {
+    deviceIdRef.current = getDeviceId()
+  }, [])
 
   // ── 1. Hydrate on login ──────────────────────────────────
   useEffect(() => {
@@ -62,6 +87,9 @@ export function useSupabaseSync() {
 
       if (!data) return
 
+      // Sincroniza version local com o DB (continua a partir do último valor)
+      versionRef.current = (data.version ?? 0) + 1
+
       const local = useProgressStore.getState().progress
 
       const remoteDate = data.last_completed_date
@@ -71,7 +99,6 @@ export function useSupabaseSync() {
         ? new Date(local.lastCompletedDate).getTime()
         : 0
 
-      // Remote vence se tiver mais XP, ou mesma XP mas data mais recente
       const remoteIsNewer =
         data.total_xp > local.totalXp ||
         (data.total_xp === local.totalXp && remoteDate > localDate)
@@ -91,8 +118,7 @@ export function useSupabaseSync() {
         })
         console.log('[SupabaseSync] ✅ Progress hydrated from Supabase')
       } else {
-        // Local é mais novo — push para Supabase sincronizar
-        await pushProgress(supabaseUser.id, local)
+        await pushProgress(supabaseUser.id, local, deviceIdRef.current, versionRef.current++)
         console.log('[SupabaseSync] ✅ Local progress pushed to Supabase')
       }
     }
@@ -105,7 +131,7 @@ export function useSupabaseSync() {
     if (!supabaseUser) return
 
     const debouncedPush = debounce((progress: Progress) => {
-      pushProgress(supabaseUser.id, progress)
+      pushProgress(supabaseUser.id, progress, deviceIdRef.current, versionRef.current++)
     }, 2000)
 
     const unsubscribe = useProgressStore.subscribe((state) => {
@@ -131,9 +157,12 @@ export function useSupabaseSync() {
         },
         (payload) => {
           const d = payload.new as Record<string, unknown>
+
+          // Echo protection: ignora updates originados neste mesmo device
+          if (d.device_id === deviceIdRef.current) return
+
           const local = useProgressStore.getState().progress
 
-          // Só aplica se o remote avançou mais (evita sobrescrever progresso local)
           if ((d.total_xp as number) > local.totalXp) {
             useProgressStore.setState({
               progress: {
@@ -147,7 +176,9 @@ export function useSupabaseSync() {
                 completedDates:    (d.completed_dates as string[]) ?? [],
               },
             })
-            console.log('[SupabaseSync] 🔄 Realtime update applied')
+            // Sincroniza version para evitar writes obsoletos a seguir
+            versionRef.current = ((d.version as number) ?? 0) + 1
+            console.log('[SupabaseSync] 🔄 Realtime update applied from another device')
           }
         }
       )

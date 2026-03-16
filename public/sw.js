@@ -217,6 +217,7 @@ const SYNC_TAGS = [
   'background-sync-prayers',
   'background-sync-journal',
   'sync-progress',
+  'sync-payment-status', // A8: re-fetch subscription ao reconectar
 ];
 
 self.addEventListener('sync', (event) => {
