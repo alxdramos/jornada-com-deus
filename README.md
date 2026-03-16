@@ -719,10 +719,10 @@ npm run lint
 - [ ] Publicação na Apple App Store
 
 **Qualidade e Infraestrutura:**
-- ✅ Testes unitários com Vitest — 26 testes do webhook Hotmart passando
-- ✅ Testes E2E com Playwright — auth, paywall, gamificação (estrutura completa)
-- ✅ `playwright.config.ts` configurado para WSL2 (projeto `paywall` com Firefox)
-- [ ] Instalar dependências do sistema no WSL2 para rodar E2E localmente: `sudo apt-get install libnspr4 libnss3 libasound2t64 libatk1.0-0 libatk-bridge2.0-0 libcups2 libxkbcommon0 libgbm1`
+- ✅ Testes unitários com Vitest — 433 testes passando
+- ✅ Testes E2E com Playwright — 33/33 passando (auth, paywall, gamificação, mobile)
+- ✅ `playwright.config.ts` configurado para WSL2 com `chrome-headless-shell` via `LD_LIBRARY_PATH`
+- ✅ `scripts/setup-playwright-deps.sh` instala libs do sistema sem `sudo` (WSL2)
 - [ ] Dashboard de progresso espiritual (gráficos semanais/mensais de XP e streak)
 
 ---
