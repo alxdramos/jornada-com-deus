@@ -42,7 +42,7 @@ export const MEDITACOES: MeditationCard[] = [
     "tags": [
       "Sono"
     ],
-    "audioUrl": "https://pub-561f3fcecd8945ba90a5b9c1683fac22.r2.dev/.mp3"
+    "audioUrl": ""
   },
   {
     "id": "med_1",

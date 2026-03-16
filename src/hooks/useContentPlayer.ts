@@ -46,6 +46,19 @@ export function useContentPlayer({ audioUrl, isOpen, title }: UseContentPlayerPr
     }
   }, [audioUrl]);
 
+  // ── Fallback: ensure src is set if ref wasn't ready on first render ──
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (audioUrl && audioRef.current && !audioRef.current.src) {
+        setAudioError(false);
+        setAudioLoading(true);
+        audioRef.current.src = resolveAudioUrl(audioUrl);
+        audioRef.current.load();
+      }
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [audioUrl]);
+
   // ── Audio events ──────────────────────────────────────────
   useEffect(() => {
     if (!audioUrl || !audioRef.current) return;
