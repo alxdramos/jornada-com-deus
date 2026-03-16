@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 import { createHmac, timingSafeEqual } from 'crypto';
 import { timingSafeCompare, detectPlanInterval, calcExpiresAt, type PlanInterval } from './utils';
 import { HotmartWebhookPayloadSchema } from '@/lib/validation/schemas';
+import { hotmartWebhookLimiter } from '@/lib/rate-limit';
 
 // ─── Supabase ────────────────────────────────────────────────────────────────
 
@@ -11,43 +12,6 @@ function getSupabase() {
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
-}
-
-// ─── Rate Limiting (in-memory, por IP) ───────────────────────────────────────
-// Sem Redis necessário no Vercel — suficiente para o volume esperado.
-// Em caso de escala horizontal, migrar para Upstash/Redis.
-
-const RATE_LIMIT_WINDOW_MS = 60_000; // janela de 1 minuto
-const RATE_LIMIT_MAX = 30;           // máx. 30 eventos/min por IP
-
-interface RateLimitEntry {
-  count: number;
-  resetAt: number;
-}
-
-const rateLimitMap = new Map<string, RateLimitEntry>();
-
-function checkRateLimit(ip: string): boolean {
-  const now = Date.now();
-
-  // Lazy cleanup: remove entradas expiradas a cada 100 chamadas
-  if (rateLimitMap.size > 100) {
-    for (const [key, entry] of rateLimitMap) {
-      if (now > entry.resetAt) rateLimitMap.delete(key);
-    }
-  }
-
-  const entry = rateLimitMap.get(ip);
-
-  if (!entry || now > entry.resetAt) {
-    rateLimitMap.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
-    return true;
-  }
-
-  if (entry.count >= RATE_LIMIT_MAX) return false;
-
-  entry.count++;
-  return true;
 }
 
 /**
@@ -94,11 +58,20 @@ export async function POST(req: NextRequest) {
     req.headers.get('x-real-ip') ??
     'unknown';
 
-  if (!checkRateLimit(ip)) {
+  const rl = await hotmartWebhookLimiter.check(ip);
+  if (!rl.success) {
     console.warn(`[hotmart/webhook] Rate limit excedido para IP: ${ip}`);
     return NextResponse.json(
       { error: 'Too Many Requests' },
-      { status: 429, headers: { 'Retry-After': '60' } }
+      {
+        status: 429,
+        headers: {
+          'Retry-After': '60',
+          'X-RateLimit-Limit': String(rl.limit),
+          'X-RateLimit-Remaining': '0',
+          'X-RateLimit-Reset': String(Math.ceil(rl.reset / 1000)),
+        },
+      }
     );
   }
 

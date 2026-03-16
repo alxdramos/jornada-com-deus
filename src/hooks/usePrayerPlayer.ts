@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useMediaSession } from "./useMediaSession";
+import { resolveAudioUrl } from "@/lib/cdn";
 
 interface UsePrayerPlayerProps {
   audioUrl?: string;
@@ -30,9 +31,7 @@ export function usePrayerPlayer({
     if (audioUrl && audioRef.current) {
       setAudioError(false);
       setAudioLoading(true);
-      // Usar proxy para evitar problemas de CORS
-      const proxiedUrl = `/api/audio?url=${encodeURIComponent(audioUrl)}`;
-      audioRef.current.src = proxiedUrl;
+      audioRef.current.src = resolveAudioUrl(audioUrl);
       audioRef.current.load();
     }
   }, [audioUrl]);

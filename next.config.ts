@@ -72,7 +72,11 @@ const nextConfig: NextConfig = {
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com",
               "img-src 'self' data: blob: https://lh3.googleusercontent.com https://*.r2.dev https://images.unsplash.com",
-              "media-src 'self' https://*.r2.dev blob:",
+              // media-src: inclui CDN customizado se configurado (NEXT_PUBLIC_AUDIO_CDN_BASE)
+              [
+                "media-src 'self' https://*.r2.dev blob:",
+                process.env.NEXT_PUBLIC_AUDIO_CDN_BASE ?? '',
+              ].filter(Boolean).join(' '),
               "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.sentry.io https://browser.sentry-cdn.com https://accounts.google.com",
               "worker-src 'self' blob:",
               "frame-src https://accounts.google.com",
