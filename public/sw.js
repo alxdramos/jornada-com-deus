@@ -1,7 +1,7 @@
 // Service Worker - Jornada com Deus PWA
 // Estratégias: CacheFirst (assets/R2), NetworkFirst (bible-api), offline fallback
 
-const CACHE_VERSION = 'v2';
+const CACHE_VERSION = 'v3';
 const STATIC_CACHE  = `static-${CACHE_VERSION}`;
 const DYNAMIC_CACHE = `dynamic-${CACHE_VERSION}`;
 const AUDIO_CACHE   = `audio-${CACHE_VERSION}`;
@@ -174,10 +174,15 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // ── Bible API / audio proxy (NetworkFirst 7 dias) ───────────────────────────
+  // ── Audio proxy: NÃO interceptar — Range requests quebram o cache do SW ──────
+  // O áudio usa HTTP Range para streaming parcial; deixar passar direto para rede
+  if (url.pathname.startsWith('/api/audio')) {
+    return; // Passa direto, sem SW
+  }
+
+  // ── Bible API (NetworkFirst 7 dias) ──────────────────────────────────────────
   if (
     url.pathname.startsWith('/api/bible') ||
-    url.pathname.startsWith('/api/audio') ||
     url.hostname.includes('bible-api') ||
     url.hostname.includes('api.bible')
   ) {
