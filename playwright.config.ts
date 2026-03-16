@@ -51,7 +51,7 @@ export default defineConfig({
     // Testes móveis (PWA Android)
     {
       name: 'mobile-android',
-      testIgnore: /paywall\.spec\.ts/,
+      testIgnore: [/paywall\.spec\.ts/, /auth\.unauth\.spec\.ts/],
       use: {
         ...devices['Pixel 5'],
         storageState: 'e2e/.auth/user.json',
@@ -59,11 +59,15 @@ export default defineConfig({
       dependencies: ['setup'],
     },
 
-    // Testes de paywall — não precisam de auth real, usam Firefox (funciona no WSL2)
+    // Testes de paywall — requerem auth para acessar a aba Meditações
     {
       name: 'paywall',
       testMatch: /paywall\.spec\.ts/,
-      use: { ...devices['Desktop Firefox'] },
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: 'e2e/.auth/user.json',
+      },
+      dependencies: ['setup'],
     },
 
     // Testes sem autenticação (login, paywall anônimo)

@@ -6,6 +6,7 @@ export default defineConfig({
     environment: 'happy-dom',
     globals: true,
     setupFiles: [path.resolve(__dirname, './src/test/setup.ts')],
+    exclude: ['**/node_modules/**', '**/dist/**', 'e2e/**', '.aios-core/**/templates/**'],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html'],

@@ -121,7 +121,7 @@ export function PaywallModal({ isOpen, onClose, onUpgrade, feature }: PaywallMod
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/60 z-[9998] backdrop-blur-sm"
+            className="fixed inset-0 bg-black/60 z-[10001] backdrop-blur-sm"
             onClick={onClose}
           />
 
@@ -131,7 +131,7 @@ export function PaywallModal({ isOpen, onClose, onUpgrade, feature }: PaywallMod
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 40 }}
             transition={{ type: "spring", damping: 28, stiffness: 320 }}
-            className="fixed inset-0 z-[9999] flex flex-col bg-white overflow-y-auto"
+            className="fixed inset-0 z-[10002] flex flex-col bg-white overflow-y-auto"
           >
             <div className="w-full max-w-lg mx-auto flex flex-col min-h-full">
               {/* Header com gradiente Premium */}

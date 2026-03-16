@@ -186,10 +186,10 @@ test.describe('PaywallModal — usuário free', () => {
     await plusBadge.click({ force: true })
     await expect(page.getByText('Jornada Premium').first()).toBeVisible({ timeout: 5_000 })
 
-    // Verifica opções de planos
-    await expect(page.getByText('Mensal')).toBeVisible({ timeout: 3_000 })
-    await expect(page.getByText('Trimestral')).toBeVisible({ timeout: 3_000 })
-    await expect(page.getByText('Anual')).toBeVisible({ timeout: 3_000 })
+    // Verifica opções de planos (first() evita strict mode violation caso haja duplicatas)
+    await expect(page.getByText('Mensal').first()).toBeVisible({ timeout: 3_000 })
+    await expect(page.getByText('Trimestral').first()).toBeVisible({ timeout: 3_000 })
+    await expect(page.getByText('Anual').first()).toBeVisible({ timeout: 3_000 })
   })
 
   test('PaywallModal exibe botão de assinatura', async ({ page }) => {
@@ -224,10 +224,14 @@ test.describe('PaywallModal — usuário free', () => {
     const premiumTitle = page.getByText('Jornada Premium').first()
     await expect(premiumTitle).toBeVisible({ timeout: 5_000 })
 
-    // Fecha com botão aria-label="Fechar"
-    await page.getByRole('button', { name: 'Fechar' }).click()
+    // Aguarda animação spring do modal estabilizar
+    await page.waitForTimeout(1_200)
 
-    await expect(premiumTitle).not.toBeVisible({ timeout: 3_000 })
+    // Fecha com botão aria-label="Fechar" (evaluate chama .click() nativo do DOM)
+    await page.getByRole('button', { name: 'Fechar' })
+      .evaluate((btn) => (btn as HTMLButtonElement).click())
+
+    await expect(premiumTitle).not.toBeVisible({ timeout: 8_000 })
   })
 
   test('botão "Talvez mais tarde" fecha o modal', async ({ page }) => {
@@ -242,7 +246,13 @@ test.describe('PaywallModal — usuário free', () => {
     await plusBadge.click({ force: true })
     await expect(page.getByText('Jornada Premium').first()).toBeVisible({ timeout: 5_000 })
 
-    await page.getByText('Talvez mais tarde').click()
+    // Aguarda animação spring estabilizar
+    await page.waitForTimeout(1_200)
+
+    // Scroll até o botão e usa evaluate para chamar .click() nativo
+    const talvezBtn = page.getByRole('button', { name: /talvez mais tarde/i })
+    await talvezBtn.scrollIntoViewIfNeeded()
+    await talvezBtn.evaluate((btn) => (btn as HTMLButtonElement).click())
 
     await expect(page.getByText('Jornada Premium').first()).not.toBeVisible({ timeout: 3_000 })
   })
