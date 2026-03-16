@@ -82,7 +82,9 @@
 | Serviço | Uso |
 |---|---|
 | **Supabase Cloud** | Database, Auth, Realtime, Storage |
-| **Cloudflare R2** | CDN de áudios MP3 (meditações, orações, estudos) |
+| **Cloudflare R2** | Armazenamento dos áudios MP3 (meditações, orações, estudos) |
+| **Cloudflare Workers** | CDN de áudio (`workers/audio-cdn.js`) — opcional, ativa via `NEXT_PUBLIC_AUDIO_CDN_BASE` |
+| **Upstash Redis** | Rate limiting distribuído (persiste entre deploys) — ativa via `UPSTASH_REDIS_REST_URL` |
 | **bible-api.com** | Bíblia Almeida Corrigida Fiel (online-only) |
 | **Unsplash** | Imagens hero nas telas de login/cadastro |
 | **Google OAuth** | Login social |
@@ -182,11 +184,13 @@
 - `lang="pt-BR"` declarado no `<html>`, semântica HTML correta (`button`, `input`, `label`)
 - VoiceOver (iOS/Safari) e TalkBack (Android/Chrome) verificados
 
-### Conteúdo em Áudio (Cloudflare R2)
+### Conteúdo em Áudio (Cloudflare R2 + CDN)
 - 28 meditações guiadas com áudio
 - 31 estudos bíblicos com áudio
 - 47 orações com áudio
-- Proxy CORS em `/api/audio` para todas as URLs R2
+- Proxy `/api/audio` com **HTTP Range requests** (seeking/streaming real sem re-download)
+- `src/lib/cdn.ts` — `resolveAudioUrl()` usa CDN customizado se `NEXT_PUBLIC_AUDIO_CDN_BASE` estiver configurado, fallback automático para o proxy
+- `workers/audio-cdn.js` — Cloudflare Worker pronto para deploy (roteia por prefixo `Med_/Ora_/Est_/Dev_` ao bucket R2 correto)
 
 ### Players de Áudio — MediaSession API (lock screen + background)
 - **`useMediaSession.ts`** — hook reutilizável para todos os players
@@ -538,6 +542,15 @@ VAPID_EMAIL="mailto:contato@minhajornadadiaria.com.br"
 HOTMART_HOTTOK="..."                                    # Token de validação de webhooks (Dashboard Hotmart)
 NEXT_PUBLIC_HOTMART_CHECKOUT_URL="https://pay.hotmart.com/..."   # Link do produto para checkout
 HOTMART_WEBHOOK_SECRET="..."                            # Secret HMAC opcional — camada extra de segurança (X-Hotmart-Signature)
+
+# Upstash Redis — rate limiting distribuído (recomendado em produção)
+UPSTASH_REDIS_REST_URL="https://xxx.upstash.io"         # console.upstash.com → Create Database
+UPSTASH_REDIS_REST_TOKEN="..."
+# Sem essas vars, usa fallback in-memory (funciona, mas reinicia a cada deploy)
+
+# CDN de áudio — opcional (melhora latência e elimina custo de banda no Vercel)
+NEXT_PUBLIC_AUDIO_CDN_BASE="https://audio.minhajornadadiaria.com.br"
+# Requer deploy de workers/audio-cdn.js no Cloudflare Workers com custom domain
 ```
 
 Gerar chaves VAPID:
@@ -583,7 +596,7 @@ npm run lint
 
 ---
 
-## Status MVP — 12/03/2026
+## Status MVP — 16/03/2026
 
 ### ✅ Implementado e em produção
 
@@ -661,7 +674,7 @@ npm run lint
 - ✅ PaywallModal com 3 planos (mensal/trimestral/anual) + checkout Hotmart
 - ✅ Webhook handler `/api/webhooks/hotmart` — segurança em 3 camadas:
   - HOTTOK com `timingSafeEqual` (anti timing-attack)
-  - Rate limiting 30 req/min por IP (in-memory, 429 + Retry-After)
+  - Rate limiting 30 req/min por IP — **Upstash Redis distribuído** (persiste entre deploys/instâncias) com fallback in-memory gracioso
   - Idempotência por `hotmart_transaction` (anti-replay de eventos duplicados)
   - HMAC-SHA256 opcional via `HOTMART_WEBHOOK_SECRET` (header `X-Hotmart-Signature`)
   - Helpers (`timingSafeCompare`, `detectPlanInterval`, `calcExpiresAt`) em `utils.ts` separado (testável + compatível Next.js route exports)
