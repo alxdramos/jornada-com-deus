@@ -1,24 +1,27 @@
 "use client";
 
 import { Suspense, useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import { AnimatePresence, motion } from "framer-motion";
 import { useSearchParams } from "next/navigation";
 import { useTabStore, type TabId } from "@/stores/tabStore";
 import { createTabVariants } from "@/lib/animations";
-import { TabHoje } from "@/components/tabs/TabHoje";
-import { TabExplorar } from "@/components/tabs/TabExplorar";
-import { TabBiblia } from "@/components/tabs/TabBiblia";
-import { TabOracoes } from "@/components/tabs/TabOracoes";
-import { TabMeditacoes } from "@/components/tabs/TabMeditacoes";
-import { TabEstudos } from "@/components/tabs/TabEstudos";
-import { TabDiario } from "@/components/tabs/TabDiario";
-import { TabDevocional } from "@/components/tabs/TabDevocional";
-import { TabKids } from "@/components/tabs/TabKids";
+import { TabLoadingSkeleton } from "@/components/ui/Skeleton";
 import { BottomNav } from "@/components/BottomNav";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { InstallPromptModal } from "@/components/InstallPromptModal";
 import { useInstallPrompt } from "@/hooks/useInstallPrompt";
 import { useSyncManager } from "@/hooks/useSyncManager";
+
+const TabHoje      = dynamic(() => import("@/components/tabs/TabHoje").then(m => ({ default: m.TabHoje })),       { loading: () => <TabLoadingSkeleton />, ssr: false });
+const TabExplorar  = dynamic(() => import("@/components/tabs/TabExplorar").then(m => ({ default: m.TabExplorar })), { loading: () => <TabLoadingSkeleton />, ssr: false });
+const TabBiblia    = dynamic(() => import("@/components/tabs/TabBiblia").then(m => ({ default: m.TabBiblia })),    { loading: () => <TabLoadingSkeleton />, ssr: false });
+const TabOracoes   = dynamic(() => import("@/components/tabs/TabOracoes").then(m => ({ default: m.TabOracoes })),  { loading: () => <TabLoadingSkeleton />, ssr: false });
+const TabMeditacoes= dynamic(() => import("@/components/tabs/TabMeditacoes").then(m => ({ default: m.TabMeditacoes })), { loading: () => <TabLoadingSkeleton />, ssr: false });
+const TabEstudos   = dynamic(() => import("@/components/tabs/TabEstudos").then(m => ({ default: m.TabEstudos })),  { loading: () => <TabLoadingSkeleton />, ssr: false });
+const TabDiario    = dynamic(() => import("@/components/tabs/TabDiario").then(m => ({ default: m.TabDiario })),    { loading: () => <TabLoadingSkeleton />, ssr: false });
+const TabDevocional= dynamic(() => import("@/components/tabs/TabDevocional").then(m => ({ default: m.TabDevocional })), { loading: () => <TabLoadingSkeleton />, ssr: false });
+const TabKids      = dynamic(() => import("@/components/tabs/TabKids").then(m => ({ default: m.TabKids })),        { loading: () => <TabLoadingSkeleton />, ssr: false });
 
 function renderTab(tab: TabId) {
   switch (tab) {

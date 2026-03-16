@@ -102,6 +102,24 @@ export function StudyCardSkeleton() {
   );
 }
 
+export function TabLoadingSkeleton() {
+  return (
+    <div className="px-4 pt-4 pb-24 space-y-4">
+      <Skeleton className="h-7 w-40" />
+      <div className="grid grid-cols-2 gap-3">
+        <ImageCardSkeleton />
+        <ImageCardSkeleton />
+        <ImageCardSkeleton />
+        <ImageCardSkeleton />
+      </div>
+      <div className="space-y-3 mt-2">
+        <CardSkeleton />
+        <CardSkeleton />
+      </div>
+    </div>
+  );
+}
+
 export function BibleBookSkeleton() {
   return (
     <div className="bg-white rounded-2xl px-4 py-4 shadow-sm">
