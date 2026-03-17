@@ -15,6 +15,7 @@ const mocks = vi.hoisted(() => ({
 }))
 
 vi.mock('@/stores/progressStore', () => ({
+  XP_PER_DAY: 100,
   useProgressStore: Object.assign(
     vi.fn(() => ({
       completeDay: mocks.completeDay,
