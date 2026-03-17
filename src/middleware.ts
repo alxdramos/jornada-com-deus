@@ -1,11 +1,19 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
+import type { CookieOptions } from '@supabase/ssr';
 
 const protectedRoutes = ['/', '/explorar', '/biblia', '/oracoes', '/meditacoes', '/diario', '/perfil', '/admin'];
 const authRoutes = ['/login', '/cadastro'];
 // Rotas públicas que nunca devem ser bloqueadas pelo middleware
 const publicRoutes = ['/auth/callback'];
+
+type PendingCookie = { name: string; value: string; options: CookieOptions };
+
+/** Aplica cookies de rotação de token a qualquer NextResponse (incluindo redirects). */
+function applyPendingCookies(res: NextResponse, cookies: PendingCookie[]) {
+  cookies.forEach(({ name, value, options }) => res.cookies.set(name, value, options));
+}
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -30,6 +38,11 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // Rastreia cookies que o Supabase quer escrever (token rotation).
+  // Precisamos propagá-los para qualquer tipo de response, incluindo redirects —
+  // caso contrário, o token rotacionado é perdido quando há redirect.
+  const pendingCookies: PendingCookie[] = [];
+
   const response = NextResponse.next({
     request: { headers: request.headers },
   });
@@ -43,9 +56,11 @@ export async function middleware(request: NextRequest) {
           return request.cookies.getAll();
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value }) =>
-            request.cookies.set(name, value)
-          );
+          // Acumula para propagação em qualquer response (normal ou redirect)
+          cookiesToSet.forEach((cookie) => pendingCookies.push(cookie));
+          // Atualiza request para middleware downstream
+          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
+          // Aplica na response normal (navegação sem redirect)
           cookiesToSet.forEach(({ name, value, options }) =>
             response.cookies.set(name, value, options)
           );
@@ -53,6 +68,8 @@ export async function middleware(request: NextRequest) {
       },
     });
 
+    // getUser() valida o token com o servidor Supabase e dispara refresh quando expirado.
+    // Os novos access_token + refresh_token são gravados via setAll acima.
     const { data } = await supabase.auth.getUser();
     user = data.user;
   } catch (err) {
@@ -70,11 +87,16 @@ export async function middleware(request: NextRequest) {
   if (!user && isProtected) {
     const loginUrl = new URL('/login', request.url);
     loginUrl.searchParams.set('redirect', pathname);
-    return NextResponse.redirect(loginUrl);
+    const redirectResponse = NextResponse.redirect(loginUrl);
+    // Propaga tokens rotacionados para o browser mesmo no redirect
+    applyPendingCookies(redirectResponse, pendingCookies);
+    return redirectResponse;
   }
 
   if (user && isAuthRoute) {
-    return NextResponse.redirect(new URL('/', request.url));
+    const redirectResponse = NextResponse.redirect(new URL('/', request.url));
+    applyPendingCookies(redirectResponse, pendingCookies);
+    return redirectResponse;
   }
 
   return response;
