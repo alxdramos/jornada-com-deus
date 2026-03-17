@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { useAnalytics } from "@/hooks/useAnalytics";
 import {
   X,
   Crown,
@@ -99,6 +100,11 @@ export function PaywallModal({ isOpen, onClose, onUpgrade, feature }: PaywallMod
   const [planoSelecionado, setPlanoSelecionado] = useState<PlanoId>("trimestral");
   const [checkoutOpened, setCheckoutOpened] = useState(false);
   const prefersReducedMotion = useReducedMotion();
+  const { trackPaywallShown, trackPurchaseClicked } = useAnalytics();
+
+  useEffect(() => {
+    if (isOpen) trackPaywallShown(feature);
+  }, [isOpen]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleUpgrade = () => {
     if (checkoutOpened) return;
@@ -107,6 +113,7 @@ export function PaywallModal({ isOpen, onClose, onUpgrade, feature }: PaywallMod
       console.warn("[PaywallModal] URL de checkout não configurada para o plano:", planoSelecionado);
       return;
     }
+    trackPurchaseClicked(planoSelecionado);
     setCheckoutOpened(true);
     window.open(url, "_blank", "noopener,noreferrer");
     onUpgrade?.();

@@ -1,5 +1,7 @@
+import { useEffect } from "react";
 import { useImageFallback } from "@/hooks/useImageFallback";
 import { ImmersiveContentPlayer } from "@/components/ImmersiveContentPlayer";
+import { useAnalytics } from "@/hooks/useAnalytics";
 
 interface Prayer {
   id: string;
@@ -37,6 +39,11 @@ export function PrayerDetailModalWithPlayer({
     filename: prayer?.imagem?.background,
     category: prayer?.category,
   });
+  const { trackPrayerStarted } = useAnalytics();
+
+  useEffect(() => {
+    if (prayer) trackPrayerStarted(prayer.id, prayer.title);
+  }, [prayer?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!prayer) return null;
 

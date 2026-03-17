@@ -1,5 +1,7 @@
+import { useEffect } from "react";
 import { ImmersiveContentPlayer } from "@/components/ImmersiveContentPlayer";
 import { MeditationCard as MeditationCardType } from "@/data/meditacoes";
+import { useAnalytics } from "@/hooks/useAnalytics";
 
 interface MeditationDetailModalWithPlayerProps {
   meditation: MeditationCardType | null;
@@ -14,6 +16,12 @@ export function MeditationDetailModalWithPlayer({
   onClose,
   onToggleFavorite,
 }: MeditationDetailModalWithPlayerProps) {
+  const { trackMeditationStarted } = useAnalytics();
+
+  useEffect(() => {
+    if (meditation) trackMeditationStarted(meditation.id, meditation.title);
+  }, [meditation?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+
   if (!meditation) return null;
 
   const badges = [

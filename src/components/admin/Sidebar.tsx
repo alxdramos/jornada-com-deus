@@ -2,13 +2,14 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, Users, CreditCard, ArrowLeft, Sprout, MessageSquare } from 'lucide-react'
+import { LayoutDashboard, Users, CreditCard, ArrowLeft, Sprout, MessageSquare, BarChart2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const navItems = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard, exact: true },
   { href: '/admin/usuarios', label: 'Usuários', icon: Users, exact: false },
   { href: '/admin/assinaturas', label: 'Assinaturas', icon: CreditCard, exact: false },
+  { href: '/admin/analytics', label: 'Analytics', icon: BarChart2, exact: false },
   { href: '/admin/suporte', label: 'Suporte', icon: MessageSquare, exact: false },
 ]
 
