@@ -13,6 +13,7 @@ import { useSubscription } from '@/hooks/useSubscription';
 import { useFavorites } from '@/hooks/useFavorites';
 import { ImageCardSkeleton } from '@/components/ui/Skeleton';
 import { Music } from 'lucide-react';
+import { EmptyFilteredContent } from '@/components/EmptyStates';
 
 export function TabMeditacoes() {
   const { isPlusUser: isPlus } = useSubscription();
@@ -74,10 +75,11 @@ export function TabMeditacoes() {
           <ContentSection
             title="Meditações"
             onViewAll={() => setShowAllModal(true)}
-            emptyState="Nenhuma meditação encontrada com esses filtros"
           >
             {!hydrated
               ? [1, 2, 3, 4].map((i) => <ImageCardSkeleton key={i} />)
+              : meditacoesFiltradas.length === 0 && chipAtivo !== "TUDO"
+              ? <EmptyFilteredContent category={chipAtivo} />
               : iniciais.map((meditacao) => (
                   <MeditationCard
                     key={meditacao.id}

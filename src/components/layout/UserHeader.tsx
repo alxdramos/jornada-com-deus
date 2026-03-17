@@ -4,9 +4,11 @@ import { ReactNode, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useUserStore } from "@/stores/userStore";
 import { ProfileModal } from "@/components/ProfileModal";
+import { GlobalSearchModal } from "@/components/GlobalSearchModal";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { useDarkMode } from "@/hooks/useDarkMode";
-import { Sun, Moon } from "lucide-react";
+import { useSearchStore } from "@/hooks/useGlobalSearch";
+import { Sun, Moon, Search } from "lucide-react";
 import Image from "next/image";
 
 interface UserHeaderProps {
@@ -21,6 +23,7 @@ export function UserHeader({ title, subtitleElement, rightElement }: UserHeaderP
   const { user: authUser, loading } = useAuth();
   const user = useUserStore((s) => s.user);
   const { isDark, toggle, mounted } = useDarkMode();
+  const openSearch = useSearchStore((s) => s.open);
 
   const displayName = user?.name || authUser?.user_metadata?.full_name || "Visitante";
   const avatarUrl = authUser?.user_metadata?.avatar_url;
@@ -73,6 +76,15 @@ export function UserHeader({ title, subtitleElement, rightElement }: UserHeaderP
         <div className="flex items-center gap-2">
           {rightElement}
 
+          {/* Global search button */}
+          <button
+            onClick={openSearch}
+            aria-label="Abrir busca global (Cmd+K)"
+            className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-violet-100 dark:hover:bg-violet-900/20 transition-colors text-text-secondary hover:text-violet-600 dark:hover:text-violet-400"
+          >
+            <Search className="w-5 h-5" />
+          </button>
+
           {/* Dark mode toggle — ícones Lucide, sem emojis */}
           {mounted && (
             <button
@@ -91,6 +103,7 @@ export function UserHeader({ title, subtitleElement, rightElement }: UserHeaderP
       </div>
 
       <ProfileModal isOpen={profileOpen} onClose={() => setProfileOpen(false)} />
+      <GlobalSearchModal />
     </>
   );
 }

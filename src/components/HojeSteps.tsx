@@ -11,6 +11,7 @@ import { DEVOCIONAL_FIXO } from "@/data/hojeSteps";
 import { ImmersiveAudioPlayer } from "./ImmersiveAudioPlayer";
 import { ExpandableStepCard } from "./hoje/ExpandableStepCard";
 import { DevocionalReadModal } from "./hoje/DevocionalReadModal";
+import { DayCompletionModal, MilestoneModal } from "./gamification";
 import { getVersiculoDoDia } from "@/data/versiculos";
 import { getPassagemDoDia } from "@/data/passagens-diarias";
 import { getOracaoDoDia } from "@/data/oracoes-diarias";
@@ -26,7 +27,12 @@ export function HojeSteps() {
     toggleExpandido,
     setPlayerAberto,
     setLerAberto,
-    handleConcluirDia
+    handleConcluirDia,
+    showDayCompletion,
+    showMilestone,
+    celebrationData,
+    handleDayCompletionClose,
+    handleMilestoneClose,
   } = useHojeSteps();
 
   const user = useUserStore((s) => s.user);
@@ -243,6 +249,27 @@ export function HojeSteps() {
         isOpen={lerAberto}
         onClose={() => setLerAberto(false)}
       />
+
+      {/* Modais de celebração */}
+      {celebrationData && (
+        <DayCompletionModal
+          isOpen={showDayCompletion}
+          onClose={handleDayCompletionClose}
+          xpGained={celebrationData.xpGained}
+          newStreak={celebrationData.newStreak}
+          newLevel={celebrationData.newLevel}
+          previousLevel={celebrationData.previousLevel}
+        />
+      )}
+
+      {celebrationData?.leveledUp && (
+        <MilestoneModal
+          isOpen={showMilestone}
+          onClose={handleMilestoneClose}
+          newLevel={celebrationData.newLevel}
+          treeStageName={celebrationData.treeStageName}
+        />
+      )}
     </>
   );
 }

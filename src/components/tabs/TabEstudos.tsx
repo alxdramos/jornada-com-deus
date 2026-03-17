@@ -13,6 +13,7 @@ import { useSubscription } from '@/hooks/useSubscription';
 import { useFavorites } from '@/hooks/useFavorites';
 import { StudyCardSkeleton } from '@/components/ui/Skeleton';
 import { BookOpen } from 'lucide-react';
+import { EmptyFilteredContent } from '@/components/EmptyStates';
 
 export function TabEstudos() {
   const { isPlusUser: isPlus } = useSubscription();
@@ -74,10 +75,11 @@ export function TabEstudos() {
           <ContentSection
             title="Estudos Bíblicos"
             onViewAll={() => setShowAllModal(true)}
-            emptyState="Nenhum estudo encontrado com esses filtros"
           >
             {!hydrated
               ? [1, 2, 3, 4].map((i) => <StudyCardSkeleton key={i} />)
+              : estudosFiltrados.length === 0 && chipAtivo !== "TUDO"
+              ? <EmptyFilteredContent category={chipAtivo} />
               : iniciais.map((estudo) => (
                   <EstudoCard
                     key={estudo.id}

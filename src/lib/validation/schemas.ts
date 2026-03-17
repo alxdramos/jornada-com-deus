@@ -90,6 +90,15 @@ export const HotmartWebhookPayloadSchema = z.object({
 
 export type HotmartWebhookPayload = z.infer<typeof HotmartWebhookPayloadSchema>;
 
+// ─── Search ───────────────────────────────────────────────────────────────────
+
+export const searchQuerySchema = z.object({
+  q: z.string().min(2, 'A busca precisa de pelo menos 2 caracteres').max(100),
+  limit: z.coerce.number().min(1).max(50).optional().default(20),
+});
+
+export type SearchQuery = z.infer<typeof searchQuerySchema>;
+
 // ─── Helper: resposta padronizada de erro de validação ────────────────────────
 
 export function zodErrorResponse(error: z.ZodError) {

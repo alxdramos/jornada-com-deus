@@ -12,6 +12,7 @@ import { PaywallModal } from "@/components/PaywallModal";
 import { useSubscription } from "@/hooks/useSubscription";
 import { ImageCardSkeleton } from "@/components/ui/Skeleton";
 import { Bird } from "lucide-react";
+import { EmptyFilteredContent } from "@/components/EmptyStates";
 
 export function TabOracoes() {
   const { isPlusUser: isPlus } = useSubscription();
@@ -97,6 +98,8 @@ export function TabOracoes() {
           >
             {!hydrated
               ? [1, 2, 3, 4].map((i) => <ImageCardSkeleton key={i} />)
+              : oracoesFiltradas.length === 0 && chipAtivo !== "TUDO"
+              ? <EmptyFilteredContent category={chipAtivo} />
               : inicialOracoes.map((oracao) => (
                   <PrayerCard
                     key={oracao.id}

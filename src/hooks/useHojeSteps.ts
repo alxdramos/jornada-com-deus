@@ -1,8 +1,18 @@
 import { useState, useEffect } from "react";
 import { EtapaId } from "@/data/hojeSteps";
-import { useProgressStore } from "@/stores/progressStore";
+import { useProgressStore, XP_PER_DAY } from "@/stores/progressStore";
+import { TREE_STAGES } from "@/components/TreeGrowthVisual";
 import { useToast } from "@/hooks/useToast";
 import { useHaptics } from "@/hooks/useHaptics";
+
+export interface CelebrationData {
+  xpGained: number;
+  newStreak: number;
+  newLevel: number;
+  previousLevel: number;
+  leveledUp: boolean;
+  treeStageName?: string;
+}
 
 const ALL_STEPS: EtapaId[] = ["versiculo", "passagem", "devocional", "oracao"];
 
@@ -20,6 +30,9 @@ export function useHojeSteps() {
   const [expandido, setExpandido] = useState<EtapaId | null>(null);
   const [playerAberto, setPlayerAberto] = useState(false);
   const [lerAberto, setLerAberto] = useState(false);
+  const [showDayCompletion, setShowDayCompletion] = useState(false);
+  const [showMilestone, setShowMilestone] = useState(false);
+  const [celebrationData, setCelebrationData] = useState<CelebrationData | null>(null);
 
   // Sincroniza quando Zustand termina de hidratar do localStorage
   // (useState inicializa antes da hidratação; useEffect corrige depois)
@@ -63,12 +76,39 @@ export function useHojeSteps() {
     const leveledUp = newProgress.level > prevLevel;
     const treeEvolved = newProgress.treeLevel > prevTreeLevel;
 
+    // Montar dados de celebração
+    const treeStageName = treeEvolved
+      ? TREE_STAGES[newProgress.treeLevel]?.name
+      : undefined;
+
+    setCelebrationData({
+      xpGained: XP_PER_DAY,
+      newStreak: newProgress.currentStreak,
+      newLevel: newProgress.level,
+      previousLevel: prevLevel,
+      leveledUp,
+      treeStageName,
+    });
+    setShowDayCompletion(true);
+
     // Feedback háptico em cascata
     vibrateDayComplete();
     if (treeEvolved) setTimeout(() => vibrateTreeEvolve(), 400);
     else if (leveledUp) setTimeout(() => vibrateLevelUp(), 300);
 
     dayCompleted();
+  };
+
+  const handleDayCompletionClose = () => {
+    setShowDayCompletion(false);
+    // Se subiu de nível, encadeia o MilestoneModal
+    if (celebrationData?.leveledUp) {
+      setTimeout(() => setShowMilestone(true), 300);
+    }
+  };
+
+  const handleMilestoneClose = () => {
+    setShowMilestone(false);
   };
 
   return {
@@ -82,5 +122,10 @@ export function useHojeSteps() {
     setPlayerAberto,
     setLerAberto,
     handleConcluirDia,
+    showDayCompletion,
+    showMilestone,
+    celebrationData,
+    handleDayCompletionClose,
+    handleMilestoneClose,
   };
 }
