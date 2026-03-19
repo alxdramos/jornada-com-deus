@@ -7,6 +7,7 @@ import { ServiceWorkerRegistration } from "@/components/ServiceWorkerRegistratio
 import { Toaster } from "sonner";
 import { SessionProvider } from "@/components/providers/SessionProvider";
 import { AuthSyncWrapper } from "@/components/AuthSyncWrapper";
+import { WebVitals } from "@/components/WebVitals";
 
 // Lora — headings elegantes com serifa espiritual
 const lora = Lora({
@@ -116,6 +117,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <body className={`${lora.variable} ${raleway.variable} font-sans antialiased bg-background text-foreground`}>
+        <WebVitals />
         <Suspense fallback={
           <div className="w-screen h-screen flex flex-col items-center justify-center bg-background gap-4">
             <div className="w-12 h-12 rounded-full border-4 border-amber-500 border-t-transparent animate-spin" />
