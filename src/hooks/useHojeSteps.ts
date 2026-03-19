@@ -91,6 +91,15 @@ export function useHojeSteps() {
     });
     setShowDayCompletion(true);
 
+    // Disparar push de celebração de nível (fire-and-forget)
+    if (leveledUp && newProgress.level > 0) {
+      fetch('/api/push/level-up', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ newLevel: newProgress.level }),
+      }).catch(() => {/* silencioso — push é opcional */});
+    }
+
     // Feedback háptico em cascata
     vibrateDayComplete();
     if (treeEvolved) setTimeout(() => vibrateTreeEvolve(), 400);

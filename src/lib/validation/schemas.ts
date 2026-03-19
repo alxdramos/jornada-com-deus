@@ -90,6 +90,12 @@ export const HotmartWebhookPayloadSchema = z.object({
 
 export type HotmartWebhookPayload = z.infer<typeof HotmartWebhookPayloadSchema>;
 
+// ─── Push Level-Up ────────────────────────────────────────────────────────────
+
+export const LevelUpPushBodySchema = z.object({
+  newLevel: z.number().int().min(1).max(10),
+});
+
 // ─── Search ───────────────────────────────────────────────────────────────────
 
 export const searchQuerySchema = z.object({

@@ -4,7 +4,7 @@ import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronRight } from 'lucide-react';
 import { usePushNotifications } from '@/hooks/usePushNotifications';
-import { useUserStore } from '@/stores/userStore';
+import { supabase } from '@/lib/supabase';
 import { SlideWelcome } from './SlideWelcome';
 import { SlideFeatures } from './SlideFeatures';
 import { SlideNotifications } from './SlideNotifications';
@@ -30,7 +30,6 @@ export function OnboardingFlow() {
   const [direction, setDirection] = useState(1);
   const [interests, setInterests] = useState<string[]>([]);
 
-  const user = useUserStore((s) => s.user);
   const { handleComplete, isCompleting } = useOnboarding();
   const { permission, subscribe, isLoading: notifLoading } = usePushNotifications();
 
@@ -40,9 +39,10 @@ export function OnboardingFlow() {
   }, []);
 
   const handleNotifEnable = useCallback(async () => {
-    await subscribe(user?.email);
+    const { data: { user: authUser } } = await supabase.auth.getUser();
+    await subscribe(authUser?.id);
     goNext();
-  }, [subscribe, user, goNext]);
+  }, [subscribe, goNext]);
 
   const handleNotifSkip = useCallback(() => {
     goNext();

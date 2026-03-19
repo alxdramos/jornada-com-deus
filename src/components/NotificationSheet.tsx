@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import { usePushNotifications } from '@/hooks/usePushNotifications';
-import { useUserStore } from '@/stores/userStore';
 import { toast } from 'sonner';
+import { supabase } from '@/lib/supabase';
 
 interface NotificationSheetProps {
   isOpen: boolean;
@@ -13,7 +13,6 @@ interface NotificationSheetProps {
 export function NotificationSheet({ isOpen, onClose }: NotificationSheetProps) {
   const { permission, isSubscribed, isLoading, subscribe, unsubscribe, isSupported } =
     usePushNotifications();
-  const user = useUserStore((s) => s.user);
   const [toggling, setToggling] = useState(false);
 
   const handleToggle = async () => {
@@ -24,7 +23,8 @@ export function NotificationSheet({ isOpen, onClose }: NotificationSheetProps) {
         if (ok) toast.success('Notificações desativadas');
         else toast.error('Erro ao desativar. Tente novamente.');
       } else {
-        const ok = await subscribe(user?.id?.toString());
+        const { data: { user: authUser } } = await supabase.auth.getUser();
+        const ok = await subscribe(authUser?.id);
         if (ok) {
           toast.success('Notificações ativadas! Você receberá lembretes diários às 7h 🌅');
         } else if (permission === 'denied') {

@@ -52,22 +52,16 @@ const AFTERNOON_MESSAGES: PushMessage[] = [
   { title: 'Meio do dia com Deus ☀️', body: 'Uma pausa espiritual agora é o melhor presente que você pode se dar.', url: '/?tab=meditacoes', tag: 'daily-afternoon' },
 ];
 
-// Mensagens da noite (cron 23h UTC = 20h Brasília) — abre Orações
+// Mensagens da noite — SMART: só enviado a quem não concluiu o dia
 const EVENING_MESSAGES: PushMessage[] = [
-  { title: 'Reflexão da noite 🌙', body: 'Antes de dormir, leve uma palavra de Deus no coração.', url: '/?tab=oracoes', tag: 'daily-evening' },
-  { title: 'Boa noite! 🌟', body: 'Encerre o dia em oração. Deus ouve cada pedido do seu coração.', url: '/?tab=oracoes', tag: 'daily-evening' },
-  { title: 'Momento de oração 🙏', body: 'O dia está terminando. Que tal agradecer e orar antes de descansar?', url: '/?tab=oracoes', tag: 'daily-evening' },
-  { title: 'Noite abençoada 💙', body: 'Uma oração noturna transforma o descanso em bênção.', url: '/?tab=oracoes', tag: 'daily-evening' },
-  { title: 'Feche o dia com fé ✨', body: 'Deixe suas preocupações nas mãos de Deus antes de dormir.', url: '/?tab=oracoes', tag: 'daily-evening' },
-  { title: 'Paz para a noite 🕊️', body: 'Você cuidou de tantas coisas hoje. Agora cuide da sua alma.', url: '/?tab=oracoes', tag: 'daily-evening' },
-  { title: 'Até amanhã! 🌿', body: 'Descanse em paz. Deus vela sobre você durante a noite.', url: '/?tab=oracoes', tag: 'daily-evening' },
+  { title: 'Ainda dá tempo! 🌙', body: 'Você ainda não completou sua jornada de hoje. Leva só 5 minutos!', url: '/?tab=hoje', tag: 'daily-evening' },
+  { title: 'Não deixe para amanhã 🌟', body: 'Seu streak depende de você hoje. Complete sua jornada antes de dormir.', url: '/?tab=hoje', tag: 'daily-evening' },
+  { title: 'Falta pouco! 🙏', body: 'Complete sua devocional de hoje e mantenha seu streak vivo.', url: '/?tab=hoje', tag: 'daily-evening' },
+  { title: 'Antes de dormir 💙', body: 'Uma leitura rápida e uma oração. Seu dia espiritual ainda pode ser completo.', url: '/?tab=hoje', tag: 'daily-evening' },
+  { title: 'Sua árvore espera você ✨', body: 'Regue sua fé hoje. Complete sua jornada e ganhe XP!', url: '/?tab=hoje', tag: 'daily-evening' },
+  { title: 'Último lembrete do dia 🕊️', body: 'Não perca seu streak! Complete a jornada de hoje.', url: '/?tab=hoje', tag: 'daily-evening' },
+  { title: 'Deus te espera 🌿', body: 'Reserve 5 minutos antes de dormir para sua jornada espiritual.', url: '/?tab=hoje', tag: 'daily-evening' },
 ];
-
-function getPeriod(utcHour: number): Period {
-  if (utcHour >= 8 && utcHour < 13) return 'morning';   // 5h–10h Brasília
-  if (utcHour >= 13 && utcHour < 20) return 'afternoon'; // 10h–17h Brasília
-  return 'evening';                                        // 17h+ Brasília
-}
 
 // Mensagens especiais de segunda-feira (motivação para a semana)
 const MONDAY_MORNING: PushMessage = {
@@ -93,23 +87,66 @@ const WEEKEND_MORNING: PushMessage = {
   tag: 'daily-morning',
 };
 
-function getTodayMessage(): PushMessage {
-  const now = new Date();
-  const utcHour = now.getUTCHours();
-  const dayOfWeek = now.getDay(); // 0 (dom), 1 (seg) … 6 (sáb)
-  const period = getPeriod(utcHour);
+// Mensagens de milestone de streak
+const STREAK_MILESTONE_MESSAGES: Record<number, PushMessage> = {
+  7:  { title: '7 dias seguidos! 🔥', body: 'Uma semana de fidelidade! Sua constância está transformando sua vida espiritual.', url: '/?tab=hoje', tag: 'streak-milestone' },
+  14: { title: '14 dias de streak! 🌟', body: 'Duas semanas sem parar! Você está construindo um hábito espiritual sólido.', url: '/?tab=hoje', tag: 'streak-milestone' },
+  21: { title: '21 dias! Hábito formado 🌳', body: 'Parabéns! 21 dias é o marco da formação de um hábito. Sua fé está florescendo!', url: '/?tab=hoje', tag: 'streak-milestone' },
+  28: { title: '28 dias seguidos! 🏆', body: 'Quase um mês de dedicação diária. Você é extraordinário(a)! Continue!', url: '/?tab=hoje', tag: 'streak-milestone' },
+  30: { title: 'Um mês completo! 🎉', body: '30 dias de jornada diária com Deus! Isso é transformação real.', url: '/?tab=hoje', tag: 'streak-milestone' },
+  60: { title: '60 dias! Você é incrível! 🌿', body: 'Dois meses de constância espiritual. Deus vê sua dedicação!', url: '/?tab=hoje', tag: 'streak-milestone' },
+  90: { title: '90 dias de fé! Lendário! 👑', body: 'Três meses sem perder um dia. Você se tornou um exemplo de fidelidade!', url: '/?tab=hoje', tag: 'streak-milestone' },
+  100: { title: '100 dias! Centenário da fé! 🏅', body: 'Cem dias de jornada diária. Isso é uma conquista histórica!', url: '/?tab=hoje', tag: 'streak-milestone' },
+};
 
-  // Mensagens especiais por dia/período
+const STREAK_MILESTONES = new Set(Object.keys(STREAK_MILESTONE_MESSAGES).map(Number));
+
+interface UserProgress {
+  user_id: string;
+  current_streak: number;
+  last_completed_date: string | null;
+}
+
+interface Subscription {
+  user_id: string | null;
+  endpoint: string;
+  p256dh: string;
+  auth_key: string;
+  progress?: UserProgress | null;
+}
+
+function getPeriod(utcHour: number): Period {
+  if (utcHour >= 8 && utcHour < 13) return 'morning';   // 5h–10h Brasília
+  if (utcHour >= 13 && utcHour < 20) return 'afternoon'; // 10h–17h Brasília
+  return 'evening';                                        // 17h+ Brasília
+}
+
+function getTodayUTC(): string {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function getGenericMessage(period: Period): PushMessage {
+  const now = new Date();
+  const dayOfWeek = now.getDay();
+
   if (dayOfWeek === 1 && period === 'morning') return MONDAY_MORNING;
   if (dayOfWeek === 5 && period === 'evening') return FRIDAY_EVENING;
   if ((dayOfWeek === 0 || dayOfWeek === 6) && period === 'morning') return WEEKEND_MORNING;
 
   const messageSet =
-    period === 'morning'   ? MORNING_MESSAGES   :
+    period === 'morning'   ? MORNING_MESSAGES :
     period === 'afternoon' ? AFTERNOON_MESSAGES :
     EVENING_MESSAGES;
 
   return messageSet[dayOfWeek % messageSet.length];
+}
+
+function selectMessage(sub: Subscription, period: Period): PushMessage {
+  // Streak milestone overrides generic message
+  if (sub.progress && STREAK_MILESTONES.has(sub.progress.current_streak)) {
+    return STREAK_MILESTONE_MESSAGES[sub.progress.current_streak];
+  }
+  return getGenericMessage(period);
 }
 
 async function handlePush(req: NextRequest) {
@@ -123,61 +160,97 @@ async function handlePush(req: NextRequest) {
 
   console.log('[push/send] Rota executada em dynamic mode -', new Date().toISOString());
 
+  const supabase = getSupabase();
+  const period = getPeriod(new Date().getUTCHours());
+  const todayUTC = getTodayUTC();
+
   try {
-    const supabase = getSupabase();
-    // Buscar todas as subscriptions ativas
-    const { data: subscriptions, error } = await supabase
+    // 1. Buscar todas as subscriptions ativas
+    const { data: rawSubs, error: subsError } = await supabase
       .from('push_subscriptions')
-      .select('endpoint, p256dh, auth_key')
+      .select('user_id, endpoint, p256dh, auth_key')
       .eq('notifications_enabled', true);
 
-    if (error) {
-      console.error('[push/send] Erro ao buscar subscriptions:', error);
+    if (subsError) {
+      console.error('[push/send] Erro ao buscar subscriptions:', subsError);
       return NextResponse.json({ error: 'Erro ao buscar subscriptions' }, { status: 500 });
     }
 
-    if (!subscriptions || subscriptions.length === 0) {
+    if (!rawSubs || rawSubs.length === 0) {
       return NextResponse.json({ sent: 0, message: 'Nenhuma subscription ativa' });
     }
 
-    const { title, body, url, tag } = getTodayMessage();
-    const payload = JSON.stringify({
-      title,
-      body,
-      icon: '/icon-192x192.png',
-      badge: '/icon-192x192.png',
-      url,
-      tag,
-    });
+    // 2. Buscar progresso dos usuários com user_id linkado
+    const linkedUserIds = [...new Set(rawSubs.filter(s => s.user_id).map(s => s.user_id as string))];
 
+    const progressMap = new Map<string, UserProgress>();
+
+    if (linkedUserIds.length > 0) {
+      const { data: progressRows } = await supabase
+        .from('user_progress')
+        .select('user_id, current_streak, last_completed_date')
+        .in('user_id', linkedUserIds);
+
+      if (progressRows) {
+        for (const p of progressRows) {
+          progressMap.set(p.user_id, p as UserProgress);
+        }
+      }
+    }
+
+    // 3. Montar subscriptions com contexto de progresso
+    const subscriptions: Subscription[] = rawSubs.map(sub => ({
+      ...sub,
+      progress: sub.user_id ? (progressMap.get(sub.user_id) ?? null) : null,
+    }));
+
+    // 4. Para período noturno: filtrar apenas quem NÃO completou hoje
+    const toNotify = period === 'evening'
+      ? subscriptions.filter(sub => {
+          if (!sub.progress) return true; // Sem dados → enviar (sem info suficiente para suprimir)
+          return sub.progress.last_completed_date !== todayUTC;
+        })
+      : subscriptions;
+
+    if (toNotify.length === 0) {
+      console.log(`[push/send] Período: ${period} | Todos já concluíram hoje. Nenhum push enviado.`);
+      return NextResponse.json({ sent: 0, total: rawSubs.length, skipped_completed: rawSubs.length });
+    }
+
+    // 5. Enviar notificações (mensagem personalizada por usuário)
     const wp = getWebPush();
-    // Enviar para todos — coletar expiradas para limpeza
     const expiredEndpoints: string[] = [];
+
     const results = await Promise.allSettled(
-      subscriptions.map((sub) =>
-        wp.sendNotification(
-          {
-            endpoint: sub.endpoint,
-            keys: { p256dh: sub.p256dh, auth: sub.auth_key },
-          },
+      toNotify.map((sub) => {
+        const msg = selectMessage(sub, period);
+        const payload = JSON.stringify({
+          title: msg.title,
+          body: msg.body,
+          icon: '/icon-192x192.png',
+          badge: '/icon-192x192.png',
+          url: msg.url,
+          tag: msg.tag,
+        });
+        return wp.sendNotification(
+          { endpoint: sub.endpoint, keys: { p256dh: sub.p256dh, auth: sub.auth_key } },
           payload
-        )
-      )
+        );
+      })
     );
 
     results.forEach((result, i) => {
       if (result.status === 'rejected') {
         const err = result.reason as { statusCode?: number };
-        // 410 Gone ou 404 = subscription expirada/inválida
         if (err?.statusCode === 410 || err?.statusCode === 404) {
-          expiredEndpoints.push(subscriptions[i].endpoint);
+          expiredEndpoints.push(toNotify[i].endpoint);
         } else {
           console.error('[push/send] Erro ao enviar:', err);
         }
       }
     });
 
-    // Limpar subscriptions expiradas
+    // 6. Limpar subscriptions expiradas
     if (expiredEndpoints.length > 0) {
       await supabase
         .from('push_subscriptions')
@@ -186,12 +259,13 @@ async function handlePush(req: NextRequest) {
     }
 
     const sent = results.filter((r) => r.status === 'fulfilled').length;
-    const period = getPeriod(new Date().getUTCHours());
-    console.log(`[push/send] Período: ${period} | Enviadas: ${sent}/${subscriptions.length}. Expiradas removidas: ${expiredEndpoints.length}`);
+    const skippedCompleted = rawSubs.length - toNotify.length;
+    console.log(`[push/send] Período: ${period} | Enviadas: ${sent}/${rawSubs.length} | Puladas (já concluíram): ${skippedCompleted} | Expiradas removidas: ${expiredEndpoints.length}`);
 
     return NextResponse.json({
       sent,
-      total: subscriptions.length,
+      total: rawSubs.length,
+      skipped_completed: skippedCompleted,
       expired_removed: expiredEndpoints.length,
     });
   } catch (err) {
