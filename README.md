@@ -596,7 +596,7 @@ npm run lint
 
 ---
 
-## Status MVP — 16/03/2026
+## Status MVP — 19/03/2026
 
 ### ✅ Implementado e em produção
 
@@ -607,7 +607,7 @@ npm run lint
 - ✅ Callback OAuth + confirm redirect para domínio de produção
 
 **Banco de Dados e Segurança:**
-- ✅ PostgreSQL Supabase com 6 migrations aplicadas (incluindo payment_system)
+- ✅ PostgreSQL Supabase com migrations aplicadas (incluindo payment_system, analytics_events, content_library)
 - ✅ RLS ativo em todas as tabelas
 - ✅ Realtime publication habilitada
 
@@ -653,6 +653,10 @@ npm run lint
 - ✅ 3× ao dia via Vercel Cron (7h, 12h, 20h Brasília)
 - ✅ Mensagens personalizadas por horário e dia da semana
 - ✅ Deep links nas notificações (abre aba correta no app)
+- ✅ Versículo diário NVI nas notificações matinais (31 versículos rotativos por dia do mês)
+- ✅ Evening push condicional (só envia para quem não concluiu o dia)
+- ✅ Streak milestones: mensagens especiais D7, D14, D21, D28, D30, D60, D90, D100
+- ✅ Push de level-up — endpoint `/api/push/level-up` disparado pelo client ao subir de nível
 
 **Painel Admin:**
 - ✅ Dashboard em `/admin` com KPIs (usuários ativos, assinantes Premium, métricas)
@@ -661,6 +665,7 @@ npm run lint
 - ✅ Logs de webhooks Hotmart em tempo real
 - ✅ Listagem completa de usuários
 - ✅ Acesso protegido por `role = 'admin'` via RLS
+- ✅ **CMS de Conteúdo** `/admin/conteudo` — criar/editar/publicar meditações, orações, devocionais, estudos e kids sem deploy
 
 **Players de Áudio (MediaSession API):**
 - ✅ `useMediaSession.ts` — hook central reutilizável pelos 3 players
@@ -703,6 +708,7 @@ npm run lint
 - ✅ **Versículo do Dia** — 31 versículos rotacionados com `VerseOfDayCard`
 - ✅ **Skeleton Screens** — `ImageCardSkeleton` + `StudyCardSkeleton` hydration-aware
 - ✅ **GamificationCard redesign** — streak pill orange→red, level badge violet, XP bar purple→gold
+- ✅ **Diário — Prompts rotativos** — 33 prompts em 5 categorias (reflexão, gratidão, intenção, escuta, compromisso), exibidos ao abrir entrada em branco com botão "Outro" para trocar
 
 **Acessibilidade:**
 - ✅ 100% WCAG AA (auditado com axe DevTools — ver `ACCESSIBILITY_CHECKLIST.md`)
@@ -725,6 +731,8 @@ npm run lint
 **Crescimento de Conteúdo:**
 - [ ] Dashboard de progresso espiritual (gráficos semanais/mensais de XP e streak)
 - [ ] Expansão do conteúdo Kids (meditações + estudos infantis)
+- [ ] Personalização por interesses do onboarding (feed TabHoje + recomendações TabExplorar)
+- [ ] Oração guiada — PrayerTimerModal (5/15/30min) + GuidedPrayerFlow (leitura → silêncio → intenção)
 
 **Distribuição Nativa:**
 - [ ] Build nativo via Capacitor (iOS/Android)
