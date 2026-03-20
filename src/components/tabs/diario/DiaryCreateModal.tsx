@@ -1,7 +1,8 @@
-import { useState } from "react";
-import { X } from "lucide-react";
+import { useState, useCallback } from "react";
+import { X, Shuffle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { DiaryEntryType, ENTRY_TYPE_LABELS, ENTRY_TYPE_ICONS } from "@/data/diario";
+import { JOURNAL_PROMPTS, getRandomPrompt } from "@/data/journalPrompts";
 import { cn } from "@/lib/utils";
 
 interface DiaryCreateModalProps {
@@ -27,6 +28,15 @@ export function DiaryCreateModal({
   const [reference, setReference] = useState("");
   const [tagInput, setTagInput] = useState("");
   const [tags, setTags] = useState<string[]>([]);
+  const [currentPrompt, setCurrentPrompt] = useState(() => getRandomPrompt());
+
+  const handleNextPrompt = useCallback(() => {
+    setCurrentPrompt((prev) => getRandomPrompt(prev.id));
+  }, []);
+
+  const handleUsePrompt = useCallback(() => {
+    setContent(currentPrompt.text);
+  }, [currentPrompt.text]);
 
   const handleAddTag = () => {
     if (tagInput.trim() && !tags.includes(tagInput.trim())) {
@@ -129,6 +139,38 @@ export function DiaryCreateModal({
                 />
               </div>
 
+              {/* Prompt sugerido */}
+              {!content && (
+                <motion.div
+                  initial={{ opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  className="bg-orange-50 border border-orange-200 rounded-xl p-4"
+                >
+                  <p className="text-xs font-medium text-orange-600 mb-1.5 uppercase tracking-wide">
+                    💡 Inspiração para começar
+                  </p>
+                  <p className="text-sm text-[#374151] mb-3 italic">"{currentPrompt.text}"</p>
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={handleUsePrompt}
+                      className="flex-1 text-xs px-3 py-1.5 rounded-lg bg-[#FB923C] text-white font-medium hover:bg-[#EA580C] transition-colors"
+                    >
+                      Usar esse prompt
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleNextPrompt}
+                      className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-lg border border-orange-300 text-orange-600 hover:bg-orange-100 transition-colors"
+                    >
+                      <Shuffle className="w-3 h-3" />
+                      Outro
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+
               {/* Conteúdo */}
               <div>
                 <label className="block text-sm font-medium text-[#1F2937] mb-2">
@@ -137,7 +179,7 @@ export function DiaryCreateModal({
                 <textarea
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
-                  placeholder="Digite o conteúdo..."
+                  placeholder="O que está em seu coração hoje?"
                   rows={6}
                   className="w-full px-4 py-2 rounded-lg border border-[#E5E7EB] focus:outline-none focus:ring-2 focus:ring-[#FB923C] resize-none"
                 />
