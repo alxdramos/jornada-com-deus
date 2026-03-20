@@ -4,6 +4,7 @@ export const revalidate = 0;
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import webpush from 'web-push';
+import { getVerseOfDay } from '@/data/daily-verses';
 
 function getSupabase() {
   return createClient(
@@ -30,16 +31,16 @@ interface PushMessage {
   tag: string;
 }
 
-// Mensagens da manhã (cron 10h UTC = 7h Brasília) — abre TabHoje
-const MORNING_MESSAGES: PushMessage[] = [
-  { title: 'Bom dia! 🌅', body: 'Comece sua jornada com Deus. Ele já está te esperando.', url: '/?tab=hoje', tag: 'daily-morning' },
-  { title: 'Bom dia! ✨', body: 'Cada manhã é uma nova graça. Sua devocional do dia te espera.', url: '/?tab=hoje', tag: 'daily-morning' },
-  { title: 'Bom dia! 🙏', body: 'Ore, leia e cresça. Sua árvore da fé está crescendo!', url: '/?tab=hoje', tag: 'daily-morning' },
-  { title: 'Bom dia! 📖', body: 'A Palavra de Deus ilumina o caminho. Leia seu versículo do dia.', url: '/?tab=hoje', tag: 'daily-morning' },
-  { title: 'Bom dia! 🕊️', body: 'Paz e graça para você. Comece o dia com espiritualidade.', url: '/?tab=hoje', tag: 'daily-morning' },
-  { title: 'Bom dia! 🌿', body: 'Um dia de cada vez com Deus. Sua jornada de hoje te espera!', url: '/?tab=hoje', tag: 'daily-morning' },
-  { title: 'Bom dia! ⭐', body: 'Continue o seu streak! Seus hábitos espirituais estão crescendo.', url: '/?tab=hoje', tag: 'daily-morning' },
-];
+// Versículo diário (cron 10h UTC = 7h Brasília) — substitui mensagens genéricas de manhã
+function getMorningVerseMessage(): PushMessage {
+  const verse = getVerseOfDay();
+  return {
+    title: `📖 ${verse.reference}`,
+    body: verse.text.length > 120 ? verse.text.slice(0, 117) + '…' : verse.text,
+    url: '/?tab=hoje',
+    tag: 'daily-morning',
+  };
+}
 
 // Mensagens da tarde (cron 15h UTC = 12h Brasília) — abre Meditações
 const AFTERNOON_MESSAGES: PushMessage[] = [
@@ -129,15 +130,15 @@ function getGenericMessage(period: Period): PushMessage {
   const now = new Date();
   const dayOfWeek = now.getDay();
 
-  if (dayOfWeek === 1 && period === 'morning') return MONDAY_MORNING;
+  // Manhã: sempre versículo do dia (exceto fim de semana que mantém mensagem especial)
+  if (period === 'morning') {
+    if (dayOfWeek === 0 || dayOfWeek === 6) return WEEKEND_MORNING;
+    return getMorningVerseMessage();
+  }
+
   if (dayOfWeek === 5 && period === 'evening') return FRIDAY_EVENING;
-  if ((dayOfWeek === 0 || dayOfWeek === 6) && period === 'morning') return WEEKEND_MORNING;
 
-  const messageSet =
-    period === 'morning'   ? MORNING_MESSAGES :
-    period === 'afternoon' ? AFTERNOON_MESSAGES :
-    EVENING_MESSAGES;
-
+  const messageSet = period === 'afternoon' ? AFTERNOON_MESSAGES : EVENING_MESSAGES;
   return messageSet[dayOfWeek % messageSet.length];
 }
 
