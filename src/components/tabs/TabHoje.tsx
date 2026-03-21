@@ -39,7 +39,8 @@ export function TabHoje() {
           subtitleElement={
             <button
               onClick={() => setCalendarioOpen(true)}
-              className="text-xs text-violet-600 dark:text-violet-400 font-semibold hover:text-violet-700 dark:hover:text-violet-300 transition-colors uppercase tracking-wide"
+              className="text-xs font-semibold transition-colors uppercase tracking-wide"
+              style={{ color: "var(--color-primary, #006947)" }}
             >
               Ver Calendário &amp; Favoritos
             </button>
@@ -62,7 +63,7 @@ export function TabHoje() {
           </p>
           <h2
             className="text-2xl font-bold text-text-primary leading-snug"
-            style={{ fontFamily: "var(--font-lora), Lora, Georgia, serif" }}
+            style={{ fontFamily: "var(--font-newsreader), Newsreader, Georgia, serif" }}
           >
             Vamos cultivar sua Árvore da Vida hoje?
           </h2>
@@ -77,7 +78,7 @@ export function TabHoje() {
           {interestHint && topTabId && (
             <button
               onClick={() => setActiveTab(topTabId as Parameters<typeof setActiveTab>[0])}
-              className="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-violet-50 dark:bg-violet-900/20 border border-violet-200/60 dark:border-violet-700/30 text-violet-700 dark:text-violet-300 text-xs font-medium active:scale-95 transition-transform"
+              className="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200/60 dark:border-emerald-700/30 text-emerald-700 dark:text-emerald-300 text-xs font-medium active:scale-95 transition-transform"
             >
               <Sparkles className="w-3.5 h-3.5" />
               {interestHint}
@@ -95,7 +96,8 @@ export function TabHoje() {
           </h3>
           <button
             onClick={() => setJourneyModalOpen(true)}
-            className="text-xs font-semibold text-violet-600 dark:text-violet-400 hover:text-violet-700 dark:hover:text-violet-300 transition-colors uppercase tracking-wide"
+            className="text-xs font-semibold transition-colors uppercase tracking-wide"
+            style={{ color: "var(--color-primary, #006947)" }}
           >
             Ver Detalhes &rsaquo;
           </button>

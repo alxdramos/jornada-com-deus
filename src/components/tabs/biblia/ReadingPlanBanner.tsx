@@ -54,7 +54,7 @@ export function ReadingPlanBanner({ onOpenPlan }: ReadingPlanBannerProps) {
         "w-full p-4 rounded-2xl border transition-all text-left group",
         allDoneToday
           ? "bg-gradient-to-r from-emerald-50 to-teal-50 border-emerald-200 hover:border-emerald-400"
-          : "bg-gradient-to-r from-violet-50 to-purple-50 border-violet-200 hover:border-violet-400"
+          : "bg-gradient-to-r from-emerald-50 to-green-50 border-emerald-200 hover:border-emerald-400"
       )}
     >
       <div className="flex items-center gap-3 mb-3">
@@ -75,7 +75,7 @@ export function ReadingPlanBanner({ onOpenPlan }: ReadingPlanBannerProps) {
           </div>
           <p className="text-xs text-[#6B7280]">Dia {currentDay} de {plan.duration}</p>
         </div>
-        <ChevronRight className="w-5 h-5 text-[#9CA3AF] group-hover:text-violet-500 transition-colors flex-shrink-0" />
+        <ChevronRight className="w-5 h-5 text-[#9CA3AF] group-hover:text-emerald-600 transition-colors flex-shrink-0" />
       </div>
 
       {/* Barra de progresso do dia */}

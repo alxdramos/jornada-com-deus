@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
-import { Lora, Raleway } from "next/font/google";
+import { Newsreader, Inter } from "next/font/google";
 import "./globals.css";
 import { OfflineIndicator } from "@/components/OfflineIndicator";
 import { ServiceWorkerRegistration } from "@/components/ServiceWorkerRegistration";
@@ -9,19 +9,19 @@ import { SessionProvider } from "@/components/providers/SessionProvider";
 import { AuthSyncWrapper } from "@/components/AuthSyncWrapper";
 import { WebVitals } from "@/components/WebVitals";
 
-// Lora — headings elegantes com serifa espiritual
-const lora = Lora({
+// Newsreader — editorial serif, authoritative yet gentle (headings, Scripture)
+const newsreader = Newsreader({
   subsets: ["latin"],
-  variable: "--font-lora",
+  variable: "--font-newsreader",
   display: "swap",
   weight: ["400", "500", "600", "700"],
   style: ["normal", "italic"],
 });
 
-// Raleway — corpo moderno, clean e legível
-const raleway = Raleway({
+// Inter — utilitarian sans, maximum legibility (body, labels, UI)
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-raleway",
+  variable: "--font-inter",
   display: "swap",
   weight: ["300", "400", "500", "600", "700"],
 });
@@ -106,7 +106,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
-  themeColor: "#7C3AED",
+  themeColor: "#006947",
 };
 
 export default function RootLayout({
@@ -116,7 +116,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" suppressHydrationWarning>
-      <body className={`${lora.variable} ${raleway.variable} font-sans antialiased bg-background text-foreground`}>
+      <body className={`${newsreader.variable} ${inter.variable} font-sans antialiased bg-background text-foreground`}>
         <WebVitals />
         <Suspense fallback={
           <div className="w-screen h-screen flex flex-col items-center justify-center bg-background gap-4">

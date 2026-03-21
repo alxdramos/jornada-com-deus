@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 
-const COLORS = ["#7C3AED", "#CA8A04", "#EA580C", "#16A34A", "#2563EB", "#EC4899"];
+const COLORS = ["#006947", "#815100", "#6C4D8F", "#58E7AB", "#FFB554", "#EC4899"];
 const PARTICLE_COUNT = 60;
 const DURATION_MS = 3000;
 

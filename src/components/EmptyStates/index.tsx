@@ -20,8 +20,8 @@ export function EmptySearchResults({ query }: EmptySearchResultsProps) {
       animate="animate"
       className="flex flex-col items-center justify-center py-12 text-center"
     >
-      <div className="w-16 h-16 rounded-full bg-violet-50 flex items-center justify-center mb-4">
-        <SearchX className="w-8 h-8 text-[#7C3AED]" />
+      <div className="w-16 h-16 rounded-full bg-emerald-50 flex items-center justify-center mb-4">
+        <SearchX className="w-8 h-8" style={{ color: "#006947" }} />
       </div>
       <h3 className="font-semibold text-[#1F2937] mb-1">
         Nenhum resultado para &ldquo;{query}&rdquo;
@@ -70,8 +70,8 @@ export function EmptyLibraryState({ message }: EmptyLibraryStateProps) {
       animate="animate"
       className="flex flex-col items-center justify-center py-12 text-center"
     >
-      <div className="w-16 h-16 rounded-full bg-violet-50 flex items-center justify-center mb-4">
-        <BookOpen className="w-8 h-8 text-[#7C3AED]" />
+      <div className="w-16 h-16 rounded-full bg-emerald-50 flex items-center justify-center mb-4">
+        <BookOpen className="w-8 h-8" style={{ color: "#006947" }} />
       </div>
       <h3 className="font-semibold text-[#1F2937] mb-1">Ainda vazio por aqui</h3>
       <p className="text-sm text-[#6B7280] max-w-xs">

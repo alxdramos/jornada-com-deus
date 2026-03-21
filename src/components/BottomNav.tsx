@@ -56,29 +56,32 @@ export function BottomNav() {
                     layoutId="bottomNavPill"
                     className="absolute inset-0 rounded-2xl"
                     style={{
-                      background: "var(--brand-muted, rgba(124, 58, 237, 0.12))",
+                      background: "var(--color-brand-muted, rgba(0, 105, 71, 0.10))",
                     }}
                     transition={{ type: "spring", stiffness: 500, damping: 35 }}
                   />
                 )}
 
-                <Icon
-                  className={cn(
-                    "relative w-5 h-5 transition-colors duration-200",
-                    isActive
-                      ? "text-violet-600 dark:text-violet-400"
-                      : "text-gray-400 dark:text-gray-500"
-                  )}
+                <span
+                  style={isActive ? { color: "var(--color-primary)" } : undefined}
                   aria-hidden="true"
-                />
+                >
+                  <Icon
+                    className={cn(
+                      "relative w-5 h-5 transition-colors duration-200",
+                      !isActive && "text-gray-400 dark:text-gray-500"
+                    )}
+                  />
+                </span>
 
                 <span
                   className={cn(
                     "relative text-[10px] font-semibold tracking-wide transition-colors duration-200 leading-none",
                     isActive
-                      ? "text-violet-600 dark:text-violet-400"
+                      ? "text-primary-600 dark:text-primary-500"
                       : "text-gray-400 dark:text-gray-500"
                   )}
+                  style={isActive ? { color: "var(--color-primary)" } : undefined}
                 >
                   {item.label}
                 </span>

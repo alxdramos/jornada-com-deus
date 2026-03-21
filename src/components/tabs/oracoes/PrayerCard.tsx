@@ -7,18 +7,18 @@ import Image from "next/image";
 const THEME_COLORS: Record<string, string> = {
   "Perdão": "bg-red-100/80 text-red-700 dark:bg-red-900/30 dark:text-red-300",
   "Cura Divina": "bg-blue-100/80 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
-  "Ansiedade": "bg-violet-100/80 text-violet-700 dark:bg-violet-900/30 dark:text-violet-300",
+  "Ansiedade": "bg-emerald-100/80 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300",
   "Gratidão": "bg-amber-100/80 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
   "Fortalecimento": "bg-red-100/80 text-red-700 dark:bg-red-900/30 dark:text-red-300",
-  "Intercessão": "bg-violet-100/80 text-violet-700 dark:bg-violet-900/30 dark:text-violet-300",
+  "Intercessão": "bg-emerald-100/80 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300",
   "Família": "bg-blue-100/80 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
   "Paz Interior": "bg-blue-100/80 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
   "Proteção": "bg-amber-100/80 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
   "Esperança": "bg-amber-100/80 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
   "Paz": "bg-blue-100/80 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
-  "Graças": "bg-violet-100/80 text-violet-700 dark:bg-violet-900/30 dark:text-violet-300",
+  "Graças": "bg-emerald-100/80 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300",
   "Força": "bg-red-100/80 text-red-700 dark:bg-red-900/30 dark:text-red-300",
-  "Fé": "bg-violet-100/80 text-violet-700 dark:bg-violet-900/30 dark:text-violet-300",
+  "Fé": "bg-emerald-100/80 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300",
 };
 
 interface PrayerCardProps {
@@ -72,14 +72,14 @@ export function PrayerCard({
             onError={() => setImgError(true)}
           />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-violet-400 to-blue-500" />
+          <div className="w-full h-full bg-gradient-to-br from-emerald-400 to-teal-500" />
         )}
 
         {/* Overlay de botões ao hover */}
         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-200 flex items-center justify-center gap-2">
           <button
             onClick={(e) => { e.stopPropagation(); onViewDetails(prayer); }}
-            className="p-3 rounded-full transition-all bg-white text-violet-600 hover:bg-violet-600 hover:text-white shadow-lg"
+            className="p-3 rounded-full transition-all bg-white text-emerald-700 hover:bg-emerald-700 hover:text-white shadow-lg"
             aria-label="Reproduzir oração"
           >
             <Play className="w-5 h-5 fill-current" />

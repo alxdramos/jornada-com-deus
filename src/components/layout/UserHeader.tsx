@@ -34,7 +34,7 @@ export function UserHeader({ title, subtitleElement, rightElement }: UserHeaderP
       <div
         className="absolute -top-6 -left-6 -right-6 h-28 pointer-events-none"
         style={{
-          background: "linear-gradient(180deg, rgba(124, 58, 237, 0.07) 0%, transparent 100%)",
+          background: "linear-gradient(180deg, rgba(0, 105, 71, 0.07) 0%, transparent 100%)",
         }}
         aria-hidden="true"
       />
@@ -45,7 +45,8 @@ export function UserHeader({ title, subtitleElement, rightElement }: UserHeaderP
           <button
             onClick={() => setProfileOpen(true)}
             aria-label="Abrir perfil"
-            className="w-10 h-10 rounded-full overflow-hidden shrink-0 border-2 border-violet-300/60 dark:border-violet-600/40 shadow-md focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-1 transition-all hover:border-violet-400/80"
+            className="w-10 h-10 rounded-full overflow-hidden shrink-0 shadow-md focus:outline-none focus:ring-2 focus:ring-offset-1 transition-all"
+            style={{ border: "2px solid rgba(0,105,71,0.35)" }}
           >
             {loading ? (
               <Skeleton className="w-full h-full rounded-full" />
@@ -59,7 +60,7 @@ export function UserHeader({ title, subtitleElement, rightElement }: UserHeaderP
                 onError={() => setAvatarError(true)}
               />
             ) : (
-              <div className="w-full h-full bg-gradient-to-br from-violet-500 to-violet-700 flex items-center justify-center text-white font-bold text-base">
+              <div className="w-full h-full flex items-center justify-center text-white font-bold text-base" style={{ background: "linear-gradient(135deg, #006947, #004D35)" }}>
                 {displayName.charAt(0).toUpperCase()}
               </div>
             )}
@@ -80,7 +81,10 @@ export function UserHeader({ title, subtitleElement, rightElement }: UserHeaderP
           <button
             onClick={openSearch}
             aria-label="Abrir busca global (Cmd+K)"
-            className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-violet-100 dark:hover:bg-violet-900/20 transition-colors text-text-secondary hover:text-violet-600 dark:hover:text-violet-400"
+            className="w-9 h-9 flex items-center justify-center rounded-full transition-colors text-text-secondary"
+            style={{ ["--hover-bg" as string]: "rgba(0,105,71,0.08)" }}
+            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(0,105,71,0.08)")}
+            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "")}
           >
             <Search className="w-5 h-5" />
           </button>
@@ -90,7 +94,9 @@ export function UserHeader({ title, subtitleElement, rightElement }: UserHeaderP
             <button
               onClick={toggle}
               aria-label={isDark ? "Ativar modo claro" : "Ativar modo escuro"}
-              className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-violet-100 dark:hover:bg-violet-900/20 transition-colors text-text-secondary hover:text-violet-600 dark:hover:text-violet-400"
+              className="w-9 h-9 flex items-center justify-center rounded-full transition-colors text-text-secondary"
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(0,105,71,0.08)")}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "")}
             >
               {isDark ? (
                 <Sun className="w-5 h-5" />

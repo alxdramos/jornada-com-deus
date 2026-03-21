@@ -66,7 +66,7 @@ export function MilestoneModal({
             className="fixed inset-0 z-[10004] flex flex-col items-center justify-center overflow-hidden"
             style={{
               background:
-                "linear-gradient(160deg, #1E0A3C 0%, #4C1D95 50%, #7C3AED 100%)",
+                "linear-gradient(160deg, #003D28 0%, #006947 50%, #4C8A6A 100%)",
             }}
             onClick={onClose}
           >
@@ -75,9 +75,9 @@ export function MilestoneModal({
               className="absolute inset-0 pointer-events-none"
               animate={{
                 background: [
-                  "radial-gradient(ellipse at center, rgba(124,58,237,0.4) 0%, transparent 70%)",
-                  "radial-gradient(ellipse at center, rgba(202,138,4,0.3) 0%, transparent 70%)",
-                  "radial-gradient(ellipse at center, rgba(124,58,237,0.4) 0%, transparent 70%)",
+                  "radial-gradient(ellipse at center, rgba(0,105,71,0.4) 0%, transparent 70%)",
+                  "radial-gradient(ellipse at center, rgba(129,81,0,0.3) 0%, transparent 70%)",
+                  "radial-gradient(ellipse at center, rgba(0,105,71,0.4) 0%, transparent 70%)",
                 ],
               }}
               transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}

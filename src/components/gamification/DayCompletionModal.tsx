@@ -61,7 +61,7 @@ export function DayCompletionModal({
               transition={{ type: "spring", stiffness: 300, damping: 24 }}
               className="w-full max-w-sm rounded-3xl overflow-hidden shadow-2xl pointer-events-auto"
               style={{
-                background: "linear-gradient(135deg, #4C1D95 0%, #7C3AED 100%)",
+                background: "linear-gradient(135deg, #003D28 0%, #006947 100%)",
               }}
             >
               <div className="p-8 flex flex-col items-center gap-4 text-center">
@@ -122,7 +122,7 @@ export function DayCompletionModal({
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 0.65, type: "spring", stiffness: 260, damping: 20 }}
                   >
-                    <span className="bg-violet-300 text-violet-900 font-bold rounded-full px-4 py-1 text-sm">
+                    <span className="bg-emerald-300 text-emerald-900 font-bold rounded-full px-4 py-1 text-sm">
                       Nível {newLevel}! ⭐
                     </span>
                   </motion.div>
@@ -134,7 +134,8 @@ export function DayCompletionModal({
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.7 }}
                   onClick={onClose}
-                  className="mt-2 w-full bg-white text-violet-700 font-bold rounded-2xl py-3 px-6 text-base active:scale-[0.97] transition-transform"
+                  className="mt-2 w-full bg-white font-bold rounded-2xl py-3 px-6 text-base active:scale-[0.97] transition-transform"
+                  style={{ color: "var(--color-primary, #006947)" }}
                 >
                   Continuar
                 </motion.button>

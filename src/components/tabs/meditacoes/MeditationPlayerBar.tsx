@@ -50,8 +50,8 @@ export function MeditationPlayerBar({
           className="h-1 bg-gray-200 rounded-full cursor-pointer hover:h-2 transition-all"
         >
           <div
-            className="h-full bg-gradient-to-r from-[#8B5CF6] to-[#6366F1] rounded-full"
-            style={{ width: `${progress}%` }}
+            className="h-full rounded-full"
+            style={{ width: `${progress}%`, background: "linear-gradient(90deg, var(--color-primary) 0%, var(--color-tertiary) 100%)" }}
           />
         </div>
         <div className="flex justify-between text-xs text-gray-500">
@@ -72,12 +72,11 @@ export function MeditationPlayerBar({
         <button
           onClick={onTogglePlay}
           disabled={audioLoading || audioError}
-          className={cn(
-            "p-4 rounded-full transition-colors",
-            playing
-              ? "bg-[#8B5CF6] text-white hover:bg-[#7C3AED]"
-              : "bg-[#8B5CF6]/20 text-[#8B5CF6] hover:bg-[#8B5CF6]/30"
-          )}
+          className="p-4 rounded-full transition-colors"
+          style={{
+            background: playing ? "var(--color-primary)" : "var(--color-primary-container)",
+            color: playing ? "var(--color-on-primary)" : "var(--color-on-primary-container)",
+          }}
         >
           {audioLoading ? (
             <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
@@ -100,12 +99,8 @@ export function MeditationPlayerBar({
       <div className="flex items-center justify-center gap-4">
         <button
           onClick={onRepeatToggle}
-          className={cn(
-            "p-2 rounded-lg transition-colors",
-            repeat
-              ? "bg-[#8B5CF6]/20 text-[#8B5CF6]"
-              : "text-gray-400 hover:text-gray-700"
-          )}
+          className="p-2 rounded-lg transition-colors"
+          style={repeat ? { background: "var(--color-primary-container)", color: "var(--color-on-primary-container)" } : { color: "#9CA3AF" }}
           title={repeat ? "Repetição ativada" : "Repetição desativada"}
         >
           <RotateCcw className="w-5 h-5" />

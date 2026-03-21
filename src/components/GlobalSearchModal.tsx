@@ -11,7 +11,7 @@ import type { SearchResult, SearchResultType } from '@/types/search';
 function TypeIcon({ type }: { type: SearchResultType }) {
   const cls = 'w-5 h-5 shrink-0';
   if (type === 'oracao') return <Mic2 className={`${cls} text-amber-500`} />;
-  if (type === 'meditacao') return <Headphones className={`${cls} text-violet-500`} />;
+  if (type === 'meditacao') return <Headphones className={`${cls} text-emerald-600`} />;
   return <BookOpen className={`${cls} text-emerald-500`} />;
 }
 
@@ -19,7 +19,7 @@ function TypeIcon({ type }: { type: SearchResultType }) {
 function CategoryBadge({ category, type }: { category?: string; type: SearchResultType }) {
   const colors: Record<SearchResultType, string> = {
     oracao: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
-    meditacao: 'bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400',
+    meditacao: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
     estudo: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
   };
   const label = category ?? (type === 'oracao' ? 'Oração' : type === 'meditacao' ? 'Meditação' : 'Estudo');
@@ -48,8 +48,8 @@ function ResultItem({
       transition={{ delay: index * 0.035, duration: 0.18 }}
       onClick={() => onSelect(result)}
       className="w-full flex items-start gap-3 px-4 py-3 text-left
-        hover:bg-violet-50 dark:hover:bg-violet-900/10
-        border-l-2 border-transparent hover:border-violet-500
+        hover:bg-emerald-50 dark:hover:bg-emerald-900/10
+        border-l-2 border-transparent hover:border-emerald-600
         transition-all group"
     >
       <div className="mt-0.5">
@@ -57,7 +57,7 @@ function ResultItem({
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="font-semibold text-sm text-text-primary truncate group-hover:text-violet-700 dark:group-hover:text-violet-400 transition-colors">
+          <span className="font-semibold text-sm text-text-primary truncate group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
             {result.title}
           </span>
           <CategoryBadge category={result.category} type={result.type} />
@@ -119,7 +119,7 @@ export function GlobalSearchModal() {
             {/* Search input row */}
             <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-100 dark:border-gray-800">
               {isLoading ? (
-                <Loader2 className="w-5 h-5 text-violet-500 shrink-0 animate-spin" />
+                <Loader2 className="w-5 h-5 text-emerald-600 shrink-0 animate-spin" />
               ) : (
                 <Search className="w-5 h-5 text-text-secondary shrink-0" />
               )}
@@ -184,7 +184,7 @@ export function GlobalSearchModal() {
                   </p>
                   {[
                     { icon: <Mic2 className="w-4 h-4 text-amber-500" />, label: 'Orações' },
-                    { icon: <Headphones className="w-4 h-4 text-violet-500" />, label: 'Meditações' },
+                    { icon: <Headphones className="w-4 h-4 text-emerald-600" />, label: 'Meditações' },
                     { icon: <BookOpen className="w-4 h-4 text-emerald-500" />, label: 'Estudos Bíblicos' },
                   ].map(({ icon, label }) => (
                     <div

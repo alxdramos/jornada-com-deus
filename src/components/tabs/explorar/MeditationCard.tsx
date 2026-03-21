@@ -26,20 +26,20 @@ const MEDITATION_IMAGES: Record<string, string> = {
 
 const TAG_COLORS: Record<string, string> = {
   "Sono": "bg-blue-100/80 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
-  "Paz": "bg-violet-100/80 text-violet-700 dark:bg-violet-900/30 dark:text-violet-300",
+  "Paz": "bg-emerald-100/80 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300",
   "Cura": "bg-rose-100/80 text-rose-700 dark:bg-rose-900/30 dark:text-rose-300",
   "Força": "bg-amber-100/80 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
   "Cura Interior e Emoções": "bg-blue-100/80 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
   "Insônia e Ansiedade Noturna": "bg-amber-100/80 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
   "Autocontrole e Hábitos": "bg-rose-100/80 text-rose-700 dark:bg-rose-900/30 dark:text-rose-300",
-  "Relacionamentos e Amor": "bg-violet-100/80 text-violet-700 dark:bg-violet-900/30 dark:text-violet-300",
+  "Relacionamentos e Amor": "bg-emerald-100/80 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300",
   "Propósito e Direção": "bg-blue-100/80 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
   "Família": "bg-amber-100/80 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
 };
 
 const FALLBACK_TAG_COLORS = [
   "bg-rose-100/80 text-rose-700 dark:bg-rose-900/30 dark:text-rose-300",
-  "bg-violet-100/80 text-violet-700 dark:bg-violet-900/30 dark:text-violet-300",
+  "bg-emerald-100/80 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300",
   "bg-blue-100/80 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
   "bg-amber-100/80 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
 ];
@@ -92,7 +92,7 @@ export function MeditationCard({
             sizes="(max-width: 768px) 50vw, 33vw"
           />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-violet-400 to-blue-500" />
+          <div className="w-full h-full bg-gradient-to-br from-emerald-400 to-teal-500" />
         )}
 
         {/* Overlay de botões ao hover */}
@@ -102,7 +102,7 @@ export function MeditationCard({
             className={cn(
               "p-3 rounded-full transition-all shadow-lg",
               canPlay
-                ? "bg-white text-violet-600 hover:bg-violet-600 hover:text-white"
+                ? "bg-white text-emerald-700 hover:bg-emerald-700 hover:text-white"
                 : "bg-gray-500/80 text-white cursor-not-allowed"
             )}
             disabled={!canPlay}

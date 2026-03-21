@@ -23,7 +23,7 @@ const DEVOCIONAL_IMAGES: Record<string, string> = {
 };
 
 const CATEGORY_COLORS: Record<string, string> = {
-  "Fé": "bg-violet-100/80 text-violet-700 dark:bg-violet-900/30 dark:text-violet-300",
+  "Fé": "bg-emerald-100/80 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300",
   "Esperança": "bg-amber-100/80 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
   "Paz": "bg-blue-100/80 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
   "Oração": "bg-green-100/80 text-green-700 dark:bg-green-900/30 dark:text-green-300",

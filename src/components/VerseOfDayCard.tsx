@@ -61,7 +61,7 @@ export function VerseOfDayCard() {
     <div
       className="relative overflow-hidden rounded-2xl p-5 text-white"
       style={{
-        background: "linear-gradient(155deg, #4C1D95 0%, #7C3AED 45%, #92400E 100%)",
+        background: "linear-gradient(155deg, #004D35 0%, #006947 45%, #815100 100%)",
       }}
     >
       {/* Decoração de fundo — círculos sutis */}
@@ -97,7 +97,7 @@ export function VerseOfDayCard() {
         {/* Texto do versículo com Lora */}
         <blockquote
           className="font-heading text-[1.05rem] font-medium italic leading-relaxed text-white/95"
-          style={{ fontFamily: "var(--font-lora), Lora, Georgia, serif" }}
+          style={{ fontFamily: "var(--font-newsreader), Newsreader, Georgia, serif" }}
         >
           "{verse.verse}"
         </blockquote>

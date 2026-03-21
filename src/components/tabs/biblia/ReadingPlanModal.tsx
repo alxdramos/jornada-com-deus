@@ -142,7 +142,7 @@ export function ReadingPlanModal({ isOpen, onClose, onReadChapter }: ReadingPlan
                     <div className="p-5 space-y-4 pb-24">
                       <p className="text-sm text-[#6B7280]">
                         Leia a Bíblia com consistência. Ganhe{" "}
-                        <span className="font-semibold text-violet-600">+25 XP</span> por capítulo lido.
+                        <span className="font-semibold" style={{ color: "var(--color-primary, #006947)" }}>+25 XP</span> por capítulo lido.
                       </p>
 
                       {READING_PLANS.map((plan) => (
@@ -176,7 +176,7 @@ export function ReadingPlanModal({ isOpen, onClose, onReadChapter }: ReadingPlan
                                   <BookOpen className="w-3 h-3" />
                                   {plan.days.reduce((s, d) => s + d.readings.length, 0)} cap.
                                 </span>
-                                <span className="flex items-center gap-1 text-xs font-medium text-violet-600">
+                                <span className="flex items-center gap-1 text-xs font-medium" style={{ color: "var(--color-primary, #006947)" }}>
                                   <Zap className="w-3 h-3" />
                                   +{plan.xpPerChapter} XP/cap
                                 </span>
@@ -320,7 +320,7 @@ export function ReadingPlanModal({ isOpen, onClose, onReadChapter }: ReadingPlan
                                     </p>
                                     {!read && (
                                       <p className="text-xs text-[#9CA3AF] mt-0.5 flex items-center gap-1">
-                                        <Zap className="w-2.5 h-2.5 text-violet-500" />
+                                        <Zap className="w-2.5 h-2.5" style={{ color: "#006947" }} />
                                         +{currentPlan.xpPerChapter} XP ao ler
                                       </p>
                                     )}
@@ -351,7 +351,8 @@ export function ReadingPlanModal({ isOpen, onClose, onReadChapter }: ReadingPlan
                         {activePlan.isCompleted ? (
                           <button
                             onClick={() => { abandonPlan(); setView("list"); }}
-                            className="w-full py-3 rounded-xl bg-violet-600 text-white font-semibold text-sm hover:bg-violet-700 transition-colors"
+                            className="w-full py-3 rounded-xl text-white font-semibold text-sm transition-colors"
+                          style={{ backgroundColor: "var(--color-primary, #006947)" }}
                           >
                             Iniciar novo plano
                           </button>

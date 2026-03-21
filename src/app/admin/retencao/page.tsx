@@ -65,7 +65,7 @@ async function RetencaoContent() {
 
       {/* Streak médio */}
       {kpis.avgStreak > 0 && (
-        <div className="bg-gradient-to-r from-[#7C3AED]/5 to-[#FB923C]/5 border border-[#7C3AED]/10 rounded-2xl p-4 flex items-center gap-3">
+        <div className="bg-gradient-to-r from-[#006947]/5 to-[#815100]/5 rounded-2xl p-4 flex items-center gap-3">
           <span className="text-2xl">🔥</span>
           <div>
             <p className="text-sm font-semibold text-[#1F2937]">

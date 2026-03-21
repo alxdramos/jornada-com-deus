@@ -44,9 +44,8 @@ export function GamificationCard() {
     <div className="relative">
       <AppCard
         title="Sua Jornada"
-        className="border-violet-200/30 dark:border-violet-800/20"
         style={{
-          background: "linear-gradient(135deg, rgba(124,58,237,0.04) 0%, rgba(202,138,4,0.04) 100%)",
+          background: "linear-gradient(135deg, rgba(0,105,71,0.04) 0%, rgba(129,81,0,0.04) 100%)",
         }}
       >
         <div className="space-y-5">
@@ -82,9 +81,15 @@ export function GamificationCard() {
             </div>
 
             {/* Nível badge */}
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-violet-100/80 dark:bg-violet-900/20 border border-violet-200/50 dark:border-violet-700/30">
-              <Star className="w-4 h-4 text-violet-600 dark:text-violet-400 fill-current" />
-              <span className="text-sm font-bold text-violet-700 dark:text-violet-300">
+            <div
+              className="flex items-center gap-2 px-3 py-1.5 rounded-xl"
+              style={{
+                background: "var(--color-primary-container)",
+                color: "var(--color-on-primary-container)",
+              }}
+            >
+              <Star className="w-4 h-4 fill-current" style={{ color: "var(--color-primary)" }} />
+              <span className="text-sm font-bold" style={{ color: "var(--color-on-primary-container)" }}>
                 Nível {progress.level}
               </span>
             </div>
@@ -107,7 +112,7 @@ export function GamificationCard() {
               <motion.div
                 className="h-full rounded-full"
                 style={{
-                  background: "linear-gradient(90deg, #7C3AED 0%, #CA8A04 100%)",
+                  background: "linear-gradient(90deg, var(--color-primary) 0%, var(--color-secondary) 100%)",
                 }}
                 initial={{ width: 0 }}
                 animate={{ width: `${xpProgress}%` }}
@@ -142,7 +147,8 @@ export function GamificationCard() {
                     text: `Estágio ${progress.treeLevel + 1} — ${stage?.name ?? "Crescendo"}!\n\n${progress.currentStreak} dias de streak\n${progress.completedDays} dias na jornada\n\nJunte-se a mim na Jornada com Deus!`,
                   });
                 }}
-                className="flex items-center gap-1 text-xs text-violet-600/70 dark:text-violet-400/70 hover:text-violet-600 dark:hover:text-violet-400 transition-colors px-2 py-1 rounded-lg hover:bg-violet-50 dark:hover:bg-violet-900/20"
+                className="flex items-center gap-1 text-xs transition-colors px-2 py-1 rounded-lg"
+              style={{ color: "var(--color-primary-dim)" }}
                 aria-label="Compartilhar progresso da Árvore da Vida"
               >
                 {copied ? (
@@ -187,7 +193,7 @@ export function GamificationCard() {
               transition={{ type: "spring", stiffness: 400, damping: 22 }}
               className="rounded-2xl px-8 py-6 text-center shadow-2xl mx-4 border border-white/20"
               style={{
-                background: "linear-gradient(135deg, #4C1D95 0%, #7C3AED 60%, #92400E 100%)",
+                background: "linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dim) 60%, var(--color-secondary) 100%)",
               }}
             >
               <motion.div
