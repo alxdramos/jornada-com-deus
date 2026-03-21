@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
-import type { Session, JWT } from 'next-auth'
+import type { Session } from 'next-auth'
+import type { JWT } from 'next-auth/jwt'
 
 // Extrair as funções de callback para teste
 const sessionCallback = async ({
@@ -9,7 +10,7 @@ const sessionCallback = async ({
   session: Session
   token: JWT
 }): Promise<Session> => {
-  if (token.sub) {
+  if (token.sub && session.user) {
     session.user.id = token.sub
   }
   return session
@@ -44,7 +45,7 @@ describe('Auth.js Callbacks', () => {
 
       const result = await sessionCallback({ session, token })
 
-      expect(result.user.id).toBe('user-123')
+      expect(result.user!.id).toBe('user-123')
     })
 
     it('retorna session sem user.id quando token.sub é undefined', async () => {
@@ -60,7 +61,7 @@ describe('Auth.js Callbacks', () => {
 
       const result = await sessionCallback({ session, token })
 
-      expect(result.user.id).toBeUndefined()
+      expect(result.user!.id).toBeUndefined()
     })
 
     it('preserva outros dados da session', async () => {
@@ -81,9 +82,9 @@ describe('Auth.js Callbacks', () => {
 
       const result = await sessionCallback({ session, token })
 
-      expect(result.user.email).toBe('test@example.com')
-      expect(result.user.name).toBe('Test User')
-      expect(result.user.image).toBe('https://example.com/image.jpg')
+      expect(result.user!.email).toBe('test@example.com')
+      expect(result.user!.name).toBe('Test User')
+      expect(result.user!.image).toBe('https://example.com/image.jpg')
       expect(result.expires).toBe(session.expires)
     })
   })
@@ -200,7 +201,7 @@ describe('Auth.js Callbacks', () => {
       })
 
       expect(modifiedToken.accessToken).toBe('token-from-provider')
-      expect(modifiedSession.user.id).toBe('user-789')
+      expect(modifiedSession.user!.id).toBe('user-789')
     })
   })
 })
