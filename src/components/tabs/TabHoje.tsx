@@ -9,8 +9,10 @@ import { getGreeting } from "@/components/VerseOfDayCard";
 import { useUserStore } from "@/stores/userStore";
 import { useProgressStore } from "@/stores/progressStore";
 import { useAuth } from "@/contexts/AuthContext";
+import { usePersonalization } from "@/hooks/usePersonalization";
+import { useTabStore } from "@/stores/tabStore";
 import { useState } from "react";
-import { Flame } from "lucide-react";
+import { Flame, Sparkles } from "lucide-react";
 
 export function TabHoje() {
   const [calendarioOpen, setCalendarioOpen] = useState(false);
@@ -18,10 +20,14 @@ export function TabHoje() {
   const { user: authUser } = useAuth();
   const user = useUserStore((s) => s.user);
   const { progress } = useProgressStore();
+  const { hasInterests, getInterestHint, getTopTabIds } = usePersonalization();
+  const setActiveTab = useTabStore((s) => s.setActiveTab);
 
   const displayName = user?.name || authUser?.user_metadata?.full_name || "Visitante";
   const firstName = displayName.split(" ")[0];
   const greeting = getGreeting();
+  const interestHint = hasInterests ? getInterestHint() : null;
+  const topTabId = hasInterests ? getTopTabIds(1)[0] : null;
 
   return (
     <div className="relative min-h-screen bg-bg-primary p-6 pb-36">
@@ -68,6 +74,15 @@ export function TabHoje() {
               year: "numeric",
             })}
           </p>
+          {interestHint && topTabId && (
+            <button
+              onClick={() => setActiveTab(topTabId as Parameters<typeof setActiveTab>[0])}
+              className="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-violet-50 dark:bg-violet-900/20 border border-violet-200/60 dark:border-violet-700/30 text-violet-700 dark:text-violet-300 text-xs font-medium active:scale-95 transition-transform"
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              {interestHint}
+            </button>
+          )}
         </div>
 
         {/* 4 etapas do dia + botão Concluir */}

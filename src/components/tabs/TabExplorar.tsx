@@ -7,6 +7,7 @@ import { SearchBar } from '@/components/molecules/SearchBar';
 import { useTabStore, TabId } from '@/stores/tabStore';
 import { ReadingPlanModal } from '@/components/tabs/biblia/ReadingPlanModal';
 import { useReadingPlanStore } from '@/stores/readingPlanStore';
+import { usePersonalization } from '@/hooks/usePersonalization';
 
 interface ExploreCard {
   id: TabId | 'planos';
@@ -54,10 +55,38 @@ const EXPLORE_CARDS: ExploreCard[] = [
   },
 ];
 
+function ExploreCardButton({
+  card,
+  onPress,
+}: {
+  card: ExploreCard;
+  onPress: () => void;
+}) {
+  return (
+    <button
+      onClick={onPress}
+      className="relative overflow-hidden rounded-2xl aspect-[3/2] cursor-pointer active:scale-[0.97] transition-transform focus:outline-none"
+    >
+      <Image
+        src={card.image}
+        alt={card.label}
+        fill
+        className="object-cover"
+        sizes="(max-width: 768px) 50vw, 33vw"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+      <span className="absolute bottom-3 left-3 right-3 text-white font-semibold text-sm leading-tight drop-shadow-md text-left">
+        {card.label}
+      </span>
+    </button>
+  );
+}
+
 export function TabExplorar() {
   const setActiveTab = useTabStore((s) => s.setActiveTab);
   const setPendingChapter = useReadingPlanStore((s) => s.setPendingChapter);
   const [planModalOpen, setPlanModalOpen] = useState(false);
+  const { hasInterests, sortedExploreCards, getTopTabIds } = usePersonalization();
 
   const handleSearch = (query: string) => {
     console.log('Search query:', query);
@@ -68,6 +97,18 @@ export function TabExplorar() {
     setPlanModalOpen(false);
     setActiveTab('biblia');
   }
+
+  function handleCardPress(card: ExploreCard) {
+    if (card.action === 'modal') {
+      setPlanModalOpen(true);
+    } else {
+      setActiveTab(card.id as TabId);
+    }
+  }
+
+  const topTabIds = hasInterests ? getTopTabIds(3) : [];
+  const forYouCards = EXPLORE_CARDS.filter((c) => topTabIds.includes(c.id));
+  const allCards = sortedExploreCards(EXPLORE_CARDS);
 
   return (
     <div className="min-h-screen bg-bg-primary p-6 pb-36">
@@ -80,31 +121,24 @@ export function TabExplorar() {
           fullWidth
         />
 
+        {hasInterests && forYouCards.length > 0 && (
+          <div>
+            <h2 className="text-text-primary text-xl font-bold mb-4">Para Você</h2>
+            <div className="grid grid-cols-2 gap-3">
+              {forYouCards.map((card) => (
+                <ExploreCardButton key={card.id} card={card} onPress={() => handleCardPress(card)} />
+              ))}
+            </div>
+          </div>
+        )}
+
         <div>
-          <h2 className="text-text-primary text-xl font-bold mb-4">Categorias</h2>
+          <h2 className="text-text-primary text-xl font-bold mb-4">
+            {hasInterests ? 'Todas as Categorias' : 'Categorias'}
+          </h2>
           <div className="grid grid-cols-2 gap-3">
-            {EXPLORE_CARDS.map((card) => (
-              <button
-                key={card.id}
-                onClick={() =>
-                  card.action === 'modal'
-                    ? setPlanModalOpen(true)
-                    : setActiveTab(card.id as TabId)
-                }
-                className="relative overflow-hidden rounded-2xl aspect-[3/2] cursor-pointer active:scale-[0.97] transition-transform focus:outline-none"
-              >
-                <Image
-                  src={card.image}
-                  alt={card.label}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 50vw, 33vw"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
-                <span className="absolute bottom-3 left-3 right-3 text-white font-semibold text-sm leading-tight drop-shadow-md text-left">
-                  {card.label}
-                </span>
-              </button>
+            {allCards.map((card) => (
+              <ExploreCardButton key={card.id} card={card} onPress={() => handleCardPress(card)} />
             ))}
           </div>
         </div>
