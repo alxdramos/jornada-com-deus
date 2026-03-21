@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, Users, CreditCard, ArrowLeft, Sprout, MessageSquare, BarChart2, Library } from 'lucide-react'
+import { LayoutDashboard, Users, CreditCard, ArrowLeft, Sprout, MessageSquare, BarChart2, Library, TrendingDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const navItems = [
@@ -10,6 +10,7 @@ const navItems = [
   { href: '/admin/usuarios', label: 'Usuários', icon: Users, exact: false },
   { href: '/admin/assinaturas', label: 'Assinaturas', icon: CreditCard, exact: false },
   { href: '/admin/analytics', label: 'Analytics', icon: BarChart2, exact: false },
+  { href: '/admin/retencao', label: 'Retenção', icon: TrendingDown, exact: false },
   { href: '/admin/conteudo', label: 'Conteúdo', icon: Library, exact: false },
   { href: '/admin/suporte', label: 'Suporte', icon: MessageSquare, exact: false },
 ]
