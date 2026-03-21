@@ -37,8 +37,8 @@ export function MeditationDetailModalWithPlayer({
       texto={meditation.description ?? ''}
       audioUrl={meditation.audioUrl}
       imageUrl={meditation.image}
-      gradientFrom="#8B5CF6"
-      gradientTo="#4C1D95"
+      gradientFrom="#6C4D8F"
+      gradientTo="#4C2E6D"
       isFavorite={isFavorite}
       onToggleFavorite={() => onToggleFavorite(meditation.id)}
       badges={badges}

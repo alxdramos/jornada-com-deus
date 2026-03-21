@@ -146,10 +146,13 @@
   --spacing-12: 48px;
 
   /* ========== BORDER RADIUS ========== */
+  /* Stitch scale: sm=8, md=12, lg=16, xl=20, 2xl=32, 3xl=48, full=9999 */
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
   --radius-xl: 20px;
+  --radius-2xl: 32px;  /* Stitch "lg" — large cards, modals */
+  --radius-3xl: 48px;  /* Stitch "xl" — pill-like containers */
   --radius-full: 9999px;
 
   /* ========== SHADOWS ========== */

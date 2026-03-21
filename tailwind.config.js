@@ -102,6 +102,8 @@ module.exports = {
         md: '12px',
         lg: '16px',
         xl: '20px',
+        '2xl': '32px',  // Stitch "lg" — large cards, modals
+        '3xl': '48px',  // Stitch "xl" — pill-like containers
       },
       spacing: {
         2: '8px',

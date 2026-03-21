@@ -60,16 +60,23 @@ export function GamificationCard() {
                   repeat: progress.currentStreak > 0 ? Infinity : 0,
                   repeatType: "reverse",
                 }}
-                className={`p-2.5 rounded-xl ${
+                className="p-2.5 rounded-xl"
+                style={
                   progress.currentStreak > 0
-                    ? "bg-gradient-to-br from-orange-400 to-red-500 shadow-sm"
-                    : "bg-gray-100 dark:bg-gray-800"
-                }`}
+                    ? {
+                        background: "var(--color-secondary-container)",
+                        boxShadow: "var(--shadow-sm)",
+                      }
+                    : { background: "var(--color-surface-container)" }
+                }
               >
                 <Flame
-                  className={`w-5 h-5 ${
-                    progress.currentStreak > 0 ? "text-white" : "text-gray-400"
-                  }`}
+                  className="w-5 h-5"
+                  style={
+                    progress.currentStreak > 0
+                      ? { color: "var(--color-secondary)" }
+                      : { color: "var(--color-on-surface-variant)" }
+                  }
                 />
               </motion.div>
               <div>
