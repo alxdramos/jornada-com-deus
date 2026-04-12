@@ -50,7 +50,7 @@ export function OracoesModal({
 
           {/* Scrollable List */}
           <div
-            className="flex-1 overflow-y-auto overscroll-contain p-4 space-y-3"
+            className="flex-1 overflow-y-auto overscroll-contain p-4 grid grid-cols-2 gap-3 content-start"
             style={{ paddingBottom: "max(env(safe-area-inset-bottom), 24px)" }}
           >
             {ORACOES.map((oracao) => (
@@ -74,7 +74,7 @@ export function OracoesModal({
             ))}
 
             {ORACOES.length === 0 && (
-              <div className="text-center py-12 text-[#9CA3AF]">
+              <div className="col-span-2 text-center py-12 text-[#9CA3AF]">
                 Nenhuma oração encontrada
               </div>
             )}

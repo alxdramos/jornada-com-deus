@@ -49,7 +49,7 @@ export function MeditacoesModal({ isOpen, onClose, onViewDetails }: MeditacoesMo
 
           {/* Scrollable List */}
           <div
-            className="flex-1 overflow-y-auto overscroll-contain p-4 space-y-3"
+            className="flex-1 overflow-y-auto overscroll-contain p-4 grid grid-cols-2 gap-3 content-start"
             style={{ paddingBottom: "max(env(safe-area-inset-bottom), 24px)" }}
           >
             {TODAS_MEDITACOES.map((med) => (
