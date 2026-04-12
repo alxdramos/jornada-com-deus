@@ -86,7 +86,7 @@ export function TabExplorar() {
   const setActiveTab = useTabStore((s) => s.setActiveTab);
   const setPendingChapter = useReadingPlanStore((s) => s.setPendingChapter);
   const [planModalOpen, setPlanModalOpen] = useState(false);
-  const { hasInterests, sortedExploreCards, getTopTabIds } = usePersonalization();
+  const { sortedExploreCards } = usePersonalization();
 
   const handleSearch = (query: string) => {
     console.log('Search query:', query);
@@ -106,8 +106,6 @@ export function TabExplorar() {
     }
   }
 
-  const topTabIds = hasInterests ? getTopTabIds(3) : [];
-  const forYouCards = EXPLORE_CARDS.filter((c) => topTabIds.includes(c.id));
   const allCards = sortedExploreCards(EXPLORE_CARDS);
 
   return (
@@ -121,21 +119,8 @@ export function TabExplorar() {
           fullWidth
         />
 
-        {hasInterests && forYouCards.length > 0 && (
-          <div>
-            <h2 className="text-text-primary text-xl font-bold mb-4">Para Você</h2>
-            <div className="grid grid-cols-2 gap-3">
-              {forYouCards.map((card) => (
-                <ExploreCardButton key={card.id} card={card} onPress={() => handleCardPress(card)} />
-              ))}
-            </div>
-          </div>
-        )}
-
         <div>
-          <h2 className="text-text-primary text-xl font-bold mb-4">
-            {hasInterests ? 'Todas as Categorias' : 'Categorias'}
-          </h2>
+          <h2 className="text-text-primary text-xl font-bold mb-4">Categorias</h2>
           <div className="grid grid-cols-2 gap-3">
             {allCards.map((card) => (
               <ExploreCardButton key={card.id} card={card} onPress={() => handleCardPress(card)} />
