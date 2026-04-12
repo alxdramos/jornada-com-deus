@@ -104,9 +104,11 @@ export function PrayerCard({
         <h3 className="font-semibold text-sm text-text-primary dark:text-[#F0EDE8] line-clamp-2 leading-snug">
           {prayer.title}
         </h3>
-        <p className="text-xs text-text-secondary dark:text-[#8A8078]">
-          {formatDuration(prayer.duration)}
-        </p>
+        {!!prayer.duration && (
+          <p className="text-xs text-text-secondary dark:text-[#8A8078]">
+            {formatDuration(prayer.duration)}
+          </p>
+        )}
         {prayer.content && (
           <p className="text-xs text-text-secondary dark:text-[#8A8078] line-clamp-2">
             {prayer.content}

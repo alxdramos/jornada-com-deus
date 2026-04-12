@@ -101,7 +101,7 @@ export function ImmersiveContentPlayer({
         </div>
 
         {/* Audio element */}
-        <audio ref={audioRef} crossOrigin="anonymous" />
+        <audio ref={audioRef} />
 
         {/* Top bar */}
         <div className="relative z-10 flex items-center justify-between px-4 pt-2 pb-2">

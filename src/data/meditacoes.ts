@@ -34,7 +34,7 @@ export interface MeditationCard {
 export const MEDITACOES: MeditationCard[] = [
   {
     "id": "med_0",
-    "title": "\"A Rocha Firme: Descanso e Renovação\"",
+    "title": "A Rocha Firme: Descanso e Renovação",
     "duration": "--:--",
     "category": "CORPO",
     "plus": false,
@@ -46,7 +46,7 @@ export const MEDITACOES: MeditationCard[] = [
   },
   {
     "id": "med_1",
-    "title": "\"Na Clareira da Paz: Acalmando a Tempestade com Jesus\"",
+    "title": "Na Clareira da Paz: Acalmando a Tempestade com Jesus",
     "duration": "--:--",
     "category": "ESPÍRITO",
     "plus": false,

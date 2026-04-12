@@ -139,9 +139,11 @@ export function MeditationCard({
         <h3 className="font-semibold text-sm text-text-primary dark:text-[#F0EDE8] line-clamp-2 leading-snug">
           {meditation.title}
         </h3>
-        <p className="text-xs text-text-secondary dark:text-[#8A8078]">
-          {meditation.duration}
-        </p>
+        {meditation.duration && meditation.duration !== '--:--' && (
+          <p className="text-xs text-text-secondary dark:text-[#8A8078]">
+            {meditation.duration}
+          </p>
+        )}
         {meditation.description && (
           <p className="text-xs text-text-secondary dark:text-[#8A8078] line-clamp-2">
             {meditation.description}

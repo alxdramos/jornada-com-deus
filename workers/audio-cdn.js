@@ -25,10 +25,8 @@ const BUCKET_MAP = {
   'Dev_': 'https://pub-18fa930087714513af7d60ab5d9586e7.r2.dev',
 };
 
-const ALLOWED_ORIGIN = 'https://app.minhajornadadiaria.com.br';
-
 const CORS_HEADERS = {
-  'Access-Control-Allow-Origin': ALLOWED_ORIGIN,
+  'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, HEAD, OPTIONS',
   'Access-Control-Allow-Headers': 'Range, Content-Type',
   'Access-Control-Expose-Headers': 'Content-Range, Content-Length, Accept-Ranges',
