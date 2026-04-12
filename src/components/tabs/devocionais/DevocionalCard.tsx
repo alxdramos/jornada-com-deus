@@ -8,6 +8,7 @@ interface DevocionalCardProps {
   isFavorite: boolean;
   onPlay: (devocional: Devocional) => void;
   onFavorite: (id: string) => void;
+  large?: boolean;
 }
 
 // Imagem única por devocional
@@ -112,7 +113,7 @@ const CATEGORY_COLORS: Record<string, string> = {
   "Geral": "bg-gray-100/80 text-gray-600 dark:bg-gray-800/50 dark:text-gray-400",
 };
 
-export function DevocionalCard({ devocional, isFavorite, onPlay, onFavorite }: DevocionalCardProps) {
+export function DevocionalCard({ devocional, isFavorite, onPlay, onFavorite, large }: DevocionalCardProps) {
   const categoryColor = CATEGORY_COLORS[devocional.category] || CATEGORY_COLORS.Geral;
   const imageUrl = DEVOCIONAL_IMAGES[devocional.id] || CATEGORY_FALLBACK_IMAGES[devocional.category];
 
@@ -121,18 +122,17 @@ export function DevocionalCard({ devocional, isFavorite, onPlay, onFavorite }: D
       className={cn(
         "rounded-2xl overflow-hidden cursor-pointer group",
         "border border-white/60 dark:border-white/[0.06]",
-        "bg-white/80 dark:bg-[#231F1B]/80",
+        "bg-white dark:bg-[#231F1B]",
         "shadow-sm hover:shadow-md",
         "transition-all duration-200 ease-out",
         "hover:-translate-y-0.5"
       )}
-      style={{
-        backdropFilter: "blur(12px)",
-        WebkitBackdropFilter: "blur(12px)",
-      }}
       onClick={() => onPlay(devocional)}
     >
-      <div className="h-24 relative overflow-hidden bg-gray-200 dark:bg-gray-800">
+      <div className={cn(
+        "relative overflow-hidden bg-gray-200 dark:bg-gray-800",
+        large ? "h-[140px]" : "h-24"
+      )}>
         {imageUrl ? (
           <Image
             src={imageUrl}
@@ -146,7 +146,12 @@ export function DevocionalCard({ devocional, isFavorite, onPlay, onFavorite }: D
             <BookHeart className="w-10 h-10 text-white/80" />
           </div>
         )}
-        <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors duration-200" />
+        <div className={cn(
+          "absolute inset-0 transition-colors duration-200",
+          large
+            ? "bg-gradient-to-t from-black/55 via-black/15 to-transparent group-hover:from-black/65"
+            : "bg-black/20 group-hover:bg-black/30"
+        )} />
 
         {/* Referência bíblica */}
         {devocional.reference && (

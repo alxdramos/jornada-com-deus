@@ -65,6 +65,7 @@ interface MeditationCardProps {
   isFavorite: boolean;
   onPlay: (meditation: MeditationCardType) => void;
   onFavorite: (id: string) => void;
+  large?: boolean;
 }
 
 export function MeditationCard({
@@ -73,6 +74,7 @@ export function MeditationCard({
   isFavorite,
   onPlay,
   onFavorite,
+  large,
 }: MeditationCardProps) {
   const canPlay = !meditation.plus || isPlus;
   const imageUrl = meditation.image || MEDITATION_IMAGES[meditation.id];
@@ -84,16 +86,18 @@ export function MeditationCard({
       className={cn(
         "rounded-2xl overflow-hidden cursor-pointer group",
         "border border-white/60 dark:border-white/[0.06]",
-        "bg-white/80 dark:bg-[#231F1B]/80",
+        "bg-white dark:bg-[#231F1B]",
         "shadow-sm hover:shadow-md",
         "transition-all duration-200 ease-out",
         "hover:-translate-y-0.5"
       )}
-      style={{ backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)" }}
       onClick={() => onPlay(meditation)}
     >
-      {/* Imagem compacta */}
-      <div className="h-24 relative overflow-hidden bg-gray-200 dark:bg-gray-800">
+      {/* Imagem */}
+      <div className={cn(
+        "relative overflow-hidden bg-gray-200 dark:bg-gray-800",
+        large ? "h-[140px]" : "h-24"
+      )}>
         {imageUrl ? (
           <Image
             fill
@@ -105,9 +109,14 @@ export function MeditationCard({
         ) : (
           <div className="w-full h-full bg-gradient-to-br from-emerald-400 to-teal-500" />
         )}
-        <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors duration-200" />
+        <div className={cn(
+          "absolute inset-0 transition-colors duration-200",
+          large
+            ? "bg-gradient-to-t from-black/55 via-black/15 to-transparent group-hover:from-black/65"
+            : "bg-black/20 group-hover:bg-black/30"
+        )} />
 
-        {/* Tag sobreposta (equivalente ao versículo no devocional) */}
+        {/* Tag sobreposta */}
         {firstTag && (
           <span className="absolute bottom-2 left-3 text-white/90 text-xs font-semibold bg-black/25 backdrop-blur-sm px-2 py-0.5 rounded-full">
             {firstTag}

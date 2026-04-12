@@ -27,6 +27,7 @@ interface PrayerCardProps {
   isFavorite: boolean;
   onToggleFavorite: (prayerId: string) => void;
   onViewDetails: (prayer: Prayer) => void;
+  large?: boolean;
 }
 
 export function PrayerCard({
@@ -34,6 +35,7 @@ export function PrayerCard({
   isFavorite,
   onToggleFavorite,
   onViewDetails,
+  large,
 }: PrayerCardProps) {
   const [imgError, setImgError] = useState(false);
   const imageUrl = prayer.imagem?.background ? `/images/${prayer.imagem.background}` : null;
@@ -44,16 +46,18 @@ export function PrayerCard({
       className={cn(
         "rounded-2xl overflow-hidden cursor-pointer group",
         "border border-white/60 dark:border-white/[0.06]",
-        "bg-white/80 dark:bg-[#231F1B]/80",
+        "bg-white dark:bg-[#231F1B]",
         "shadow-sm hover:shadow-md",
         "transition-all duration-200 ease-out",
         "hover:-translate-y-0.5"
       )}
-      style={{ backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)" }}
       onClick={() => onViewDetails(prayer)}
     >
-      {/* Imagem compacta */}
-      <div className="h-24 relative overflow-hidden bg-gray-200 dark:bg-gray-800">
+      {/* Imagem */}
+      <div className={cn(
+        "relative overflow-hidden bg-gray-200 dark:bg-gray-800",
+        large ? "h-[140px]" : "h-24"
+      )}>
         {imageUrl && !imgError ? (
           <Image
             fill
@@ -66,9 +70,14 @@ export function PrayerCard({
         ) : (
           <div className="w-full h-full bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center" />
         )}
-        <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors duration-200" />
+        <div className={cn(
+          "absolute inset-0 transition-colors duration-200",
+          large
+            ? "bg-gradient-to-t from-black/55 via-black/15 to-transparent group-hover:from-black/65"
+            : "bg-black/20 group-hover:bg-black/30"
+        )} />
 
-        {/* Categoria sobreposta (equivalente ao versículo no devocional) */}
+        {/* Categoria sobreposta */}
         {prayer.category && (
           <span className="absolute bottom-2 left-3 text-white/90 text-xs font-semibold bg-black/25 backdrop-blur-sm px-2 py-0.5 rounded-full">
             {prayer.category}
