@@ -4,6 +4,15 @@ import { createHmac, timingSafeEqual } from 'crypto';
 import { timingSafeCompare, detectPlanInterval, calcExpiresAt, type PlanInterval } from './utils';
 import { HotmartWebhookPayloadSchema } from '@/lib/validation/schemas';
 import { hotmartWebhookLimiter } from '@/lib/rate-limit';
+import { sendEmail } from '@/lib/email';
+import {
+  subscriptionConfirmedEmailHtml,
+  subscriptionConfirmedEmailSubject,
+} from '@/lib/email-templates/subscription-confirmed';
+import {
+  subscriptionCancelledEmailHtml,
+  subscriptionCancelledEmailSubject,
+} from '@/lib/email-templates/subscription-cancelled';
 
 // ─── Supabase ────────────────────────────────────────────────────────────────
 
@@ -280,6 +289,35 @@ export async function POST(req: NextRequest) {
         .update({ processed: true })
         .eq('hotmart_transaction', transaction)
         .eq('buyer_email', buyerEmail);
+    }
+
+    // ── 14. Disparar email transacional (fire-and-forget) ─────────────────
+    const { data: profileForEmail } = await supabase
+      .from('profiles')
+      .select('name')
+      .eq('id', userId)
+      .maybeSingle();
+
+    const userName = profileForEmail?.name ?? null;
+
+    if (isNewSubscription) {
+      sendEmail({
+        to: buyerEmail,
+        subject: subscriptionConfirmedEmailSubject(),
+        html: subscriptionConfirmedEmailHtml({
+          name: userName,
+          planInterval,
+          expiresAt: calcExpiresAt(planInterval),
+        }),
+        tags: [{ name: 'template', value: 'subscription-confirmed' }],
+      }).catch((err) => console.error('[hotmart/webhook] Falha ao enviar email de confirmação:', err));
+    } else if (event === 'PURCHASE_CANCELED' || event === 'SUBSCRIPTION_CANCELLATION') {
+      sendEmail({
+        to: buyerEmail,
+        subject: subscriptionCancelledEmailSubject(),
+        html: subscriptionCancelledEmailHtml({ name: userName }),
+        tags: [{ name: 'template', value: 'subscription-cancelled' }],
+      }).catch((err) => console.error('[hotmart/webhook] Falha ao enviar email de cancelamento:', err));
     }
 
     console.log(`[hotmart/webhook] Evento ${event} processado → status: ${newStatus} | intervalo: ${planInterval}`);
