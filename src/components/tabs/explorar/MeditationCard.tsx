@@ -1,5 +1,5 @@
 import { MeditationCard as MeditationCardType } from "@/data/meditacoes";
-import { Heart, Play, Crown } from "lucide-react";
+import { Heart, Headphones, Crown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 
@@ -25,16 +25,16 @@ const MEDITATION_IMAGES: Record<string, string> = {
 };
 
 const TAG_COLORS: Record<string, string> = {
-  "Sono": "bg-blue-100/80 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
-  "Paz": "bg-emerald-100/80 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300",
-  "Cura": "bg-rose-100/80 text-rose-700 dark:bg-rose-900/30 dark:text-rose-300",
-  "Força": "bg-amber-100/80 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
-  "Cura Interior e Emoções": "bg-blue-100/80 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
-  "Insônia e Ansiedade Noturna": "bg-amber-100/80 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
-  "Autocontrole e Hábitos": "bg-rose-100/80 text-rose-700 dark:bg-rose-900/30 dark:text-rose-300",
-  "Relacionamentos e Amor": "bg-emerald-100/80 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300",
-  "Propósito e Direção": "bg-blue-100/80 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
-  "Família": "bg-amber-100/80 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
+  "Sono":                       "bg-blue-100/80 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
+  "Paz":                        "bg-emerald-100/80 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300",
+  "Cura":                       "bg-rose-100/80 text-rose-700 dark:bg-rose-900/30 dark:text-rose-300",
+  "Força":                      "bg-amber-100/80 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
+  "Cura Interior e Emoções":    "bg-blue-100/80 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
+  "Insônia e Ansiedade Noturna":"bg-amber-100/80 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
+  "Autocontrole e Hábitos":     "bg-rose-100/80 text-rose-700 dark:bg-rose-900/30 dark:text-rose-300",
+  "Relacionamentos e Amor":     "bg-emerald-100/80 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300",
+  "Propósito e Direção":        "bg-blue-100/80 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
+  "Família":                    "bg-amber-100/80 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
 };
 
 const FALLBACK_TAG_COLORS = [
@@ -64,6 +64,9 @@ export function MeditationCard({
   onFavorite,
 }: MeditationCardProps) {
   const canPlay = !meditation.plus || isPlus;
+  const imageUrl = meditation.image || MEDITATION_IMAGES[meditation.id];
+  const firstTag = meditation.tags[0];
+  const tagColor = getTagColor(firstTag, 0);
 
   return (
     <div
@@ -75,18 +78,15 @@ export function MeditationCard({
         "transition-all duration-200 ease-out",
         "hover:-translate-y-0.5"
       )}
-      style={{
-        backdropFilter: "blur(12px)",
-        WebkitBackdropFilter: "blur(12px)",
-      }}
+      style={{ backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)" }}
       onClick={() => onPlay(meditation)}
     >
-      {/* Imagem */}
-      <div className="relative h-40 overflow-hidden bg-gray-200 dark:bg-gray-800">
-        {(meditation.image || MEDITATION_IMAGES[meditation.id]) ? (
+      {/* Imagem compacta */}
+      <div className="h-24 relative overflow-hidden bg-gray-200 dark:bg-gray-800">
+        {imageUrl ? (
           <Image
             fill
-            src={meditation.image || MEDITATION_IMAGES[meditation.id]}
+            src={imageUrl}
             alt={meditation.title}
             className="object-cover group-hover:scale-105 transition-transform duration-300"
             sizes="(max-width: 768px) 50vw, 33vw"
@@ -94,39 +94,32 @@ export function MeditationCard({
         ) : (
           <div className="w-full h-full bg-gradient-to-br from-emerald-400 to-teal-500" />
         )}
+        <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors duration-200" />
 
-        {/* Overlay de botões ao hover */}
-        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-200 flex items-center justify-center gap-2">
-          <button
-            onClick={(e) => { e.stopPropagation(); onPlay(meditation); }}
-            className={cn(
-              "p-3 rounded-full transition-all shadow-lg",
-              canPlay
-                ? "bg-white text-emerald-700 hover:bg-emerald-700 hover:text-white"
-                : "bg-gray-500/80 text-white cursor-not-allowed"
-            )}
-            disabled={!canPlay}
-            aria-label="Reproduzir meditação"
-          >
-            <Play className="w-5 h-5 fill-current" />
-          </button>
-          <button
-            onClick={(e) => { e.stopPropagation(); onFavorite(meditation.id); }}
-            className={cn(
-              "p-3 rounded-full transition-all shadow-lg",
-              isFavorite
-                ? "bg-rose-500 text-white"
-                : "bg-white text-rose-500 hover:bg-rose-500 hover:text-white"
-            )}
-            aria-label={isFavorite ? "Remover dos favoritos" : "Adicionar aos favoritos"}
-          >
-            <Heart className={cn("w-5 h-5", isFavorite && "fill-current")} />
-          </button>
-        </div>
+        {/* Tag sobreposta (equivalente ao versículo no devocional) */}
+        {firstTag && (
+          <span className="absolute bottom-2 left-3 text-white/90 text-xs font-semibold bg-black/25 backdrop-blur-sm px-2 py-0.5 rounded-full">
+            {firstTag}
+          </span>
+        )}
+
+        {/* Favorito */}
+        <button
+          onClick={(e) => { e.stopPropagation(); onFavorite(meditation.id); }}
+          className={cn(
+            "absolute top-2 right-2 p-1.5 rounded-full transition-all duration-200",
+            isFavorite
+              ? "text-rose-400 bg-white/30 backdrop-blur-sm"
+              : "text-white/70 hover:bg-white/20 backdrop-blur-sm"
+          )}
+          aria-label={isFavorite ? "Remover dos favoritos" : "Adicionar aos favoritos"}
+        >
+          <Heart className={cn("w-4 h-4", isFavorite && "fill-current text-rose-400")} />
+        </button>
 
         {/* Badge PLUS */}
         {meditation.plus && !isPlus && (
-          <div className="absolute top-2 right-2">
+          <div className="absolute top-2 left-2">
             <span className="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-2 py-0.5 rounded-full text-xs font-semibold flex items-center gap-1 shadow-sm">
               <Crown className="w-3 h-3" /> PLUS
             </span>
@@ -135,32 +128,28 @@ export function MeditationCard({
       </div>
 
       {/* Conteúdo */}
-      <div className="p-3 space-y-1.5">
-        <h3 className="font-semibold text-sm text-text-primary dark:text-[#F0EDE8] line-clamp-2 leading-snug">
+      <div className="p-3 space-y-2">
+        <h3 className={cn(
+          "font-semibold text-sm text-text-primary dark:text-[#F0EDE8] line-clamp-2 leading-snug",
+          !canPlay && "opacity-60"
+        )}>
           {meditation.title}
         </h3>
-        {meditation.duration && meditation.duration !== '--:--' && (
-          <p className="text-xs text-text-secondary dark:text-[#8A8078]">
-            {meditation.duration}
-          </p>
-        )}
-        {meditation.description && (
-          <p className="text-xs text-text-secondary dark:text-[#8A8078] line-clamp-2">
-            {meditation.description}
-          </p>
-        )}
-        {meditation.tags.length > 0 && (
-          <div className="flex gap-1 mt-1.5 flex-wrap">
-            {meditation.tags.slice(0, 2).map((tag, i) => (
-              <span
-                key={tag}
-                className={cn("px-2 py-0.5 rounded-full text-xs font-medium", getTagColor(tag, i))}
-              >
-                {tag}
-              </span>
-            ))}
+        <div className="flex items-center justify-between">
+          {firstTag ? (
+            <span className={cn("text-xs px-2 py-0.5 rounded-full font-medium", tagColor)}>
+              {firstTag}
+            </span>
+          ) : (
+            <span className="text-xs px-2 py-0.5 rounded-full font-medium bg-gray-100/80 text-gray-600">
+              {meditation.category}
+            </span>
+          )}
+          <div className="flex items-center gap-1 text-emerald-500 dark:text-emerald-400">
+            <Headphones className="w-3.5 h-3.5" />
+            <span className="text-xs text-text-secondary dark:text-[#8A8078]">Áudio</span>
           </div>
-        )}
+        </div>
       </div>
     </div>
   );

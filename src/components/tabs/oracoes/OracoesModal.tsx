@@ -2,7 +2,7 @@
 
 import { ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ORACOES, Prayer } from "@/data/oracoes";
+import { Prayer, PRAYERS_PREDEFINIDAS } from "@/data/oracoes";
 import { PrayerCard } from "./PrayerCard";
 
 interface OracoesModalProps {
@@ -43,7 +43,7 @@ export function OracoesModal({
               <ChevronDown className="w-5 h-5 text-gray-600" />
             </motion.button>
             <h2 className="text-base font-semibold text-[#1F2937]">
-              Todas as Orações ({ORACOES.length})
+              Todas as Orações ({PRAYERS_PREDEFINIDAS.length})
             </h2>
             <div className="w-9" />
           </div>
@@ -53,27 +53,17 @@ export function OracoesModal({
             className="flex-1 overflow-y-auto overscroll-contain p-4 grid grid-cols-2 gap-3 content-start"
             style={{ paddingBottom: "max(env(safe-area-inset-bottom), 24px)" }}
           >
-            {ORACOES.map((oracao) => (
+            {PRAYERS_PREDEFINIDAS.map((prayer) => (
               <PrayerCard
-                key={oracao.id}
-                prayer={{
-                  id: oracao.id,
-                  title: oracao.titulo,
-                  content: oracao.texto,
-                  category: oracao.theme && oracao.theme !== "default" ? oracao.theme : "Geral",
-                  isCustom: false,
-                  createdAt: new Date(oracao.createdAt),
-                  audioUrl: oracao.audioUrl,
-                  duration: oracao.duration,
-                  imagem: oracao.imagem,
-                }}
-                isFavorite={isFavorite(oracao.id)}
+                key={prayer.id}
+                prayer={prayer}
+                isFavorite={isFavorite(prayer.id)}
                 onToggleFavorite={onToggleFavorite}
                 onViewDetails={onViewDetails}
               />
             ))}
 
-            {ORACOES.length === 0 && (
+            {PRAYERS_PREDEFINIDAS.length === 0 && (
               <div className="col-span-2 text-center py-12 text-[#9CA3AF]">
                 Nenhuma oração encontrada
               </div>
