@@ -22,6 +22,18 @@ const MEDITATION_IMAGES: Record<string, string> = {
   med_14: "/images/meditacoes/med-14-cura-vergonha.webp",
   med_15: "/images/meditacoes/med-15-guardando-coracao.webp",
   med_16: "/images/meditacoes/med-16-autoimagem-curta.webp",
+  // med_17-27: reutilizam imagens temáticas existentes
+  med_17: "/images/meditacoes/med-10-cura-culpa.webp",
+  med_18: "/images/meditacoes/med-0-rocha-descanso.webp",
+  med_19: "/images/meditacoes/med-1-clareira-paz.webp",
+  med_20: "/images/meditacoes/med-9-paz-interior.webp",
+  med_21: "/images/meditacoes/med-11-portas-deus.webp",
+  med_22: "/images/meditacoes/med-14-cura-vergonha.webp",
+  med_23: "/images/meditacoes/med-4-confianca-oracao.webp",
+  med_24: "/images/meditacoes/med-7-madrugada-paz.webp",
+  med_25: "/images/meditacoes/med-12-ansiedade-respiracao.webp",
+  med_26: "/images/meditacoes/med-15-guardando-coracao.webp",
+  med_27: "/images/meditacoes/med-9-paz-interior.webp",
 };
 
 const TAG_COLORS: Record<string, string> = {

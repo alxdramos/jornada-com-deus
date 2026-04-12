@@ -22,6 +22,16 @@ const DEVOCIONAL_IMAGES: Record<string, string> = {
   dev_7: "/images/devocionais/dev-7-perdao-liberta.webp",
 };
 
+// Fallback por categoria para devocionais sem imagem própria
+const CATEGORY_FALLBACK_IMAGES: Record<string, string> = {
+  "Fé":        "/images/devocionais/dev-4-fe-montanhas.webp",
+  "Esperança": "/images/devocionais/dev-3-alegria-tempestade.webp",
+  "Paz":       "/images/devocionais/dev-2-descanso-deus.webp",
+  "Oração":    "/images/devocionais/dev-5-oracao-pai.webp",
+  "Gratidão":  "/images/devocionais/dev-6-gratidao-vida.webp",
+  "Perdão":    "/images/devocionais/dev-7-perdao-liberta.webp",
+};
+
 const CATEGORY_COLORS: Record<string, string> = {
   "Fé": "bg-emerald-100/80 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300",
   "Esperança": "bg-amber-100/80 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
@@ -34,7 +44,7 @@ const CATEGORY_COLORS: Record<string, string> = {
 
 export function DevocionalCard({ devocional, isFavorite, onPlay, onFavorite }: DevocionalCardProps) {
   const categoryColor = CATEGORY_COLORS[devocional.category] || CATEGORY_COLORS.Geral;
-  const imageUrl = DEVOCIONAL_IMAGES[devocional.id];
+  const imageUrl = DEVOCIONAL_IMAGES[devocional.id] || CATEGORY_FALLBACK_IMAGES[devocional.category];
 
   return (
     <div
