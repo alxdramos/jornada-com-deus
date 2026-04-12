@@ -72,8 +72,8 @@ const nextConfig: NextConfig = {
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com",
               "img-src 'self' data: blob: https://lh3.googleusercontent.com https://*.r2.dev https://images.unsplash.com",
-              // media-src: R2 direto + CDN customizado (hardcoded para não depender de env no build)
-              "media-src 'self' blob: https://*.r2.dev https://audio.minhajornadadiaria.com.br",
+              // media-src: R2 direto + Workers.dev (URL padrão Cloudflare) + custom domain futuro
+              "media-src 'self' blob: https://*.r2.dev https://*.workers.dev https://audio.minhajornadadiaria.com.br",
               "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.sentry.io https://browser.sentry-cdn.com https://accounts.google.com",
               "worker-src 'self' blob:",
               "frame-src https://accounts.google.com",
