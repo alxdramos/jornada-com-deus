@@ -131,7 +131,7 @@ export function DevocionalCard({ devocional, isFavorite, onPlay, onFavorite, lar
     >
       <div className={cn(
         "relative overflow-hidden bg-gray-200 dark:bg-gray-800",
-        large ? "h-[140px]" : "h-24"
+        large ? "h-[180px]" : "h-24"
       )}>
         {imageUrl ? (
           <Image
@@ -139,7 +139,7 @@ export function DevocionalCard({ devocional, isFavorite, onPlay, onFavorite, lar
             alt={devocional.shortTitle}
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-300"
-            sizes="(max-width: 768px) 50vw, 33vw"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           />
         ) : (
           <div className="w-full h-full bg-gradient-to-br from-orange-400 to-amber-600 flex items-center justify-center">
