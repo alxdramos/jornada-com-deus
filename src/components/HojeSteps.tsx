@@ -2,31 +2,25 @@
 
 import { useMemo } from "react";
 import { motion } from "framer-motion";
-import { Quote, BookOpen, MessageCircle, Bird, Volume2, Share2, Check } from "lucide-react";
+import { Quote, BookOpen, MessageCircle, Bird, Volume2, Share2, Check, ChevronRight } from "lucide-react";
 import { useNativeShare } from "@/hooks/useNativeShare";
-import { useUserStore } from "@/stores/userStore";
 import { cn } from "@/lib/utils";
 import { useHojeSteps } from "@/hooks/useHojeSteps";
 import { DEVOCIONAL_FIXO } from "@/data/hojeSteps";
-import { ImmersiveAudioPlayer } from "./ImmersiveAudioPlayer";
 import { ExpandableStepCard } from "./hoje/ExpandableStepCard";
-import { DevocionalReadModal } from "./hoje/DevocionalReadModal";
 import { DayCompletionModal, MilestoneModal } from "./gamification";
 import { getVersiculoDoDia } from "@/data/versiculos";
 import { getPassagemDoDia } from "@/data/passagens-diarias";
 import { getOracaoDoDia } from "@/data/oracoes-diarias";
+import { useTabStore } from "@/stores/tabStore";
 
 export function HojeSteps() {
   const {
     completados,
     expandido,
-    playerAberto,
-    lerAberto,
     todayDone,
     toggleEtapa,
     toggleExpandido,
-    setPlayerAberto,
-    setLerAberto,
     handleConcluirDia,
     showDayCompletion,
     showMilestone,
@@ -35,8 +29,7 @@ export function HojeSteps() {
     handleMilestoneClose,
   } = useHojeSteps();
 
-  const user = useUserStore((s) => s.user);
-  const isPlus = user?.isPlus ?? false;
+  const setActiveTab = useTabStore((s) => s.setActiveTab);
 
   const versiculoDoDia = useMemo(() => getVersiculoDoDia(), []);
   const passagemDoDia = useMemo(() => getPassagemDoDia(), []);
@@ -160,23 +153,27 @@ export function HojeSteps() {
             </button>
 
             <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2">
+              <button
+                onClick={() => setActiveTab("devocional")}
+                className="flex items-center gap-2 text-left w-full"
+              >
                 <MessageCircle className="w-5 h-5 shrink-0 text-[#FB923C]" />
                 <span className="font-medium text-[#1F2937]">Devocional</span>
-              </div>
+                <ChevronRight className="w-4 h-4 text-[#9CA3AF] ml-auto" />
+              </button>
               <p className="text-sm font-semibold text-[#1F2937] mt-0.5">
                 {DEVOCIONAL_FIXO.refBiblica}
               </p>
               <div className="flex gap-2 mt-2">
                 <button
-                  onClick={() => setPlayerAberto(true)}
+                  onClick={() => setActiveTab("devocional")}
                   className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#1F2937] text-white text-sm font-medium"
                 >
                   <Volume2 className="w-4 h-4" />
                   OUVIR
                 </button>
                 <button
-                  onClick={() => setLerAberto(true)}
+                  onClick={() => setActiveTab("devocional")}
                   className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#1F2937] text-white text-sm font-medium"
                 >
                   <BookOpen className="w-4 h-4" />
@@ -236,19 +233,6 @@ export function HojeSteps() {
           Concluir meu dia hoje
         </motion.button>
       )}
-
-      <ImmersiveAudioPlayer
-        isOpen={playerAberto}
-        onClose={() => setPlayerAberto(false)}
-        titulo={DEVOCIONAL_FIXO.titulo}
-        texto={DEVOCIONAL_FIXO.texto}
-        isPlus={isPlus}
-      />
-
-      <DevocionalReadModal
-        isOpen={lerAberto}
-        onClose={() => setLerAberto(false)}
-      />
 
       {/* Modais de celebração */}
       {celebrationData && (
