@@ -2,12 +2,13 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import { Search } from 'lucide-react';
 import { UserHeader } from '@/components/layout/UserHeader';
-import { SearchBar } from '@/components/molecules/SearchBar';
 import { useTabStore, TabId } from '@/stores/tabStore';
 import { ReadingPlanModal } from '@/components/tabs/biblia/ReadingPlanModal';
 import { useReadingPlanStore } from '@/stores/readingPlanStore';
 import { usePersonalization } from '@/hooks/usePersonalization';
+import { useSearchStore } from '@/hooks/useGlobalSearch';
 
 interface ExploreCard {
   id: TabId | 'planos';
@@ -87,10 +88,7 @@ export function TabExplorar() {
   const setPendingChapter = useReadingPlanStore((s) => s.setPendingChapter);
   const [planModalOpen, setPlanModalOpen] = useState(false);
   const { sortedExploreCards } = usePersonalization();
-
-  const handleSearch = (query: string) => {
-    console.log('Search query:', query);
-  };
+  const openSearch = useSearchStore((s) => s.open);
 
   function handleOpenChapterFromExplorer(bookId: string, bookName: string, chapter: number) {
     setPendingChapter({ bookId, bookName, chapter });
@@ -113,11 +111,17 @@ export function TabExplorar() {
       <div className="max-w-4xl mx-auto space-y-6">
         <UserHeader title="Descobrir" />
 
-        <SearchBar
-          placeholder="Orações, Categorias, Bíblia e Mais"
-          onSearch={handleSearch}
-          fullWidth
-        />
+        <button
+          onClick={openSearch}
+          className="w-full flex items-center gap-3 px-4 py-3 bg-white rounded-xl border border-[#E5E7EB] shadow-sm text-left hover:border-[#FB923C] transition-colors group"
+          aria-label="Abrir busca global"
+        >
+          <Search className="w-4 h-4 text-[#9CA3AF] shrink-0 group-hover:text-[#FB923C] transition-colors" />
+          <span className="text-[#9CA3AF] text-sm flex-1">Devocionais, Orações, Meditações e Mais</span>
+          <kbd className="hidden sm:inline-flex items-center px-1.5 py-0.5 text-[10px] font-mono text-[#9CA3AF] border border-[#E5E7EB] rounded">
+            ⌘K
+          </kbd>
+        </button>
 
         <div>
           <h2 className="text-text-primary text-xl font-bold mb-4">Categorias</h2>

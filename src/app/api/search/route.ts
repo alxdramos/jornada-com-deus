@@ -5,6 +5,7 @@ import type { SearchResult } from '@/types/search';
 import { ORACOES } from '@/data/oracoes';
 import { MEDITACOES } from '@/data/meditacoes';
 import { ESTUDOS } from '@/data/estudos';
+import { DEVOCIONAIS } from '@/data/devocionais';
 
 // ─── In-memory rate limiter (10 req / 10s per IP) ────────────────────────────
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
@@ -122,6 +123,22 @@ export async function GET(req: NextRequest) {
         description: e.text?.slice(0, 120) + '...',
         category: e.category,
         audioUrl: e.audioUrl,
+        _score: s,
+      });
+    }
+  }
+
+  // Search devocionais
+  for (const d of DEVOCIONAIS) {
+    const s = totalScore(d.title, d.text ?? '', q);
+    if (s > 0) {
+      results.push({
+        id: d.id,
+        type: 'devocional',
+        title: d.title,
+        description: d.text?.slice(0, 120) + '...',
+        category: d.category,
+        audioUrl: d.audioUrl,
         _score: s,
       });
     }

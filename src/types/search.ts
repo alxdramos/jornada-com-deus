@@ -1,4 +1,4 @@
-export type SearchResultType = 'oracao' | 'meditacao' | 'estudo';
+export type SearchResultType = 'oracao' | 'meditacao' | 'estudo' | 'devocional';
 
 export interface SearchResult {
   id: string;

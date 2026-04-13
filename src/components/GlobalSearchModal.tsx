@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Search, X, Mic2, Headphones, BookOpen, SearchX, Loader2 } from 'lucide-react';
+import { Search, X, Mic2, Headphones, BookOpen, SearchX, Loader2, MessageCircle } from 'lucide-react';
 import { useGlobalSearch } from '@/hooks/useGlobalSearch';
 import { useTabStore } from '@/stores/tabStore';
 import type { SearchResult, SearchResultType } from '@/types/search';
@@ -12,6 +12,7 @@ function TypeIcon({ type }: { type: SearchResultType }) {
   const cls = 'w-5 h-5 shrink-0';
   if (type === 'oracao') return <Mic2 className={`${cls} text-amber-500`} />;
   if (type === 'meditacao') return <Headphones className={`${cls} text-emerald-600`} />;
+  if (type === 'devocional') return <MessageCircle className={`${cls} text-orange-500`} />;
   return <BookOpen className={`${cls} text-emerald-500`} />;
 }
 
@@ -21,8 +22,9 @@ function CategoryBadge({ category, type }: { category?: string; type: SearchResu
     oracao: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
     meditacao: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
     estudo: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
+    devocional: 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400',
   };
-  const label = category ?? (type === 'oracao' ? 'Oração' : type === 'meditacao' ? 'Meditação' : 'Estudo');
+  const label = category ?? (type === 'oracao' ? 'Oração' : type === 'meditacao' ? 'Meditação' : type === 'devocional' ? 'Devocional' : 'Estudo');
   return (
     <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full ${colors[type]}`}>
       {label}
@@ -89,6 +91,7 @@ export function GlobalSearchModal() {
     if (result.type === 'oracao') setActiveTab('oracoes');
     else if (result.type === 'meditacao') setActiveTab('meditacoes');
     else if (result.type === 'estudo') setActiveTab('estudos');
+    else if (result.type === 'devocional') setActiveTab('devocional');
     setIsOpen(false);
   }
 
@@ -127,7 +130,7 @@ export function GlobalSearchModal() {
                 ref={inputRef}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Buscar orações, meditações, estudos..."
+                placeholder="Buscar devocionais, orações, meditações..."
                 className="flex-1 bg-transparent text-base text-text-primary placeholder-text-secondary outline-none"
                 aria-label="Campo de busca global"
               />
@@ -183,6 +186,7 @@ export function GlobalSearchModal() {
                     Buscar em
                   </p>
                   {[
+                    { icon: <MessageCircle className="w-4 h-4 text-orange-500" />, label: 'Devocionais' },
                     { icon: <Mic2 className="w-4 h-4 text-amber-500" />, label: 'Orações' },
                     { icon: <Headphones className="w-4 h-4 text-emerald-600" />, label: 'Meditações' },
                     { icon: <BookOpen className="w-4 h-4 text-emerald-500" />, label: 'Estudos Bíblicos' },
