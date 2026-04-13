@@ -8,6 +8,7 @@ import { Info, BookOpen, ChevronLeft, ChevronRight, Loader2 } from "lucide-react
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { useBibleLocal } from "@/hooks/useBibleLocal";
+import { useNativeShare } from "@/hooks/useNativeShare";
 
 // Sub-componentes
 import { BibleTestamentToggle } from "./biblia/BibleTestamentToggle";
@@ -47,6 +48,7 @@ export function TabBiblia() {
   const [searchMode, setSearchMode] = useState<"reference" | "word">("reference");
   const [showPlanModal, setShowPlanModal] = useState(false);
 
+  const { share: shareVerse } = useNativeShare();
   const pendingChapter = useReadingPlanStore((s) => s.pendingChapter);
   const setPendingChapter = useReadingPlanStore((s) => s.setPendingChapter);
 
@@ -306,7 +308,14 @@ export function TabBiblia() {
                         <span className="text-sm font-semibold text-[#FB923C]">
                           {verse.verse}
                         </span>
-                        <button className="opacity-0 group-hover:opacity-100 p-1 rounded transition-all hover:bg-gray-100">
+                        <button
+                          className="opacity-0 group-hover:opacity-100 p-1 rounded transition-all hover:bg-gray-100"
+                          aria-label="Compartilhar versículo"
+                          onClick={() => shareVerse({
+                            title: `${selectedBook} ${selectedChapter}:${verse.verse}`,
+                            text: `"${verse.text}"\n— ${selectedBook} ${selectedChapter}:${verse.verse}`,
+                          })}
+                        >
                           <svg
                             className="w-4 h-4 text-[#6B7280]"
                             fill="none"
