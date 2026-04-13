@@ -1,7 +1,7 @@
 // Service Worker - Jornada com Deus PWA
 // Estratégias: CacheFirst (assets/R2), NetworkFirst (bible-api), offline fallback
 
-const CACHE_VERSION = 'v3';
+const CACHE_VERSION = 'v4';
 const STATIC_CACHE  = `static-${CACHE_VERSION}`;
 const DYNAMIC_CACHE = `dynamic-${CACHE_VERSION}`;
 const AUDIO_CACHE   = `audio-${CACHE_VERSION}`;
@@ -162,9 +162,18 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // ── R2 Cloudflare: áudios e imagens (CacheFirst 30 dias) ────────────────────
+  // ── Range requests: bypass direto (streaming de áudio) ───────────────────────
+  // A Cache API não suporta Range requests: armazena resposta parcial (206) e na
+  // próxima requisição de range diferente devolve os bytes errados → erro de reprodução.
+  // Mesmo motivo pelo qual /api/audio já era excluído — aplicar a todos os ranges.
+  if (request.headers.get('range')) {
+    return;
+  }
+
+  // ── R2 Cloudflare: imagens (CacheFirst 30 dias) ──────────────────────────────
+  // Áudio R2 é excluído via Range header acima; aqui só cacheia imagens (sem Range).
   if (url.hostname.includes('r2.dev') || url.hostname.includes('pub-561f3fcecd8945ba90a5b9c1683fac22')) {
-    event.respondWith(cacheFirst(request, AUDIO_CACHE, 60 * 60 * 24 * 30));
+    event.respondWith(cacheFirst(request, IMAGE_CACHE, 60 * 60 * 24 * 30));
     return;
   }
 
