@@ -55,6 +55,9 @@ const FALLBACK_TAG_COLORS = [
   "bg-amber-100/80 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
 ];
 
+// LQIP generic blur placeholder (8x8 WebP)
+const BLUR_PLACEHOLDER = "data:image/webp;base64,UklGRj4AAABXRUJQVlA4IDIAAADwAQCdASoIAAgABUB8JYgCdAD5jG+8iYAA/tYY29KDLMr0xFtoTkWETsWKA4av25QAAA==";
+
 function getTagColor(tag: string, index: number): string {
   return TAG_COLORS[tag] || FALLBACK_TAG_COLORS[index % 4];
 }
@@ -105,6 +108,8 @@ export function MeditationCard({
             alt={meditation.title}
             className="object-cover group-hover:scale-105 transition-transform duration-300"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            placeholder="blur"
+            blurDataURL={BLUR_PLACEHOLDER}
           />
         ) : (
           <div className="w-full h-full bg-gradient-to-br from-emerald-400 to-teal-500" />

@@ -103,6 +103,9 @@ const CATEGORY_FALLBACK_IMAGES: Record<string, string> = {
   "Perdão":    "/images/devocionais/dev-7-perdao-liberta.webp",
 };
 
+// LQIP generic blur placeholder (8x8 WebP)
+const BLUR_PLACEHOLDER = "data:image/webp;base64,UklGRkIAAABXRUJQVlA4IDYAAAAQAgCdASoIAAgABUB8JYgCdAD5j5e5m30AAPzqwT/UubZQLVj0ccL2OIiV6UgIjWm8ZRT3kAA=";
+
 const CATEGORY_COLORS: Record<string, string> = {
   "Fé": "bg-emerald-100/80 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300",
   "Esperança": "bg-amber-100/80 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
@@ -140,6 +143,8 @@ export function DevocionalCard({ devocional, isFavorite, onPlay, onFavorite, lar
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-300"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            placeholder="blur"
+            blurDataURL={BLUR_PLACEHOLDER}
           />
         ) : (
           <div className="w-full h-full bg-gradient-to-br from-orange-400 to-amber-600 flex items-center justify-center">

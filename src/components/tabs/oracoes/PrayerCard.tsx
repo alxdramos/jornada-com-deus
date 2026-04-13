@@ -4,6 +4,9 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import Image from "next/image";
 
+// LQIP generic blur placeholder (8x8 WebP)
+const BLUR_PLACEHOLDER = "data:image/webp;base64,UklGRkQAAABXRUJQVlA4IDgAAADQAQCdASoIAAgABUB8JQBOgBuPzSQcAADN7YZaLH5QIxo3Q9LKMrTSbkH0Ohtjf5p9E9Q27AAAAA==";
+
 const CATEGORY_COLORS: Record<string, string> = {
   "Perdão":       "bg-red-100/80 text-red-700 dark:bg-red-900/30 dark:text-red-300",
   "Cura Divina":  "bg-blue-100/80 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
@@ -65,6 +68,8 @@ export function PrayerCard({
             alt={prayer.title}
             className="object-cover group-hover:scale-105 transition-transform duration-300"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            placeholder="blur"
+            blurDataURL={BLUR_PLACEHOLDER}
             onError={() => setImgError(true)}
           />
         ) : (

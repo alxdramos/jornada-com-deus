@@ -10,6 +10,7 @@ export interface TreeStage {
   description: string;
   visual: string; // emoji fallback
   image: string;  // caminho da imagem gerada
+  blur: string;   // LQIP base64 placeholder
   bgFrom: string;
   bgTo: string;
   daysRequired: number;
@@ -22,6 +23,7 @@ export const TREE_STAGES: TreeStage[] = [
     description: "Sua jornada começa aqui",
     visual: "🌰",
     image: "/images/tree-stages/stage-0-semente.webp",
+    blur: "data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAACwAQCdASoIAAgABUB8JYwCsAD0U4QgAP5NAbiLThnycCjcN2v5dGURzhxZ3WAA",
     bgFrom: "#78350F",
     bgTo: "#92400E",
     daysRequired: 0,
@@ -32,6 +34,7 @@ export const TREE_STAGES: TreeStage[] = [
     description: "Primeiros passos na fé",
     visual: "🌱",
     image: "/images/tree-stages/stage-1-broto.webp",
+    blur: "data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAACQAQCdASoIAAgABUB8JQBOgBrXiAAA/b92nWSyrw8HZdcMCqM5olkSOghroAAA",
     bgFrom: "#14532D",
     bgTo: "#166534",
     daysRequired: 5,
@@ -42,6 +45,7 @@ export const TREE_STAGES: TreeStage[] = [
     description: "Raízes se aprofundando",
     visual: "🌿",
     image: "/images/tree-stages/stage-2-muda.webp",
+    blur: "data:image/webp;base64,UklGRkQAAABXRUJQVlA4IDgAAAAQAgCdASoIAAgABUB8JYgCdAEWUQeLkGOAAP6ajX6kDkMCbU9sdpED5c0tRFSGofHpBLUvsAAAAA==",
     bgFrom: "#15803D",
     bgTo: "#16A34A",
     daysRequired: 10,
@@ -52,6 +56,7 @@ export const TREE_STAGES: TreeStage[] = [
     description: "Crescendo com constância",
     visual: "🪴",
     image: "/images/tree-stages/stage-3-planta-jovem.webp",
+    blur: "data:image/webp;base64,UklGRj4AAABXRUJQVlA4IDIAAAAQAgCdASoIAAgABUB8JYgCxC8AE6WbwSgAAM4kPdI4G9uyyiof1RClRHmVzwjYDfqwAA==",
     bgFrom: "#065F46",
     bgTo: "#047857",
     daysRequired: 18,
@@ -62,6 +67,7 @@ export const TREE_STAGES: TreeStage[] = [
     description: "Fé florescendo",
     visual: "🌲",
     image: "/images/tree-stages/stage-4-arvore-jovem.webp",
+    blur: "data:image/webp;base64,UklGRkYAAABXRUJQVlA4IDoAAADQAQCdASoIAAgABUB8JZACsAD0sOPnAAD8j4WOM/76z/QIaS0zBzdd8aA87cMrlKMGSU7Emc4MAAAA",
     bgFrom: "#166534",
     bgTo: "#15803D",
     daysRequired: 27,
@@ -72,6 +78,7 @@ export const TREE_STAGES: TreeStage[] = [
     description: "Plantado em Cristo",
     visual: "🌳",
     image: "/images/tree-stages/stage-5-arvore-adulta.webp",
+    blur: "data:image/webp;base64,UklGRkYAAABXRUJQVlA4IDoAAACwAQCdASoIAAgABUB8JYwAAtz9EgQAAMycZJjQge7GtNK+r7YFO3+8+d28ayi/lXOkI8/ht6AqkIAA",
     bgFrom: "#14532D",
     bgTo: "#166534",
     daysRequired: 37,
@@ -82,6 +89,7 @@ export const TREE_STAGES: TreeStage[] = [
     description: "Primeiros frutos aparecem",
     visual: "🌴",
     image: "/images/tree-stages/stage-6-bananeira-jovem.webp",
+    blur: "data:image/webp;base64,UklGRkAAAABXRUJQVlA4IDQAAADQAQCdASoIAAgABUB8JZgCdADclnTIAADiSVICdAQ/Q91Sq4Q89ALeY18Q8XvLMJzQMIAA",
     bgFrom: "#365314",
     bgTo: "#3F6212",
     daysRequired: 48,
@@ -92,6 +100,7 @@ export const TREE_STAGES: TreeStage[] = [
     description: "Floração em abundância",
     visual: "🌸🌴",
     image: "/images/tree-stages/stage-7-bananeira-florida.webp",
+    blur: "data:image/webp;base64,UklGRj4AAABXRUJQVlA4IDIAAADQAQCdASoIAAgABUB8JYgCdAD0Ob0j4ADNdTNQ0wASiUD5Xf04kQ/RGrQBhFqYKgAAAA==",
     bgFrom: "#713F12",
     bgTo: "#92400E",
     daysRequired: 59,
@@ -102,6 +111,7 @@ export const TREE_STAGES: TreeStage[] = [
     description: "Frutos da perseverança",
     visual: "🌴🍌",
     image: "/images/tree-stages/stage-8-primeiros-cachos.webp",
+    blur: "data:image/webp;base64,UklGRkYAAABXRUJQVlA4IDoAAADQAQCdASoIAAgABUB8JQBOgBuMm2U6gADN0u9rCPH3cL7/fzQjsri63LCANBI5j3i9M8VOAyyQrqAA",
     bgFrom: "#92400E",
     bgTo: "#B45309",
     daysRequired: 70,
@@ -112,6 +122,7 @@ export const TREE_STAGES: TreeStage[] = [
     description: "Colheita de frutos espirituais",
     visual: "🍌🌴",
     image: "/images/tree-stages/stage-9-bananeira-plena.webp",
+    blur: "data:image/webp;base64,UklGRkYAAABXRUJQVlA4IDoAAAAQAgCdASoIAAgABUB8JbACdG1/An6S3GgAAPyJqnjbp4YP4Ix36VnyaBlH5A2TCBxWTsXrXQBNO2gA",
     bgFrom: "#B45309",
     bgTo: "#D97706",
     daysRequired: 80,
@@ -122,6 +133,7 @@ export const TREE_STAGES: TreeStage[] = [
     description: "90 dias! Jornada completa! 🎉",
     visual: "✨🍌✨",
     image: "/images/tree-stages/stage-10-bananeira-gloriosa.webp",
+    blur: "data:image/webp;base64,UklGRkoAAABXRUJQVlA4ID4AAAAQAgCdASoIAAgABUB8JagCdG1/AkFy0hyAAP6XKCFnH2CTZZAjeMZMqot7x++ScPi/O2WU6Ieb6xZZqcRkAA==",
     bgFrom: "#D97706",
     bgTo: "#FBBF24",
     daysRequired: 90,
@@ -177,6 +189,8 @@ export function TreeGrowthVisual({
                     width={56}
                     height={56}
                     className="w-full h-full object-cover"
+                    placeholder="blur"
+                    blurDataURL={stage.blur}
                     onError={() => handleImgError(stage.level)}
                   />
                 )}
@@ -273,6 +287,8 @@ export function TreeGrowthVisual({
                 className="object-cover"
                 sizes="176px"
                 priority
+                placeholder="blur"
+                blurDataURL={stage.blur}
                 onError={() => handleImgError(stage.level)}
               />
             )}
@@ -367,6 +383,8 @@ export function TreeGrowthVisual({
                       height={32}
                       className="w-full h-full object-cover"
                       loading="lazy"
+                      placeholder="blur"
+                      blurDataURL={s.blur}
                       onError={() => handleImgError(s.level)}
                     />
                   )}
