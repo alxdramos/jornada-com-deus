@@ -37,18 +37,20 @@ export const R2_BUCKET_MAP: Record<string, string> = {
 export function resolveAudioUrl(r2Url: string | undefined): string {
   if (!r2Url) return '';
 
+  // CDN configurado: redireciona para CDN custom (ex: audio.minhajornadadiaria.com.br)
   if (CDN_BASE) {
     try {
       const url = new URL(r2Url);
-      // Pega apenas o nome do arquivo (sem path)
       const filename = url.pathname.split('/').filter(Boolean).pop() ?? '';
       return `${CDN_BASE.replace(/\/$/, '')}/${filename}`;
     } catch {
-      // URL inválida — fallback para proxy
+      // URL inválida — fallback para R2 direto
     }
   }
 
-  return `/api/audio?url=${encodeURIComponent(r2Url)}`;
+  // Sem CDN: usa R2 direto.
+  // <audio> elements não têm restrição de CORS — R2 suporta Range requests nativamente.
+  return r2Url;
 }
 
 /**
