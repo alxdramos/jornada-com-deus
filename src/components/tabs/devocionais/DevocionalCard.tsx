@@ -1,5 +1,5 @@
 import { Devocional } from "@/data/devocionais";
-import { Heart, BookHeart, Headphones } from "lucide-react";
+import { Heart, BookHeart, Headphones, Crown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 
@@ -8,6 +8,7 @@ interface DevocionalCardProps {
   isFavorite: boolean;
   onPlay: (devocional: Devocional) => void;
   onFavorite: (id: string) => void;
+  isPlus?: boolean;
   large?: boolean;
 }
 
@@ -116,7 +117,7 @@ const CATEGORY_COLORS: Record<string, string> = {
   "Geral": "bg-gray-100/80 text-gray-600 dark:bg-gray-800/50 dark:text-gray-400",
 };
 
-export function DevocionalCard({ devocional, isFavorite, onPlay, onFavorite, large }: DevocionalCardProps) {
+export function DevocionalCard({ devocional, isFavorite, onPlay, onFavorite, isPlus = false, large }: DevocionalCardProps) {
   const categoryColor = CATEGORY_COLORS[devocional.category] || CATEGORY_COLORS.Geral;
   const imageUrl = DEVOCIONAL_IMAGES[devocional.id] || CATEGORY_FALLBACK_IMAGES[devocional.category];
 
@@ -178,6 +179,15 @@ export function DevocionalCard({ devocional, isFavorite, onPlay, onFavorite, lar
         >
           <Heart className={cn("w-4 h-4", isFavorite && "fill-current text-rose-400")} />
         </button>
+
+        {/* Badge PLUS */}
+        {devocional.plus && !isPlus && (
+          <div className="absolute top-2 left-2">
+            <span className="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-2 py-0.5 rounded-full text-xs font-semibold flex items-center gap-1 shadow-sm">
+              <Crown className="w-3 h-3" /> PLUS
+            </span>
+          </div>
+        )}
       </div>
 
       <div className="p-3 space-y-2">

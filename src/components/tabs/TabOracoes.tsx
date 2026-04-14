@@ -116,6 +116,7 @@ export function TabOracoes() {
                       plus: oracao.plus,
                     }}
                     isFavorite={isFavorite(oracao.id)}
+                    isPlus={isPlus}
                     onToggleFavorite={toggleFavorite}
                     onViewDetails={handleViewDetails}
                   />
@@ -130,6 +131,7 @@ export function TabOracoes() {
           isOpen={showAllModal}
           onClose={() => setShowAllModal(false)}
           isFavorite={isFavorite}
+          isPlus={isPlus}
           onToggleFavorite={toggleFavorite}
           onViewDetails={handleViewDetails}
         />

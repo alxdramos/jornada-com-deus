@@ -85,6 +85,7 @@ export function TabEstudos() {
                     key={estudo.id}
                     estudo={estudo}
                     isFavorite={isFavorite(estudo.id)}
+                    isPlus={isPlus}
                     onPlay={handleViewDetails}
                     onFavorite={toggleFavorite}
                   />
@@ -98,6 +99,7 @@ export function TabEstudos() {
         <EstudosModal
           isOpen={showAllModal}
           onClose={() => setShowAllModal(false)}
+          isPlus={isPlus}
           onViewDetails={handleViewDetails}
         />
       )}

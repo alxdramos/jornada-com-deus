@@ -82,6 +82,7 @@ export function TabDevocional() {
                     key={devocional.id}
                     devocional={devocional}
                     isFavorite={isFavorite(devocional.id)}
+                    isPlus={isPlus}
                     onPlay={handleViewDetails}
                     onFavorite={toggleFavorite}
                   />
@@ -95,6 +96,7 @@ export function TabDevocional() {
         <DevocionaisModal
           isOpen={showAllModal}
           onClose={() => setShowAllModal(false)}
+          isPlus={isPlus}
           onViewDetails={handleViewDetails}
         />
       )}

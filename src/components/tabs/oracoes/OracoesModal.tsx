@@ -12,6 +12,7 @@ interface OracoesModalProps {
   isFavorite: (id: string) => boolean;
   onToggleFavorite: (id: string) => void;
   onViewDetails: (prayer: Prayer) => void;
+  isPlus?: boolean;
 }
 
 export function OracoesModal({
@@ -20,6 +21,7 @@ export function OracoesModal({
   isFavorite,
   onToggleFavorite,
   onViewDetails,
+  isPlus = false,
 }: OracoesModalProps) {
   const [search, setSearch] = useState("");
   const [showSearch, setShowSearch] = useState(false);
@@ -149,6 +151,7 @@ export function OracoesModal({
                     key={oracao.id}
                     prayer={toPrayer(oracao)}
                     isFavorite={isFavorite(oracao.id)}
+                    isPlus={isPlus}
                     onToggleFavorite={onToggleFavorite}
                     onViewDetails={onViewDetails}
                     large

@@ -10,9 +10,10 @@ interface EstudosModalProps {
   isOpen: boolean;
   onClose: () => void;
   onViewDetails: (estudo: EstudoBiblico) => void;
+  isPlus?: boolean;
 }
 
-export function EstudosModal({ isOpen, onClose, onViewDetails }: EstudosModalProps) {
+export function EstudosModal({ isOpen, onClose, onViewDetails, isPlus = false }: EstudosModalProps) {
   const { toggleFavorite, isFavorite } = useFavorites();
 
   if (!isOpen) return null;
@@ -53,6 +54,7 @@ export function EstudosModal({ isOpen, onClose, onViewDetails }: EstudosModalPro
                 key={estudo.id}
                 estudo={estudo}
                 isFavorite={isFavorite(estudo.id)}
+                isPlus={isPlus}
                 onPlay={onViewDetails}
                 onFavorite={toggleFavorite}
               />

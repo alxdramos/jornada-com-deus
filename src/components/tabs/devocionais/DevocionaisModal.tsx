@@ -11,9 +11,10 @@ interface DevocionaisModalProps {
   isOpen: boolean;
   onClose: () => void;
   onViewDetails: (devocional: Devocional) => void;
+  isPlus?: boolean;
 }
 
-export function DevocionaisModal({ isOpen, onClose, onViewDetails }: DevocionaisModalProps) {
+export function DevocionaisModal({ isOpen, onClose, onViewDetails, isPlus = false }: DevocionaisModalProps) {
   const { toggleFavorite, isFavorite } = useFavorites();
   const [search, setSearch] = useState("");
   const [showSearch, setShowSearch] = useState(false);
@@ -129,6 +130,7 @@ export function DevocionaisModal({ isOpen, onClose, onViewDetails }: Devocionais
                     key={devocional.id}
                     devocional={devocional}
                     isFavorite={isFavorite(devocional.id)}
+                    isPlus={isPlus}
                     onPlay={onViewDetails}
                     onFavorite={toggleFavorite}
                     large

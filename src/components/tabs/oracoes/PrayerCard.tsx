@@ -1,5 +1,5 @@
 import { Prayer } from "@/data/oracoes";
-import { Heart, Headphones } from "lucide-react";
+import { Heart, Headphones, Crown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import Image from "next/image";
@@ -30,6 +30,7 @@ interface PrayerCardProps {
   isFavorite: boolean;
   onToggleFavorite: (prayerId: string) => void;
   onViewDetails: (prayer: Prayer) => void;
+  isPlus?: boolean;
   large?: boolean;
 }
 
@@ -38,6 +39,7 @@ export function PrayerCard({
   isFavorite,
   onToggleFavorite,
   onViewDetails,
+  isPlus = false,
   large,
 }: PrayerCardProps) {
   const [imgError, setImgError] = useState(false);
@@ -102,6 +104,15 @@ export function PrayerCard({
         >
           <Heart className={cn("w-4 h-4", isFavorite && "fill-current text-rose-400")} />
         </button>
+
+        {/* Badge PLUS */}
+        {prayer.plus && !isPlus && (
+          <div className="absolute top-2 left-2">
+            <span className="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-2 py-0.5 rounded-full text-xs font-semibold flex items-center gap-1 shadow-sm">
+              <Crown className="w-3 h-3" /> PLUS
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Conteúdo */}
