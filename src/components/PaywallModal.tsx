@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import {
@@ -78,8 +79,12 @@ const BENEFICIOS = [
 export function PaywallModal({ isOpen, onClose, onUpgrade, feature }: PaywallModalProps) {
   const [planoSelecionado, setPlanoSelecionado] = useState<PlanoId>("anual");
   const [checkoutOpened, setCheckoutOpened]     = useState(false);
+  const [mounted, setMounted]                   = useState(false);
   const prefersReducedMotion = useReducedMotion();
   const { trackPaywallShown, trackPurchaseClicked } = useAnalytics();
+
+  // Montar portal apenas no cliente (SSR-safe)
+  useEffect(() => { setMounted(true); }, []);
 
   // Rastrear abertura
   useEffect(() => {
@@ -104,7 +109,11 @@ export function PaywallModal({ isOpen, onClose, onUpgrade, feature }: PaywallMod
 
   const planoAtivo = PLANOS.find((p) => p.id === planoSelecionado)!;
 
-  return (
+  // Portal garante renderização direta no document.body,
+  // escapando qualquer stacking context do Dialog/ProfileModal
+  if (!mounted) return null;
+
+  return createPortal(
     <AnimatePresence>
       {isOpen && (
         <>
@@ -325,6 +334,7 @@ export function PaywallModal({ isOpen, onClose, onUpgrade, feature }: PaywallMod
           </motion.div>
         </>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }
