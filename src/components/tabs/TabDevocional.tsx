@@ -8,16 +8,21 @@ import { ContentSection } from './explorar/ContentSection';
 import { DevocionalCard } from './devocionais/DevocionalCard';
 import { DevocionalDetailModalWithPlayer } from './devocionais/DevocionalDetailModalWithPlayer';
 import { DevocionaisModal } from './devocionais/DevocionaisModal';
+import { PaywallModal } from '@/components/PaywallModal';
 import { useFavorites } from '@/hooks/useFavorites';
+import { useSubscription } from '@/hooks/useSubscription';
 import { StudyCardSkeleton } from '@/components/ui/Skeleton';
 import { BookHeart } from 'lucide-react';
 
 export function TabDevocional() {
   const { toggleFavorite, isFavorite } = useFavorites();
+  const { isPlusUser: isPlus } = useSubscription();
   const [hydrated, setHydrated] = useState(false);
   const [selectedDevocional, setSelectedDevocional] = useState<Devocional | null>(null);
   const [showAllModal, setShowAllModal] = useState(false);
   const [chipAtivo, setChipAtivo] = useState("TUDO");
+  const [paywallOpen, setPaywallOpen] = useState(false);
+  const [paywallFeature, setPaywallFeature] = useState('');
 
   const categorias = Array.from(CATEGORIAS_DEVOCIONAIS).filter((cat) => {
     if (cat === "TUDO") return true;
@@ -33,7 +38,12 @@ export function TabDevocional() {
   useEffect(() => { setHydrated(true); }, []);
 
   const handleViewDetails = (devocional: Devocional) => {
-    setSelectedDevocional(devocional);
+    if (devocional.plus && !isPlus) {
+      setPaywallFeature(devocional.title);
+      setPaywallOpen(true);
+    } else {
+      setSelectedDevocional(devocional);
+    }
   };
 
   return (
@@ -97,6 +107,13 @@ export function TabDevocional() {
           onToggleFavorite={toggleFavorite}
         />
       )}
+
+      <PaywallModal
+        isOpen={paywallOpen}
+        onClose={() => setPaywallOpen(false)}
+        onUpgrade={() => setPaywallOpen(false)}
+        feature={paywallFeature}
+      />
     </>
   );
 }

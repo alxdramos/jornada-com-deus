@@ -113,6 +113,7 @@ export function TabOracoes() {
                       audioUrl: oracao.audioUrl,
                       duration: oracao.duration,
                       imagem: oracao.imagem,
+                      plus: oracao.plus,
                     }}
                     isFavorite={isFavorite(oracao.id)}
                     onToggleFavorite={toggleFavorite}
