@@ -128,6 +128,7 @@
 - `20260224_enable_realtime_rls_consolidation.sql` — RLS idempotente + Realtime
 - `20260226_payment_system.sql` — subscriptions + hotmart_webhook_logs + colunas plan/expires_at em profiles + trigger sync_profile_plan
 - `20260304_security_fixes.sql` — hardening de segurança adicional
+- `20260414_expire_subscriptions.sql` — índice em expires_at + update trigger para 'expired' + view `subscriptions_status`
 - **RLS ativo** em todas as tabelas (`auth.uid() = user_id`)
 
 ### Sync Multi-Device (Tempo Real)
@@ -161,18 +162,25 @@
 - Acesso restrito a usuários com `role = 'admin'` via RLS
 - **KPIs do app** — usuários ativos, assinantes Premium, métricas de retenção
 - **Disparo manual de push** para todos os assinantes + **botão de teste** individual
-- **Gestão de assinantes Hotmart** — lista com status (active/canceled/refunded), planos, datas e histórico
-- **Logs de webhooks Hotmart** — eventos processados em tempo real (PURCHASE_APPROVED, PURCHASE_REFUNDED, etc.)
+- **Gestão de assinantes** — lista com status (active/expired/canceled), planos, datas e histórico
+- **Logs de webhooks** — eventos Herospark e Hotmart processados em tempo real
+- **Retenção** — CohortTable + ChurnTrendChart + AtRiskUsersTable
 - **Listagem completa de usuários** com status de plano e data de cadastro
 - Componentes: `KpiCard`, `PushNotificationCard`, `SubscribersTable`, `WebhookLogsTable`, `UsersTable`, `charts/`
 
-### Monetização (Hotmart)
-- **Paywall** em conteúdo Premium: meditações, orações e estudos bíblicos com áudio narrado
-- **`PaywallModal`** — modal com 3 planos (mensal/trimestral/anual), checkout Hotmart via `NEXT_PUBLIC_HOTMART_CHECKOUT_URL`
-- **Webhook Hotmart** — `/api/webhooks/hotmart` valida `HOTTOK`, processa PURCHASE_APPROVED / PURCHASE_REFUNDED / PURCHASE_CANCELED
+### Monetização (Herospark) — Freemium
+
+- **Modelo Freemium** — 4 itens gratuitos no topo de cada categoria; restante bloqueado para Plus
+  - Meditações: 4 gratuitas · 12 Plus | Orações: 4 gratuitas · 43 Plus | Devocionais: 4 gratuitos · 74 Plus | Estudos: 4 gratuitos · 27 Plus
+- **`PaywallModal`** — bottom sheet com 3 planos: Mensal R$19,90 · Trimestral R$49,90 (3×) · Anual R$180,00 (12×)
+  - Links de checkout Herospark hardcoded · `createPortal` para escapar stacking context · z-index `10050/10051`
+- **Webhook Herospark** — `/api/webhooks/herospark?token=TOKEN` — token via query param (timing-safe), rate limit 30 req/min, idempotência por `email+offer_id+data`
+  - Detecta plano por `offer_title` ("mensal"/"trimestral"/"anual"), fallback por valor em reais
+  - Expiração com buffer: Mensal = 35 dias · Trimestral = 95 dias · Anual = 370 dias
+- **Cron de expiração** — `/api/crons/expire-subscriptions` todo dia às 06:00 UTC · marca `status = 'expired'` em lote · trigger SQL reverte `profiles.plan = 'free'`
 - **`useSubscription`** — hook com Realtime listener, expõe `isPlusUser` derivado de `plan = 'plus'`
-- **Plan sync automático** — trigger SQL sincroniza `profiles.plan = 'plus'` imediatamente após compra aprovada
-- **Transições Premium** — `AnimatePresence` com slide direcional entre abas para UX fluido
+- **Plan sync automático** — trigger SQL `sync_profile_plan` sincroniza `profiles.plan` imediatamente após compra aprovada
+- **Webhook legacy Hotmart** — `/api/webhooks/hotmart` mantido para histórico
 - **Compartilhamento social nativo** — Árvore da Vida e versículos via Web Share API
 
 ### Acessibilidade (WCAG AA)
@@ -302,7 +310,13 @@ jornada-com-deus/
 │   │   │   │   ├── send/               # Disparo de push (Vercel Cron + manual)
 │   │   │   │   └── subscribe/          # Registro de subscription VAPID
 │   │   │   ├── admin/push/test/        # Teste de push para o próprio admin
-│   │   │   └── webhooks/hotmart/       # Webhook Hotmart — HOTTOK timing-safe + HMAC + rate limit + idempotência
+│   │   │   ├── webhooks/hotmart/       # Webhook Hotmart — legacy (HOTTOK + HMAC + rate limit + idempotência)
+│   │   │   ├── webhooks/herospark/     # Webhook Herospark — token via query param + detecção de plano + cron de expiração
+│   │   │   └── crons/
+│   │   │       ├── expire-subscriptions/ # Expira assinaturas vencidas (06:00 UTC)
+│   │   │       ├── email-inactive/     # E-mail para usuários inativos
+│   │   │       ├── email-post-trial/   # E-mail pós-período de teste
+│   │   │       └── email-streak-milestone/ # E-mail de streak milestone
 │   │   ├── auth/callback/              # Callback OAuth + confirmação de e-mail
 │   │   ├── biblia/sobre/               # Aviso legal da tradução bíblica
 │   │   ├── login/                      # Tela de login (Google + e-mail/senha)
