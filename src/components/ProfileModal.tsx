@@ -40,6 +40,11 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
     router.replace("/login");
   };
 
+  const handleOpenPaywall = () => {
+    onClose();                 // fecha o Dialog do Radix (libera focus trap)
+    setShowPaywall(true);
+  };
+
   if (!authUser && !user) return null;
 
   return (
@@ -49,8 +54,8 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
         <Dialog open={isOpen} onOpenChange={onClose}>
           <DialogContent
             className="sm:max-w-md border-0 shadow-2xl"
-            onInteractOutside={(e) => { if (showPaywall) e.preventDefault(); }}
-            onPointerDownOutside={(e) => { if (showPaywall) e.preventDefault(); }}
+            onInteractOutside={(e) => { if (showSupport) e.preventDefault(); }}
+            onPointerDownOutside={(e) => { if (showSupport) e.preventDefault(); }}
           >
             <motion.div
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
@@ -167,7 +172,7 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                 ) : (
                   /* ── Usuário Free — CTA Premium ── */
                   <button
-                    onClick={() => setShowPaywall(true)}
+                    onClick={handleOpenPaywall}
                     className="w-full p-4 bg-gradient-to-r from-[#92400E] via-[#D97706] to-[#FB923C] rounded-2xl text-white shadow-[0_4px_16px_rgba(180,83,9,0.35)] hover:opacity-95 active:scale-[0.98] transition-all"
                   >
                     <div className="flex items-center justify-center gap-2">
