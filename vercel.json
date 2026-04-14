@@ -23,6 +23,10 @@
     {
       "path": "/api/crons/email-inactive",
       "schedule": "0 13 * * *"
+    },
+    {
+      "path": "/api/crons/expire-subscriptions",
+      "schedule": "0 6 * * *"
     }
   ]
 }
