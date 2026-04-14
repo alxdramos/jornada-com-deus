@@ -24,6 +24,13 @@ interface PaywallModalProps {
   feature?: string;
 }
 
+// ─── URLs Herospark ───────────────────────────────────────────────────────
+const CHECKOUT_URLS = {
+  mensal:     "https://pay.herospark.com/assinatura-mensal-minha-jornada-diaria-516847",
+  trimestral: "https://pay.herospark.com/trimestral-minha-jornada-diaria-516849",
+  anual:      "https://pay.herospark.com/anual-sua-jornada-completa-na-fe-516850",
+} as const;
+
 // ─── Planos disponíveis ───────────────────────────────────────────────────
 const PLANOS = [
   {
@@ -34,38 +41,28 @@ const PLANOS = [
     detalhe: "Renovação mensal automática",
     desconto: null,
     destaque: false,
-    envKey: "NEXT_PUBLIC_HOTMART_CHECKOUT_MENSAL",
   },
   {
     id: "trimestral" as const,
     label: "Trimestral",
-    preco: "R$ 16,63",
-    periodo: "/mês",
-    detalhe: "Cobrado R$ 49,90 a cada 3 meses",
-    desconto: "16% off",
+    preco: "R$ 49,90",
+    periodo: "/trimestre",
+    detalhe: "em até 3x • Cobrado a cada 3 meses",
+    desconto: "Mais flexível",
     destaque: true,
-    envKey: "NEXT_PUBLIC_HOTMART_CHECKOUT_TRIMESTRAL",
   },
   {
     id: "anual" as const,
     label: "Anual",
-    preco: "R$ 12,49",
-    periodo: "/mês",
-    detalhe: "Cobrado R$ 149,90 por ano",
-    desconto: "37% off",
+    preco: "R$ 180,00",
+    periodo: "/ano",
+    detalhe: "em 12x • Melhor custo-benefício",
+    desconto: "Melhor valor",
     destaque: false,
-    envKey: "NEXT_PUBLIC_HOTMART_CHECKOUT_ANUAL",
   },
 ] as const;
 
 type PlanoId = (typeof PLANOS)[number]["id"];
-
-// Mapa de variáveis de ambiente dos checkouts
-const CHECKOUT_URLS: Record<PlanoId, string | undefined> = {
-  mensal: process.env.NEXT_PUBLIC_HOTMART_CHECKOUT_MENSAL,
-  trimestral: process.env.NEXT_PUBLIC_HOTMART_CHECKOUT_TRIMESTRAL,
-  anual: process.env.NEXT_PUBLIC_HOTMART_CHECKOUT_ANUAL,
-};
 
 // ─── Benefícios ───────────────────────────────────────────────────────────
 const BENEFICIOS_PREMIUM = [
@@ -109,10 +106,6 @@ export function PaywallModal({ isOpen, onClose, onUpgrade, feature }: PaywallMod
   const handleUpgrade = () => {
     if (checkoutOpened) return;
     const url = CHECKOUT_URLS[planoSelecionado];
-    if (!url) {
-      console.warn("[PaywallModal] URL de checkout não configurada para o plano:", planoSelecionado);
-      return;
-    }
     trackPurchaseClicked(planoSelecionado);
     setCheckoutOpened(true);
     window.open(url, "_blank", "noopener,noreferrer");
@@ -277,7 +270,7 @@ export function PaywallModal({ isOpen, onClose, onUpgrade, feature }: PaywallMod
                 {/* Footer */}
                 <div className="text-center space-y-2">
                   <p className="text-xs text-[#6B7280]">
-                    ✓ Pagamento seguro via Hotmart • ✓ Cancela quando quiser • ✓ 7 dias de garantia
+                    ✓ Pagamento seguro via Herospark • ✓ Cancela quando quiser • ✓ 7 dias de garantia
                   </p>
                   <button
                     onClick={onClose}
