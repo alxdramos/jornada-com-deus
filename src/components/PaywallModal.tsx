@@ -184,7 +184,7 @@ export function PaywallModal({ isOpen, onClose, onUpgrade, feature }: PaywallMod
             </div>
 
             {/* ── Conteúdo com scroll ─────────────────────────────────────── */}
-            <div className="overflow-y-auto overscroll-contain flex-1 px-5 pt-5 pb-6 space-y-5">
+            <div className="overflow-y-auto overscroll-contain flex-1 min-h-0 px-5 pt-5 pb-6 space-y-5">
 
               {/* Seletor de planos */}
               <div>
@@ -228,6 +228,7 @@ export function PaywallModal({ isOpen, onClose, onUpgrade, feature }: PaywallMod
                           {plano.preco}
                         </p>
                         <p className="text-[9px] text-[#9CA3AF] mt-0.5">{plano.periodo}</p>
+                        <p className="text-[8px] text-[#9CA3AF] mt-1 leading-tight">{plano.detalhe}</p>
 
                         {/* Indicador selecionado */}
                         {ativo && (
@@ -244,19 +245,6 @@ export function PaywallModal({ isOpen, onClose, onUpgrade, feature }: PaywallMod
                   })}
                 </div>
 
-                {/* Detalhe do plano selecionado */}
-                <AnimatePresence mode="wait">
-                  <motion.p
-                    key={planoSelecionado}
-                    initial={{ opacity: 0, y: -4 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 4 }}
-                    transition={{ duration: 0.18 }}
-                    className="text-center text-[11px] text-[#9CA3AF] mt-2"
-                  >
-                    {planoAtivo.detalhe}
-                  </motion.p>
-                </AnimatePresence>
               </div>
 
               {/* Benefícios */}

@@ -47,7 +47,11 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
     <AnimatePresence>
       {isOpen && (
         <Dialog open={isOpen} onOpenChange={onClose}>
-          <DialogContent className="sm:max-w-md border-0 shadow-2xl">
+          <DialogContent
+            className="sm:max-w-md border-0 shadow-2xl"
+            onInteractOutside={(e) => { if (showPaywall) e.preventDefault(); }}
+            onPointerDownOutside={(e) => { if (showPaywall) e.preventDefault(); }}
+          >
             <motion.div
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
