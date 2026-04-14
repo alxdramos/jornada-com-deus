@@ -115,7 +115,7 @@ Senhor Deus, Pai querido, nós te agradecemos pela Tua Palavra. Ajuda-nos, Pai, 
     reference: "Mateus 17:20",
     category: "Fé",
     audioUrl: "https://pub-18fa930087714513af7d60ab5d9586e7.r2.dev/Dev_20260311150026_736.mp3",
-    plus: true,
+    plus: false,
     text: `Olá, meu querido irmão, minha querida irmã... que bom que podemos parar um instante e respirar juntos na presença de Deus.
 
 Escute o que o próprio Jesus nos diz em Sua Palavra.
@@ -137,7 +137,7 @@ Vamos orar. Pai querido, obrigado porque o Senhor não exige de nós uma fé per
     reference: "Mateus 6:9-13",
     category: "Oração",
     audioUrl: "https://pub-18fa930087714513af7d60ab5d9586e7.r2.dev/Dev_20260311153026_674.mp3",
-    plus: true,
+    plus: false,
     text: `Olá, meu querido amigo, minha querida amiga. Que bom ter esse momento com você. Separe um instante, respire fundo, e vamos juntos ouvir o que o Senhor quer nos falar.
 
 Naquele dia, Jesus ensinou seus discípulos a orar. E Ele disse...
@@ -159,7 +159,7 @@ Pai querido, muito obrigado porque podemos te chamar de Pai. Obrigado por nos co
     reference: "1 Tessalonicenses 5:18",
     category: "Gratidão",
     audioUrl: "https://pub-18fa930087714513af7d60ab5d9586e7.r2.dev/Dev_20260311160025_385.mp3",
-    plus: true,
+    plus: false,
     text: `Meu amigo, minha amiga... que a paz do Senhor encontre o seu coração neste exato momento. Que bom estarmos juntos aqui.
 
 Gostaria de compartilhar com você uma palavra que se encontra em Primeira Tessalonicenses, capítulo 5, versículo 18.
@@ -181,7 +181,7 @@ Senhor, muito obrigado por este dia. Ajuda-nos a ter um coração verdadeirament
     reference: "Mateus 6:14-15",
     category: "Perdão",
     audioUrl: "https://pub-18fa930087714513af7d60ab5d9586e7.r2.dev/Dev_20260311163025_154.mp3",
-    plus: true,
+    plus: false,
     text: `Meu querido amigo, minha querida amiga, que a paz do Senhor esteja em seu coração neste momento. Vamos respirar fundo e aquietar a nossa alma por um instante.
 
 Hoje, eu quero compartilhar com você uma palavra poderosa que se encontra no Evangelho de Mateus, capítulo 6, versículos 14 e 15.
