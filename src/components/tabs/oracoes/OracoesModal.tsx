@@ -50,6 +50,7 @@ export function OracoesModal({
     audioUrl: oracao.audioUrl,
     duration: oracao.duration,
     imagem: oracao.imagem,
+    plus: oracao.plus,
   });
 
   if (!isOpen) return null;
