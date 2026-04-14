@@ -16,42 +16,60 @@ function getSupabase() {
 export type PlanInterval = 'mensal' | 'trimestral' | 'anual';
 
 /**
- * Determina o intervalo do plano a partir do nome ou valor pago.
- * Herospark pode enviar o nome do plano ou o valor em centavos/reais.
+ * Formato do payload Herospark (campos são Liquid templates preenchidos pelo Herospark):
+ * {
+ *   "event": "Purchase",
+ *   "value": "19.90",           ← já em reais (offer_price / 100)
+ *   "offer_id": "xxx",
+ *   "buyer_name": "João Silva",
+ *   "buyer_email": "joao@email.com",
+ *   "buyer_phone": "11999999999",
+ *   "buyer_document": "123.456.789-00",
+ *   "offer_title": "Jornada Plus — Mensal"
+ * }
  */
-function detectPlanInterval(planName?: string, amountCents?: number): PlanInterval {
-  // Tentar pelo nome do plano primeiro
-  if (planName) {
-    const name = planName.toLowerCase();
-    if (name.includes('anual') || name.includes('annual') || name.includes('12')) return 'anual';
-    if (name.includes('trimestral') || name.includes('quarterly') || name.includes('3 mes') || name.includes('3mes')) return 'trimestral';
-    if (name.includes('mensal') || name.includes('monthly') || name.includes('1 mes')) return 'mensal';
-  }
+interface HerosparkPayload {
+  event: string;
+  value?: string | number;
+  offer_id?: string;
+  buyer_name?: string;
+  buyer_email?: string;
+  buyer_phone?: string;
+  buyer_document?: string;
+  offer_title?: string;
+}
 
-  // Fallback por valor (centavos ou reais — Herospark pode enviar os dois)
-  if (amountCents !== undefined) {
-    const valueReais = amountCents > 1000 ? amountCents / 100 : amountCents;
-    if (valueReais >= 150) return 'anual';      // R$180,00
+// ─── Plano: detectar pelo título da oferta ou pelo valor ─────────────────────
+
+function detectPlanInterval(offerTitle?: string, valueReais?: number): PlanInterval {
+  if (offerTitle) {
+    const t = offerTitle.toLowerCase();
+    if (t.includes('anual') || t.includes('annual') || t.includes('12')) return 'anual';
+    if (t.includes('trimestral') || t.includes('quarterly') || t.includes('3 mes') || t.includes('trim')) return 'trimestral';
+    if (t.includes('mensal') || t.includes('monthly') || t.includes('mes')) return 'mensal';
+  }
+  // Fallback por valor em reais
+  if (valueReais !== undefined) {
+    if (valueReais >= 150) return 'anual';      // R$180
     if (valueReais >= 40)  return 'trimestral'; // R$49,90
   }
-
   return 'mensal'; // default
 }
 
 /**
- * Calcula expires_at a partir do intervalo.
- * Adiciona 5 dias de buffer para cobrir atrasos de renovação.
+ * Calcula a data de expiração com 5 dias de buffer para cobrir atrasos de renovação.
+ * Mensal = 35 dias | Trimestral = 95 dias | Anual = 370 dias
  */
 function calcExpiresAt(interval: PlanInterval): string {
   const DAYS: Record<PlanInterval, number> = {
-    mensal:     35,  // 30 + 5 buffer
-    trimestral: 95,  // 90 + 5 buffer
-    anual:      370, // 365 + 5 buffer
+    mensal:     35,
+    trimestral: 95,
+    anual:      370,
   };
   return new Date(Date.now() + DAYS[interval] * 24 * 60 * 60 * 1000).toISOString();
 }
 
-/** Compara strings em tempo constante para evitar timing attacks. */
+/** Comparação de string em tempo constante (anti timing-attack). */
 function timingSafeCompare(a: string, b: string): boolean {
   try {
     const bufA = Buffer.from(a, 'utf8');
@@ -63,46 +81,18 @@ function timingSafeCompare(a: string, b: string): boolean {
   }
 }
 
-// ─── Mapeamento de eventos ────────────────────────────────────────────────────
-// Herospark pode enviar eventos em snake_case ou com outros nomes.
-// Documentação: https://docs.herospark.com/webhooks
-
-const PURCHASE_EVENTS = new Set([
-  'payment.approved',
-  'payment_approved',
-  'purchase.approved',
-  'purchase_approved',
-  'subscription.activated',
-  'subscription_activated',
-]);
-
-const CANCEL_EVENTS = new Set([
-  'payment.canceled',
-  'payment_canceled',
-  'payment.refunded',
-  'payment_refunded',
-  'subscription.canceled',
-  'subscription_canceled',
-  'subscription.cancelled',
-  'subscription_cancelled',
-  'chargeback',
-  'payment.chargeback',
-]);
-
-// ─── Rate limiting simples in-memory ─────────────────────────────────────────
+// ─── Rate limiting in-memory ──────────────────────────────────────────────────
 
 const rateLimitMap = new Map<string, { count: number; reset: number }>();
-const RATE_LIMIT = 30;
-const RATE_WINDOW_MS = 60_000;
 
 function checkRateLimit(ip: string): boolean {
   const now = Date.now();
   const entry = rateLimitMap.get(ip);
   if (!entry || now > entry.reset) {
-    rateLimitMap.set(ip, { count: 1, reset: now + RATE_WINDOW_MS });
+    rateLimitMap.set(ip, { count: 1, reset: now + 60_000 });
     return true;
   }
-  if (entry.count >= RATE_LIMIT) return false;
+  if (entry.count >= 30) return false;
   entry.count++;
   return true;
 }
@@ -123,253 +113,193 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  // ── 2. Ler body ───────────────────────────────────────────────────────────
-  let rawBody: string;
-  let payload: Record<string, unknown>;
-
+  // ── 2. Ler e parsear body ─────────────────────────────────────────────────
+  let payload: HerosparkPayload;
   try {
-    rawBody = await req.text();
-    payload = JSON.parse(rawBody);
+    const raw = await req.text();
+    payload = JSON.parse(raw);
   } catch {
-    return NextResponse.json({ error: 'Bad Request — payload inválido' }, { status: 400 });
+    return NextResponse.json({ error: 'Payload inválido' }, { status: 400 });
   }
 
-  // ── 3. Validar token de segurança do Herospark ────────────────────────────
-  // Herospark envia o token no body (campo "token" ou "secret") ou no header
-  // Authorization. Verificamos todas as possibilidades.
+  // ── 3. Validar token de segurança ─────────────────────────────────────────
+  // O token é passado como query param na URL configurada no Herospark:
+  //   https://app.minhajornadadiaria.com.br/api/webhooks/herospark?token=SEU_TOKEN
   const expectedToken = process.env.HEROSPARK_WEBHOOK_SECRET ?? '';
 
   if (!expectedToken) {
-    console.error('[herospark/webhook] HEROSPARK_WEBHOOK_SECRET não configurado');
+    console.error('[herospark] HEROSPARK_WEBHOOK_SECRET não configurado');
     return NextResponse.json({ error: 'Webhook não configurado' }, { status: 500 });
   }
 
   const receivedToken =
-    (payload.token as string) ??
-    (payload.secret as string) ??
+    req.nextUrl.searchParams.get('token') ??
     req.headers.get('x-herospark-token') ??
-    req.headers.get('authorization')?.replace('Bearer ', '') ??
     '';
 
   if (!receivedToken || !timingSafeCompare(receivedToken, expectedToken)) {
-    console.warn('[herospark/webhook] Token inválido — IP:', ip);
-    // Logar payload para debug (ajuda a entender o formato real do Herospark)
-    console.log('[herospark/webhook] Payload recebido (token inválido):', JSON.stringify(payload).slice(0, 500));
+    console.warn('[herospark] Token inválido — IP:', ip);
     return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
   }
 
-  // ── 4. Extrair campos do payload Herospark ────────────────────────────────
-  // Herospark tem variações de campo — suportamos múltiplos formatos
-  const event = String(
-    payload.event ??
-    payload.type ??
-    payload.action ??
-    ''
-  ).toLowerCase();
+  // ── 4. Extrair campos do payload ──────────────────────────────────────────
+  const event      = (payload.event ?? '').trim();
+  const buyerEmail = (payload.buyer_email ?? '').toLowerCase().trim();
+  const buyerName  = payload.buyer_name ?? null;
+  const offerId    = payload.offer_id ?? null;
+  const offerTitle = payload.offer_title ?? '';
+  const valueReais = payload.value !== undefined ? parseFloat(String(payload.value)) : 0;
 
-  // Email do comprador (múltiplos caminhos)
-  const buyerEmail = (
-    (payload.customer_email as string) ??
-    ((payload.customer as Record<string, unknown>)?.email as string) ??
-    ((payload.data as Record<string, unknown>)?.customer_email as string) ??
-    ((payload.buyer as Record<string, unknown>)?.email as string) ??
-    ''
-  ).toLowerCase().trim();
+  console.log(`[herospark] Evento: "${event}" | Email: "${buyerEmail}" | Oferta: "${offerTitle}" | Valor: R$${valueReais}`);
 
-  // ID da transação / pedido (para idempotência)
-  const orderId = String(
-    payload.order_id ??
-    payload.transaction_id ??
-    payload.payment_id ??
-    ((payload.sale as Record<string, unknown>)?.id) ??
-    ''
-  );
-
-  // ID da assinatura
-  const subscriptionId = String(
-    payload.subscription_id ??
-    ((payload.subscription as Record<string, unknown>)?.id) ??
-    ''
-  );
-
-  // Nome do plano
-  const planName = String(
-    payload.plan_name ??
-    payload.plan ??
-    ((payload.subscription as Record<string, unknown>)?.plan) ??
-    ((payload.plan as Record<string, unknown>)?.name) ??
-    ''
-  );
-
-  // Valor pago (pode vir em centavos ou reais)
-  const rawAmount =
-    (payload.amount as number) ??
-    (payload.value as number) ??
-    ((payload.sale as Record<string, unknown>)?.value as number) ??
-    0;
-
-  // Produto
-  const productId = String(payload.product_id ?? payload.product ?? '');
-
-  const supabase = getSupabase();
-
-  // ── 5. Logar evento completo (para diagnóstico inicial) ───────────────────
-  console.log(`[herospark/webhook] Evento: "${event}" | Email: "${buyerEmail}" | Plano: "${planName}" | Valor: ${rawAmount}`);
-
-  // ── 6. Validar campos obrigatórios ────────────────────────────────────────
-  if (!event) {
-    console.warn('[herospark/webhook] Evento ausente no payload');
-    return NextResponse.json({ error: 'evento ausente' }, { status: 400 });
+  // ── 5. Apenas Purchase é processado (por agora) ───────────────────────────
+  if (event !== 'Purchase') {
+    console.log(`[herospark] Evento ignorado: ${event}`);
+    return NextResponse.json({ received: true, note: 'evento_ignorado' });
   }
 
+  // ── 6. Email obrigatório ──────────────────────────────────────────────────
   if (!buyerEmail) {
-    console.warn('[herospark/webhook] Email do comprador ausente');
-    // Logar para auditoria
-    void supabase.from('hotmart_webhook_logs').insert({
-      event: `herospark:${event}`,
-      hotmart_transaction: orderId || null,
-      buyer_email: null,
-      payload,
-      processed: false,
-      error: 'buyer_email_missing',
-    });
+    console.warn('[herospark] buyer_email ausente');
     return NextResponse.json({ received: true, warning: 'sem_email' });
   }
 
-  // ── 7. Idempotência ────────────────────────────────────────────────────────
-  if (orderId) {
-    const { data: existingLog } = await supabase
-      .from('hotmart_webhook_logs')
-      .select('id, processed')
-      .eq('hotmart_transaction', orderId)
-      .eq('processed', true)
-      .maybeSingle();
+  const supabase = getSupabase();
 
-    if (existingLog) {
-      console.log(`[herospark/webhook] Transação duplicada ignorada: ${orderId}`);
-      return NextResponse.json({ received: true, note: 'already_processed' });
-    }
+  // ── 7. Idempotência — evitar ativação dupla no mesmo dia ─────────────────
+  // Herospark não envia transaction_id, então usamos buyer_email + offer_id + data
+  const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+  const idempotencyKey = `herospark:${buyerEmail}:${offerId ?? 'nooffer'}:${today}`;
+
+  const { data: dupLog } = await supabase
+    .from('hotmart_webhook_logs')
+    .select('id')
+    .eq('hotmart_transaction', idempotencyKey)
+    .eq('processed', true)
+    .maybeSingle();
+
+  if (dupLog) {
+    console.log(`[herospark] Compra duplicada ignorada: ${idempotencyKey}`);
+    return NextResponse.json({ received: true, note: 'already_processed' });
   }
 
   // ── 8. Log do evento ──────────────────────────────────────────────────────
   const { error: logErr } = await supabase.from('hotmart_webhook_logs').insert({
-    event: `herospark:${event}`,
-    hotmart_transaction: orderId || null,
+    event: `herospark:Purchase`,
+    hotmart_transaction: idempotencyKey,
     buyer_email: buyerEmail,
-    payload,
+    payload: payload as unknown as Record<string, unknown>,
     processed: false,
   });
-  if (logErr) console.error('[herospark/webhook] Erro ao logar:', logErr);
+  if (logErr) console.error('[herospark] Erro ao logar:', logErr);
 
-  // ── 9. Ignorar eventos desconhecidos ──────────────────────────────────────
-  const isPurchaseEvent = PURCHASE_EVENTS.has(event);
-  const isCancelEvent = CANCEL_EVENTS.has(event);
-
-  if (!isPurchaseEvent && !isCancelEvent) {
-    console.log('[herospark/webhook] Evento não processado:', event);
-    return NextResponse.json({ received: true, note: 'evento_ignorado' });
-  }
-
-  // ── 10. Buscar usuário no Supabase ────────────────────────────────────────
+  // ── 9. Buscar usuário ─────────────────────────────────────────────────────
   const { data: profile } = await supabase
     .from('profiles')
-    .select('id, name')
+    .select('id')
     .eq('email', buyerEmail)
     .maybeSingle();
 
   if (!profile?.id) {
-    console.warn(`[herospark/webhook] Usuário não encontrado: ${buyerEmail}`);
-    if (orderId) {
-      await supabase
-        .from('hotmart_webhook_logs')
-        .update({ error: 'user_not_found' })
-        .eq('hotmart_transaction', orderId);
-    }
+    console.warn(`[herospark] Usuário não encontrado: ${buyerEmail}`);
+    await supabase
+      .from('hotmart_webhook_logs')
+      .update({ error: 'user_not_found' })
+      .eq('hotmart_transaction', idempotencyKey);
     return NextResponse.json({ received: true, warning: 'user_not_found' });
   }
 
   const userId = profile.id;
 
-  // ── 11. Processar evento ──────────────────────────────────────────────────
-  try {
-    if (isPurchaseEvent) {
-      const planInterval = detectPlanInterval(planName, rawAmount);
-      const expiresAt = calcExpiresAt(planInterval);
+  // ── 10. Detectar plano e calcular expiração ───────────────────────────────
+  const planInterval = detectPlanInterval(offerTitle, valueReais);
+  const expiresAt = calcExpiresAt(planInterval);
 
-      const { error: upsertError } = await supabase
-        .from('subscriptions')
-        .upsert({
-          user_id: userId,
-          plan: 'plus',
-          plan_interval: planInterval,
-          status: 'active',
-          hotmart_subscription_id: subscriptionId || null,
-          hotmart_transaction: orderId || null,
-          product_id: productId || null,
-          price_paid: rawAmount > 1000 ? rawAmount / 100 : rawAmount, // normaliza centavos
-          currency: 'BRL',
-          starts_at: new Date().toISOString(),
-          expires_at: expiresAt,
-          canceled_at: null,
-          updated_at: new Date().toISOString(),
-        }, { onConflict: 'user_id' });
+  // ── 11. Ativar assinatura (upsert — renova se já existia) ─────────────────
+  const { error: upsertError } = await supabase
+    .from('subscriptions')
+    .upsert({
+      user_id:                userId,
+      plan:                   'plus',
+      plan_interval:          planInterval,
+      status:                 'active',
+      hotmart_subscription_id: offerId,
+      hotmart_transaction:    idempotencyKey,
+      product_id:             offerId ?? null,
+      price_paid:             isNaN(valueReais) ? 0 : valueReais,
+      currency:               'BRL',
+      starts_at:              new Date().toISOString(),
+      expires_at:             expiresAt,
+      canceled_at:            null,
+      updated_at:             new Date().toISOString(),
+    }, { onConflict: 'user_id' });
 
-      if (upsertError) {
-        console.error('[herospark/webhook] Erro ao criar subscription:', upsertError);
-        return NextResponse.json({ error: 'Erro ao processar subscription' }, { status: 500 });
-      }
-
-      console.log(`[herospark/webhook] ✅ Plano ativado — user: ${userId} | intervalo: ${planInterval} | expira: ${expiresAt}`);
-
-    } else {
-      // Cancelamento / reembolso / chargeback
-      const newStatus = event.includes('refund') ? 'refunded' :
-                        event.includes('chargeback') ? 'chargeback' : 'canceled';
-
-      const { error: updateError } = await supabase
-        .from('subscriptions')
-        .update({
-          status: newStatus,
-          canceled_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        })
-        .eq('user_id', userId);
-
-      if (updateError) {
-        console.error('[herospark/webhook] Erro ao cancelar subscription:', updateError);
-        return NextResponse.json({ error: 'Erro ao atualizar subscription' }, { status: 500 });
-      }
-
-      console.log(`[herospark/webhook] ❌ Plano cancelado — user: ${userId} | status: ${newStatus}`);
-    }
-
-    // ── 12. Marcar log como processado ─────────────────────────────────────
-    if (orderId) {
-      await supabase
-        .from('hotmart_webhook_logs')
-        .update({ processed: true })
-        .eq('hotmart_transaction', orderId);
-    }
-
-    return NextResponse.json({
-      received: true,
-      event,
-      action: isPurchaseEvent ? 'activated' : 'canceled',
-    });
-
-  } catch (err) {
-    console.error('[herospark/webhook] Erro interno:', err);
-    return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
+  if (upsertError) {
+    console.error('[herospark] Erro ao ativar subscription:', upsertError);
+    return NextResponse.json({ error: 'Erro ao ativar plano' }, { status: 500 });
   }
+
+  // ── 12. Marcar log como processado ────────────────────────────────────────
+  await supabase
+    .from('hotmart_webhook_logs')
+    .update({ processed: true })
+    .eq('hotmart_transaction', idempotencyKey);
+
+  console.log(`[herospark] ✅ Plano ativado — user: ${userId} | intervalo: ${planInterval} | expira: ${expiresAt} | oferta: "${offerTitle}"`);
+
+  // ── 13. Email de confirmação (fire-and-forget) ────────────────────────────
+  // Importar dinamicamente para não bloquear a resposta
+  Promise.resolve().then(async () => {
+    try {
+      const { sendEmail } = await import('@/lib/email');
+      const { subscriptionConfirmedEmailHtml, subscriptionConfirmedEmailSubject } =
+        await import('@/lib/email-templates/subscription-confirmed');
+
+      await sendEmail({
+        to: buyerEmail,
+        subject: subscriptionConfirmedEmailSubject(),
+        html: subscriptionConfirmedEmailHtml({
+          name: buyerName,
+          planInterval,
+          expiresAt,
+        }),
+        tags: [{ name: 'template', value: 'subscription-confirmed' }],
+      });
+    } catch (err) {
+      console.error('[herospark] Falha ao enviar email de confirmação:', err);
+    }
+  });
+
+  return NextResponse.json({
+    received: true,
+    event: 'Purchase',
+    plan: planInterval,
+    expires_at: expiresAt,
+  });
 }
 
-// GET — health check + informações de configuração
-export async function GET() {
+// GET — health check
+export async function GET(req: NextRequest) {
+  const configured = !!process.env.HEROSPARK_WEBHOOK_SECRET;
   return NextResponse.json({
     status: 'ok',
     endpoint: 'herospark-webhook',
-    configured: !!process.env.HEROSPARK_WEBHOOK_SECRET,
-    purchase_events: [...PURCHASE_EVENTS],
-    cancel_events: [...CANCEL_EVENTS],
+    configured,
+    webhook_url_example: 'https://app.minhajornadadiaria.com.br/api/webhooks/herospark?token=SEU_TOKEN',
+    expected_payload: {
+      event: 'Purchase',
+      value: '19.90',
+      offer_id: 'xxx',
+      buyer_name: 'João Silva',
+      buyer_email: 'joao@email.com',
+      buyer_phone: '11999999999',
+      buyer_document: '123.456.789-00',
+      offer_title: 'Jornada Plus — Mensal',
+    },
+    plan_detection: {
+      mensal: 'offer_title contém "mensal" ou value < R$40',
+      trimestral: 'offer_title contém "trimestral" ou value entre R$40-R$149',
+      anual: 'offer_title contém "anual" ou value >= R$150',
+    },
   });
 }
