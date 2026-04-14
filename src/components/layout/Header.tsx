@@ -5,16 +5,17 @@ import { useUserStore } from '@/stores/userStore';
 import Image from 'next/image';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import { NotificationSheet } from '@/components/NotificationSheet';
+import { ProfileModal } from '@/components/ProfileModal';
 import './Header.css';
 
 export function Header() {
   const user = useUserStore((s) => s.user);
   const { isDark, toggle, mounted } = useDarkMode();
   const [notifOpen, setNotifOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
 
   const handleProfileClick = () => {
-    // TODO: Abrir modal de perfil
-    console.log('Profile clicked');
+    setProfileOpen(true);
   };
 
   return (
@@ -73,6 +74,7 @@ export function Header() {
       </header>
 
       <NotificationSheet isOpen={notifOpen} onClose={() => setNotifOpen(false)} />
+      <ProfileModal isOpen={profileOpen} onClose={() => setProfileOpen(false)} />
     </>
   );
 }

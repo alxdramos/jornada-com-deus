@@ -299,7 +299,7 @@ export function TabBiblia() {
                 </div>
               ) : data?.verses ? (
                 <div className="space-y-4">
-                  {data.verses.map((verse: any, idx: number) => (
+                  {data.verses.map((verse: { verse: number; text: string }, idx: number) => (
                     <div
                       key={idx}
                       className="p-4 rounded-lg bg-white border border-[#E5E7EB] hover:border-[#FB923C] transition-colors group"

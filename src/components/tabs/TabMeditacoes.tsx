@@ -106,7 +106,7 @@ export function TabMeditacoes() {
       <PaywallModal
         isOpen={paywallOpen}
         onClose={() => setPaywallOpen(false)}
-        onUpgrade={() => console.log("Upgrade realizado!")}
+        onUpgrade={() => setPaywallOpen(false)}
         feature={selectedMeditation?.title}
       />
 
