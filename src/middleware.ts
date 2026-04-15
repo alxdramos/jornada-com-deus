@@ -6,7 +6,7 @@ import type { CookieOptions } from '@supabase/ssr';
 const protectedRoutes = ['/', '/explorar', '/biblia', '/oracoes', '/meditacoes', '/diario', '/perfil', '/admin'];
 const authRoutes = ['/login', '/cadastro'];
 // Rotas públicas que nunca devem ser bloqueadas pelo middleware
-const publicRoutes = ['/auth/callback'];
+const publicRoutes = ['/auth/callback', '/forgot-password', '/auth/reset-password'];
 
 type PendingCookie = { name: string; value: string; options: CookieOptions };
 

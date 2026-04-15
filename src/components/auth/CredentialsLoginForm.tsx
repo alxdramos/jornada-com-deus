@@ -73,12 +73,20 @@ export function CredentialsLoginForm() {
 
       {/* Campo Senha */}
       <div className="space-y-1.5">
-        <label
-          htmlFor="password"
-          className="block text-sm font-medium text-[#1F2937]"
-        >
-          Senha
-        </label>
+        <div className="flex items-center justify-between">
+          <label
+            htmlFor="password"
+            className="block text-sm font-medium text-[#1F2937]"
+          >
+            Senha
+          </label>
+          <Link
+            href="/forgot-password"
+            className="text-xs text-[#FB923C] hover:underline"
+          >
+            Esqueci minha senha
+          </Link>
+        </div>
         <div className="relative">
           <input
             id="password"
