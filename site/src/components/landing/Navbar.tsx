@@ -40,7 +40,7 @@ export function Navbar() {
         borderBottom: scrolled ? '1px solid rgba(45,106,79,0.12)' : '1px solid rgba(45,106,79,0.07)',
       }}
     >
-      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 lg:h-[72px] flex items-center justify-between gap-8">
+      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 lg:h-[72px] flex items-center justify-between gap-4 lg:gap-8">
 
         {/* Logo */}
         <a href="#hero" className="flex items-center gap-2.5 shrink-0">
@@ -68,7 +68,7 @@ export function Navbar() {
         </a>
 
         {/* Nav links — desktop */}
-        <ul className="hidden md:flex items-center gap-1">
+        <ul className="hidden lg:flex items-center gap-1">
           {navLinks.map((link) => (
             <li key={link.href}>
               <a
@@ -94,7 +94,7 @@ export function Navbar() {
         </ul>
 
         {/* CTA — desktop */}
-        <div className="hidden md:flex items-center gap-3 shrink-0">
+        <div className="hidden lg:flex items-center gap-3 shrink-0">
           <a
             href={APP_URL}
             target="_blank"
@@ -119,9 +119,9 @@ export function Navbar() {
           </a>
         </div>
 
-        {/* Hamburger — mobile */}
+        {/* Hamburger — mobile/tablet */}
         <button
-          className="md:hidden p-2 rounded-xl transition-colors"
+          className="lg:hidden p-2 rounded-xl transition-colors"
           style={{ color: '#1F2937' }}
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label="Abrir menu"
@@ -137,7 +137,7 @@ export function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden overflow-hidden"
+            className="lg:hidden overflow-hidden"
             style={{
               background: 'rgba(248,247,244,0.98)',
               backdropFilter: 'blur(12px)',

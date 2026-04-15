@@ -129,7 +129,7 @@ export function ContentStatsSection() {
           style={{ background: BRAND, borderRadius: 16, padding: '22px 28px' }}
         >
           <p
-            className="font-semibold italic"
+            className="font-semibold italic flex-1 min-w-0"
             style={{ fontFamily: 'var(--font-lora)', fontSize: 17, color: '#fff' }}
           >
             Mais de 180 conteúdos para cada momento da sua caminhada.

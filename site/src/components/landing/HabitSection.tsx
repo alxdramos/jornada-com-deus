@@ -214,7 +214,7 @@ export function HabitSection() {
                       {item.title}
                     </h4>
                     <p
-                      style={{ fontSize: 12, color: 'rgba(240,237,232,0.52)', lineHeight: 1.48, fontFamily: 'var(--font-raleway)' }}
+                      style={{ fontSize: 12, color: 'rgba(240,237,232,0.72)', lineHeight: 1.55, fontFamily: 'var(--font-raleway)' }}
                     >
                       {item.desc}
                     </p>
