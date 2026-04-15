@@ -92,7 +92,7 @@ export function WebhookLogsTable({ logs }: { logs: WebhookLog[] }) {
   return (
     <div className="bg-white rounded-2xl border border-[#E5E7EB] shadow-sm overflow-hidden">
       <div className="px-5 py-4 border-b border-[#F3F4F6]">
-        <h3 className="text-sm font-semibold text-[#1F2937]">Eventos Hotmart Recentes</h3>
+        <h3 className="text-sm font-semibold text-[#1F2937]">Eventos de Pagamento Recentes</h3>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full text-sm">

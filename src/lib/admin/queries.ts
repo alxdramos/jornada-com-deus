@@ -145,7 +145,7 @@ export async function getTopStreaks(limit = 5) {
   return data ?? []
 }
 
-// ── KPIs de Monetização (Hotmart) ─────────────────────────────────────────
+// ── KPIs de Monetização (Herospark) ───────────────────────────────────────
 export interface SubscriptionKpi {
   totalPlus: number
   mrr: number
@@ -273,7 +273,7 @@ export interface WebhookLog {
 
 export async function getWebhookLogs(limit = 20): Promise<WebhookLog[]> {
   const { data } = await supabaseAdmin
-    .from('hotmart_webhook_logs')
+    .from('hotmart_webhook_logs') // tabela mantida por compatibilidade — renomear em migration futura
     .select('id, event, hotmart_transaction, buyer_email, processed, error, created_at')
     .order('created_at', { ascending: false })
     .limit(limit)

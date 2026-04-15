@@ -16,7 +16,7 @@ export default async function AssinaturasPage() {
       <div>
         <h1 className="text-2xl font-bold text-[#1F2937]">Assinaturas</h1>
         <p className="text-sm text-[#9CA3AF] mt-0.5">
-          Monetização via Hotmart — dados em tempo real
+          Monetização via Herospark — dados em tempo real
         </p>
       </div>
 

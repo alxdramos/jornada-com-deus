@@ -309,7 +309,7 @@ export function SupportSheet({ isOpen, onClose }: SupportSheetProps) {
                       Perguntas frequentes
                     </p>
                     {[
-                      { q: "Como cancelar minha assinatura?", a: "Acesse sua conta na Hotmart em hotmart.com/product/subscriptions e cancele lá." },
+                      { q: "Como cancelar minha assinatura?", a: "Acesse sua conta na Herospark e cancele pela área do cliente. Em caso de dúvidas, abra um ticket de suporte." },
                       { q: "Meu acesso Premium não ativou", a: "Aguarde até 5 minutos após o pagamento. Se persistir, abra um ticket com o comprovante." },
                       { q: "Esqueci minha senha", a: "Na tela de login, clique em 'Esqueci a senha' para redefinir por e-mail." },
                     ].map((faq, i) => (

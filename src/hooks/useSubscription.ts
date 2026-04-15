@@ -8,14 +8,12 @@ export interface SubscriptionData {
   plan: 'free' | 'plus'
   status: 'active' | 'inactive' | 'canceled' | 'refunded' | 'expired' | 'chargeback' | null
   expiresAt: string | null
-  hotmartSubscriptionId: string | null
 }
 
 const DEFAULT_SUBSCRIPTION: SubscriptionData = {
   plan: 'free',
   status: null,
   expiresAt: null,
-  hotmartSubscriptionId: null,
 }
 
 export function useSubscription() {
@@ -29,7 +27,7 @@ export function useSubscription() {
       setLoading(true)
       const { data } = await supabase
         .from('subscriptions')
-        .select('plan, status, expires_at, hotmart_subscription_id')
+        .select('plan, status, expires_at')
         .eq('user_id', user.id)
         .maybeSingle()
 
@@ -39,7 +37,6 @@ export function useSubscription() {
           plan: isActive ? (data.plan as 'free' | 'plus') : 'free',
           status: data.status,
           expiresAt: data.expires_at,
-          hotmartSubscriptionId: data.hotmart_subscription_id,
         })
       } else {
         setSubscription(DEFAULT_SUBSCRIPTION)

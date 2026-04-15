@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { timingSafeEqual } from 'crypto';
+import { herosparkWebhookLimiter } from '@/lib/rate-limit';
 
 // ─── Supabase ────────────────────────────────────────────────────────────────
 
@@ -81,22 +82,6 @@ function timingSafeCompare(a: string, b: string): boolean {
   }
 }
 
-// ─── Rate limiting in-memory ──────────────────────────────────────────────────
-
-const rateLimitMap = new Map<string, { count: number; reset: number }>();
-
-function checkRateLimit(ip: string): boolean {
-  const now = Date.now();
-  const entry = rateLimitMap.get(ip);
-  if (!entry || now > entry.reset) {
-    rateLimitMap.set(ip, { count: 1, reset: now + 60_000 });
-    return true;
-  }
-  if (entry.count >= 30) return false;
-  entry.count++;
-  return true;
-}
-
 // ─── Handler principal ────────────────────────────────────────────────────────
 
 export async function POST(req: NextRequest) {
@@ -105,8 +90,9 @@ export async function POST(req: NextRequest) {
     req.headers.get('x-real-ip') ??
     'unknown';
 
-  // ── 1. Rate limiting ──────────────────────────────────────────────────────
-  if (!checkRateLimit(ip)) {
+  // ── 1. Rate limiting distribuído (Upstash Redis) ──────────────────────────
+  const rl = await herosparkWebhookLimiter.check(ip);
+  if (!rl.success) {
     return NextResponse.json({ error: 'Too Many Requests' }, {
       status: 429,
       headers: { 'Retry-After': '60' },
@@ -219,19 +205,17 @@ export async function POST(req: NextRequest) {
   const { error: upsertError } = await supabase
     .from('subscriptions')
     .upsert({
-      user_id:                userId,
-      plan:                   'plus',
-      plan_interval:          planInterval,
-      status:                 'active',
-      hotmart_subscription_id: offerId,
-      hotmart_transaction:    idempotencyKey,
-      product_id:             offerId ?? null,
-      price_paid:             isNaN(valueReais) ? 0 : valueReais,
-      currency:               'BRL',
-      starts_at:              new Date().toISOString(),
-      expires_at:             expiresAt,
-      canceled_at:            null,
-      updated_at:             new Date().toISOString(),
+      user_id:       userId,
+      plan:          'plus',
+      plan_interval: planInterval,
+      status:        'active',
+      product_id:    offerId ?? null,
+      price_paid:    isNaN(valueReais) ? 0 : valueReais,
+      currency:      'BRL',
+      starts_at:     new Date().toISOString(),
+      expires_at:    expiresAt,
+      canceled_at:   null,
+      updated_at:    new Date().toISOString(),
     }, { onConflict: 'user_id' });
 
   if (upsertError) {

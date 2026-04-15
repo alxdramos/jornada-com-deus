@@ -117,8 +117,8 @@ export function createRateLimiter(
 
 // ─── Rate limiters pré-configurados ──────────────────────────────────────────
 
-/** Webhook Hotmart: 30 req/min por IP */
-export const hotmartWebhookLimiter = createRateLimiter(30, 60, '@jornada/hotmart');
+/** Webhook Herospark: 30 req/min por IP (distribuído via Upstash) */
+export const herosparkWebhookLimiter = createRateLimiter(30, 60, '@jornada/herospark');
 
 /** API pública genérica: 100 req/min por IP */
 export const apiLimiter = createRateLimiter(100, 60, '@jornada/api');
