@@ -43,9 +43,12 @@ async function requireAdmin(req: NextRequest) {
 }
 
 export async function GET(
-  _req: NextRequest,
+  req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const user = await requireAdmin(req)
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
+
   const { id } = await params
   const item = await getContentItem(id)
   if (!item) return NextResponse.json({ error: 'Não encontrado' }, { status: 404 })
