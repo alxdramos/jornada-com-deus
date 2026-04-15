@@ -1,94 +1,89 @@
 'use client';
 
-import { motion, type Variants } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import { Star, Quote } from 'lucide-react';
 
+const BRAND = '#2D6A4F';
+
 const testimonials = [
   {
-    name:     'Mariana Costa',
-    role:     'Estudante de Teologia',
-    initials: 'M',
-    color:    '#FB923C',
-    stars:    5,
-    text:     'Depois de 30 dias consecutivos usando o app, minha ansiedade diminuiu muito e minha fé cresceu de uma forma que eu não esperava. A Árvore da Vida me motiva a não quebrar a sequência!',
+    name:      'Mariana Costa',
+    role:      'Estudante de Teologia',
+    initials:  'M',
+    color:     '#FB923C',
+    stars:     5,
+    text: 'Depois de 30 dias consecutivos usando o app, minha ansiedade diminuiu muito e minha fé cresceu de uma forma que não esperava. A Árvore da Vida me motiva a não quebrar a sequência!',
   },
   {
-    name:     'André Lopes',
-    role:     'Pastor e pai de família',
-    initials: 'A',
-    color:    '#10B981',
-    stars:    5,
-    text:     'Como pastor, fico feliz de indicar um app que une tecnologia e espiritualidade com tanto cuidado. As meditações guiadas em áudio são um diferencial incrível para quem está começando.',
+    name:      'André Lopes',
+    role:      'Pastor e pai de família',
+    initials:  'A',
+    color:     '#2D6A4F',
+    stars:     5,
+    text: 'Como pastor, fico feliz de indicar um app que une tecnologia e espiritualidade com tanto cuidado. As meditações guiadas em áudio são um diferencial incrível.',
   },
   {
-    name:     'Gabriela Torres',
-    role:     'Enfermeira, cristã há 15 anos',
-    initials: 'G',
-    color:    '#8B5CF6',
-    stars:    5,
-    text:     'Nos plantões noturnos, quando o Wi-Fi some, o app continua funcionando offline. Ter a Bíblia completa disponível a qualquer hora mudou minha rotina espiritual completamente.',
+    name:      'Gabriela Torres',
+    role:      'Enfermeira, cristã há 15 anos',
+    initials:  'G',
+    color:     '#74C69D',
+    stars:     5,
+    text: 'Nos plantões noturnos, quando o Wi-Fi some, o app continua funcionando. Ter a Bíblia completa disponível a qualquer hora mudou minha rotina espiritual completamente.',
   },
   {
-    name:     'Ricardo Melo',
-    role:     'Empresário e líder de célula',
-    initials: 'R',
-    color:    '#C98989',
-    stars:    5,
-    text:     'O design é tão bonito e sereno que dá prazer abrir o app de manhã. Em 3 semanas já virou hábito antes do café. Recomendo para toda a minha célula!',
+    name:      'Ricardo Melo',
+    role:      'Empresário e líder de célula',
+    initials:  'R',
+    color:     '#CA8A04',
+    stars:     5,
+    text: 'O design é tão bonito e sereno que dá prazer abrir o app de manhã. Em 3 semanas já virou hábito antes do café. Recomendo para toda a minha célula!',
   },
 ];
-
-const containerVariants: Variants = {
-  hidden: {},
-  show:   { transition: { staggerChildren: 0.1 } },
-};
-
-const cardVariants: Variants = {
-  hidden: { opacity: 0, y: 24 },
-  show:   { opacity: 1, y: 0, transition: { duration: 0.55 } },
-};
 
 export function TestimonialsSection() {
   const ref    = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-60px' });
 
   return (
-    <section id="depoimentos" className="py-24 sm:py-32 bg-[#FAF9F6] scroll-mt-16">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section
+      id="depoimentos"
+      className="scroll-mt-16"
+      style={{ padding: 'clamp(60px,8vw,90px) clamp(20px,6vw,80px)', background: '#F8F7F4' }}
+    >
+      <div className="max-w-5xl mx-auto">
 
         {/* Header */}
-        <div className="text-center mb-16" ref={ref}>
+        <div className="text-center mb-14" ref={ref}>
           <motion.span
             initial={{ opacity: 0 }}
             animate={inView ? { opacity: 1 } : {}}
-            className="text-xs font-semibold tracking-widest text-[#10B981] uppercase"
+            className="text-xs font-semibold tracking-widest uppercase"
+            style={{ color: BRAND, fontFamily: 'var(--font-raleway)' }}
           >
-            Depoimentos reais
+            Depoimentos Reais
           </motion.span>
           <motion.h2
             initial={{ opacity: 0, y: 16 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.1, duration: 0.6 }}
-            className="mt-3 text-3xl sm:text-4xl lg:text-5xl font-bold text-[#1F2937] leading-tight"
+            className="mt-3 font-bold leading-tight"
+            style={{
+              fontFamily: 'var(--font-lora)',
+              fontSize: 'clamp(26px, 3vw, 38px)',
+              color: '#1F2937',
+            }}
           >
-            Vidas transformadas dia a dia
+            Vidas transformadas,{' '}
+            <em style={{ fontStyle: 'italic', color: BRAND }}>dia a dia</em>
           </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 12 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: 0.2, duration: 0.5 }}
-            className="mt-4 text-[#6B7280] text-lg max-w-lg mx-auto"
-          >
-            Histórias de quem fez da Jornada um hábito diário de fé.
-          </motion.p>
 
-          {/* Stats de prova social */}
+          {/* Stats */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: 0.3, duration: 0.5 }}
+            transition={{ delay: 0.25, duration: 0.5 }}
             className="flex flex-wrap items-center justify-center gap-6 mt-8"
           >
             {[
@@ -97,70 +92,105 @@ export function TestimonialsSection() {
               { value: '94%',   label: 'mantêm o hábito' },
             ].map((s) => (
               <div key={s.label} className="flex items-center gap-2 text-sm">
-                <span className="font-bold text-[#FB923C] text-base">{s.value}</span>
-                <span className="text-[#9CA3AF]">{s.label}</span>
+                <span
+                  className="font-bold text-base"
+                  style={{ fontFamily: 'var(--font-lora)', color: BRAND }}
+                >
+                  {s.value}
+                </span>
+                <span style={{ color: '#9CA3AF', fontFamily: 'var(--font-raleway)' }}>
+                  {s.label}
+                </span>
               </div>
             ))}
           </motion.div>
         </div>
 
-        {/* Cards: 1-col mobile, 2-col tablet, 4-col desktop */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate={inView ? 'show' : 'hidden'}
-          className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5"
-        >
-          {testimonials.map((t) => (
+        {/* Cards */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {testimonials.map((t, i) => (
             <motion.div
               key={t.name}
-              variants={cardVariants}
-              whileHover={{ y: -4, transition: { duration: 0.2 } }}
-              className="bg-white rounded-2xl border border-[#E5E7EB] p-5 shadow-sm hover:shadow-md transition-all relative overflow-hidden flex flex-col"
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-40px' }}
+              transition={{ delay: i * 0.08, duration: 0.55 }}
+              whileHover={{ y: -5, transition: { duration: 0.2 } }}
+              className="relative overflow-hidden flex flex-col rounded-2xl border shadow-sm hover:shadow-lg transition-all"
+              style={{
+                background: '#fff',
+                borderColor: '#E5E7EB',
+                padding: 20,
+              }}
             >
-              {/* Quote decorativo */}
+              {/* Decorative quote */}
               <Quote
-                size={40}
-                className="absolute top-3 right-3 opacity-[0.06] text-[#1F2937]"
+                size={44}
+                className="absolute top-3 right-3 opacity-[0.05] text-[#1F2937]"
                 aria-hidden="true"
               />
 
               {/* Stars */}
               <div className="flex gap-0.5 mb-4">
-                {[...Array(t.stars)].map((_, i) => (
-                  <Star key={i} size={13} className="fill-[#FB923C] text-[#FB923C]" />
+                {[...Array(t.stars)].map((_, si) => (
+                  <Star key={si} size={13} style={{ fill: '#CA8A04', color: '#CA8A04' }} />
                 ))}
               </div>
 
-              {/* Texto */}
-              <p className="text-[#4B5563] leading-relaxed text-sm flex-1 mb-5">
+              {/* Text */}
+              <p
+                className="text-sm leading-relaxed flex-1 mb-5"
+                style={{ color: '#4B5563', fontFamily: 'var(--font-raleway)' }}
+              >
                 &ldquo;{t.text}&rdquo;
               </p>
 
-              {/* Autor */}
+              {/* Author */}
               <div className="flex items-center gap-2.5 mt-auto">
                 <div
                   className="w-9 h-9 rounded-full flex items-center justify-center text-white font-bold text-xs shrink-0"
-                  style={{ backgroundColor: t.color }}
+                  style={{ backgroundColor: t.color, fontFamily: 'var(--font-raleway)' }}
                 >
                   {t.initials}
                 </div>
                 <div className="min-w-0">
-                  <p className="font-semibold text-[#1F2937] text-xs truncate">{t.name}</p>
-                  <p className="text-[10px] text-[#9CA3AF] truncate">{t.role}</p>
+                  <p
+                    className="font-semibold text-xs truncate"
+                    style={{ fontFamily: 'var(--font-lora)', color: '#1F2937' }}
+                  >
+                    {t.name}
+                  </p>
+                  <p
+                    className="text-[10px] truncate"
+                    style={{ color: '#9CA3AF', fontFamily: 'var(--font-raleway)' }}
+                  >
+                    {t.role}
+                  </p>
                 </div>
               </div>
 
-              {/* Badge verificado */}
-              <div className="mt-3 inline-flex items-center gap-1 text-[10px] text-[#10B981] font-medium">
-                <span className="w-3 h-3 rounded-full bg-[#ECFDF5] flex items-center justify-center">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#10B981]" />
+              {/* Verified */}
+              <div
+                className="mt-3 inline-flex items-center gap-1 text-[10px] font-medium"
+                style={{ color: BRAND, fontFamily: 'var(--font-raleway)' }}
+              >
+                <span
+                  className="w-3 h-3 rounded-full flex items-center justify-center"
+                  style={{ backgroundColor: 'rgba(45,106,79,0.10)' }}
+                >
+                  <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: BRAND }} />
                 </span>
                 Usuário verificado
               </div>
+
+              {/* Color accent */}
+              <div
+                className="absolute bottom-0 left-0 right-0 h-0.5"
+                style={{ backgroundColor: t.color, opacity: 0.4 }}
+              />
             </motion.div>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );

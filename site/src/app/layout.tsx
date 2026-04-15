@@ -1,17 +1,25 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Lora, Raleway } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({
+const lora = Lora({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-lora",
   display: "swap",
+  weight: ["400", "500", "600", "700"],
+});
+
+const raleway = Raleway({
+  subsets: ["latin"],
+  variable: "--font-raleway",
+  display: "swap",
+  weight: ["300", "400", "500", "600", "700", "800"],
 });
 
 export const metadata: Metadata = {
-  title: "Minha Jornada Diária - Devocional Diário com Paz e Crescimento",
+  title: "Minha Jornada Diária — Devocional, Meditação e Bíblia",
   description:
-    "Encontre paz no seu dia a dia com devocionais, meditações guiadas, Bíblia offline e hábitos espirituais. Instale gratuitamente o PWA Minha Jornada Diária.",
+    "Um app espiritual completo para cultivar sua fé todo dia. Devocional diário, meditações guiadas em áudio, Bíblia offline e gamificação espiritual. Gratuito.",
   keywords: [
     "devocional diário",
     "bíblia offline",
@@ -20,38 +28,35 @@ export const metadata: Metadata = {
     "hábito espiritual",
     "app cristão",
     "crescimento espiritual",
-    "paz interior",
     "jornada com deus",
+    "árvore da vida",
   ],
   authors: [{ name: "Minha Jornada Diária" }],
   creator: "Minha Jornada Diária",
   publisher: "Minha Jornada Diária",
   metadataBase: new URL("https://minhajornadadiaria.com.br"),
-  alternates: {
-    canonical: "/",
-  },
+  alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     locale: "pt_BR",
     url: "https://minhajornadadiaria.com.br",
-    title: "Minha Jornada Diária - Devocional Diário com Paz e Crescimento",
+    title: "Minha Jornada Diária — Sua Fé, Cultivada Todo Dia",
     description:
-      "Encontre paz no seu dia a dia com devocionais, meditações guiadas, Bíblia offline e hábitos espirituais. Gratuito e offline.",
+      "Devocional diário, meditações guiadas, Bíblia offline e hábitos espirituais. Gratuito.",
     siteName: "Minha Jornada Diária",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Minha Jornada Diária - App Devocional",
+        alt: "Minha Jornada Diária",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Minha Jornada Diária - Devocional Diário",
-    description:
-      "Transforme seus dias com a Palavra, oração e meditação. Gratuito e offline.",
+    title: "Minha Jornada Diária",
+    description: "Cultivar sua fé todo dia — devocional, meditação, Bíblia e oração.",
     creator: "@senier451",
     images: ["/og-image.png"],
   },
@@ -69,7 +74,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#FB923C",
+  themeColor: "#2D6A4F",
 };
 
 export default function RootLayout({
@@ -78,8 +83,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-BR" className={inter.variable}>
-      <body className="font-sans antialiased">
+    <html lang="pt-BR" className={`${lora.variable} ${raleway.variable}`}>
+      <body
+        className="antialiased"
+        style={{ fontFamily: 'var(--font-raleway)' }}
+      >
         {children}
       </body>
     </html>

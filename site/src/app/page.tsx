@@ -1,32 +1,28 @@
-import { Navbar }                  from '@/components/landing/Navbar';
-import { HeroSection }             from '@/components/landing/HeroSection';
-import { MissionSection }          from '@/components/landing/MissionSection';
-import { ProblemSolutionSection }  from '@/components/landing/ProblemSolutionSection';
-import { FeaturesSection }         from '@/components/landing/FeaturesSection';
-import { TestimonialsSection }     from '@/components/landing/TestimonialsSection';
-import { CTASection }              from '@/components/landing/CTASection';
-import { Footer }                  from '@/components/landing/Footer';
-
-function SectionDivider() {
-  return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="h-px bg-gradient-to-r from-transparent via-[#E5E7EB] to-transparent" />
-    </div>
-  );
-}
+import { Navbar }              from '@/components/landing/Navbar';
+import { HeroSection }         from '@/components/landing/HeroSection';
+import { MirrorSection }       from '@/components/landing/MirrorSection';
+import { FeaturesSection }     from '@/components/landing/FeaturesSection';
+import { JourneySection }      from '@/components/landing/JourneySection';
+import { ContentStatsSection } from '@/components/landing/ContentStatsSection';
+import { HabitSection }        from '@/components/landing/HabitSection';
+import { FreePricingSection }  from '@/components/landing/FreePricingSection';
+import { CompatSection }       from '@/components/landing/CompatSection';
+import { TestimonialsSection } from '@/components/landing/TestimonialsSection';
+import { CTASection }          from '@/components/landing/CTASection';
+import { Footer }              from '@/components/landing/Footer';
 
 export default function HomePage() {
   return (
     <main className="overflow-x-hidden">
       <Navbar />
       <HeroSection />
-      <SectionDivider />
-      <MissionSection />
-      <SectionDivider />
-      <ProblemSolutionSection />
-      <SectionDivider />
+      <MirrorSection />
       <FeaturesSection />
-      <SectionDivider />
+      <JourneySection />
+      <ContentStatsSection />
+      <HabitSection />
+      <FreePricingSection />
+      <CompatSection />
       <TestimonialsSection />
       <CTASection />
       <Footer />

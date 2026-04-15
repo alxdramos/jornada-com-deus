@@ -1,34 +1,57 @@
 @import "tailwindcss";
 
 @theme {
-  /* ─── Paleta Minha Jornada Diária ─── */
-  --color-background:     #FAF9F6;
-  --color-surface:        #FFFFFF;
-  --color-surface-2:      #F5F3EF;
+  /* ── Brand Colors — Verde Floresta ── */
+  --color-brand:         #2D6A4F;
+  --color-brand-dark:    #1B4332;
+  --color-brand-hover:   #245741;
+  --color-brand-light:   #74C69D;
+  --color-brand-pale:    #D8F3DC;
+  --color-brand-dim:     rgba(45,106,79,0.10);
 
-  --color-primary:        #FB923C;
-  --color-primary-hover:  #F97316;
-  --color-primary-light:  #FEF3E2;
+  --color-gold:          #CA8A04;
+  --color-gold-hover:    #A16207;
+  --color-gold-light:    #FCD34D;
+  --color-gold-pale:     #FFFBEB;
+  --color-gold-dim:      rgba(202,138,4,0.13);
 
-  --color-secondary:      #10B981;
-  --color-secondary-light:#3FDFB8;
-  --color-secondary-pale: #ECFDF5;
+  --color-orange:        #FB923C;
+  --color-orange-pale:   #FEF3E2;
 
-  --color-accent:         #C98989;
-  --color-accent-light:   #FDF2F2;
-  --color-blue-pale:      #E0F2FE;
+  /* ── Dark Surfaces ── */
+  --color-dark:          #1A1714;
+  --color-dark-2:        #231F1B;
+  --color-dark-3:        #2D2720;
+  --color-border-dark:   #3D3830;
 
-  --color-text:           #1F2937;
-  --color-text-muted:     #6B7280;
-  --color-text-light:     #9CA3AF;
+  /* ── Light Surfaces ── */
+  --color-background:    #F8F7F4;
+  --color-background-2:  #EEEAE3;
+  --color-surface:       #FFFFFF;
+  --color-surface-2:     #F5F3EF;
 
-  --color-border:         #E5E7EB;
-  --color-border-subtle:  #F3F4F6;
+  /* ── Text ── */
+  --color-text:          #1F2937;
+  --color-text-muted:    #6B7280;
+  --color-text-light:    #9CA3AF;
 
-  /* ─── Tipografia ─── */
-  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  /* ── Borders ── */
+  --color-border:        #E5E7EB;
+  --color-border-subtle: #F3F4F6;
 
-  /* ─── Radius ─── */
+  /* ── Supporting ── */
+  --color-green:         #10B981;
+  --color-green-pale:    #ECFDF5;
+  --color-blue:          #3B82F6;
+  --color-blue-pale:     #EFF6FF;
+  --color-rose:          #C98989;
+  --color-rose-pale:     #FDF2F2;
+
+  /* ── Typography ── */
+  --font-heading: "Lora", Georgia, serif;
+  --font-body:    "Raleway", system-ui, -apple-system, sans-serif;
+
+  /* ── Radius ── */
   --radius-sm:   8px;
   --radius-md:   12px;
   --radius-lg:   16px;
@@ -37,47 +60,45 @@
   --radius-full: 9999px;
 }
 
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-}
+* { box-sizing: border-box; padding: 0; margin: 0; }
 
-html {
-  scroll-behavior: smooth;
-}
+html { scroll-behavior: smooth; overflow-x: hidden; }
 
 body {
   background-color: var(--color-background);
   color: var(--color-text);
-  font-family: var(--font-sans);
+  font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+h1, h2, h3, h4 {
+  font-family: var(--font-heading);
+}
+
 /* Scrollbar sutil */
-::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #D1D5DB; border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: #9CA3AF; }
 
-/* Seleção com cor primária */
-::selection {
-  background-color: #FEF3E2;
-  color: #FB923C;
+/* Selection com brand */
+::selection { background-color: #D8F3DC; color: #2D6A4F; }
+
+/* Acessibilidade — reduz animações quando solicitado */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
-/* Gradientes utilitários */
-.gradient-hero {
-  background: radial-gradient(ellipse 80% 60% at 60% 40%, #FEF3E2 0%, transparent 60%),
-              radial-gradient(ellipse 60% 50% at 30% 80%, #ECFDF5 0%, transparent 55%),
-              #FAF9F6;
-}
-
-.gradient-mission {
-  background: linear-gradient(135deg, #E0F2FE 0%, #ECFDF5 50%, #FEF3E2 100%);
-}
-
-.gradient-cta {
-  background: linear-gradient(135deg, #3FDFB8 0%, #10B981 40%, #FB923C 100%);
+/* Hero landscape fix — evita hero inacessível em celular deitado */
+@media (orientation: landscape) and (max-height: 500px) {
+  .hero-landscape-fix {
+    min-height: auto !important;
+    padding-top: 4rem !important;
+    padding-bottom: 2rem !important;
+  }
 }

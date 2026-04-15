@@ -1,16 +1,23 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { Heart, Instagram, Twitter } from 'lucide-react';
 
 const APP_URL = 'https://app.minhajornadadiaria.com.br';
+const BRAND   = '#2D6A4F';
 
 const navLinks = [
-  { label: 'Início',       href: '#hero' },
-  { label: 'Missão',       href: '#missao' },
-  { label: 'Recursos',     href: '#recursos' },
-  { label: 'Depoimentos',  href: '#depoimentos' },
-  { label: 'Começar',      href: '#comecar' },
+  { label: 'Recursos',      href: '#recursos' },
+  { label: 'Como Funciona', href: '#como-funciona' },
+  { label: 'Depoimentos',   href: '#depoimentos' },
+  { label: 'Começar',       href: '#comecar' },
+];
+
+const resourceLinks = [
+  'Devocional Diário',
+  'Meditação Guiada',
+  'Bíblia Offline',
+  'Diário de Oração',
+  'Árvore da Vida',
 ];
 
 const legalLinks = [
@@ -19,39 +26,57 @@ const legalLinks = [
 ];
 
 const socialLinks = [
-  {
-    label: 'Instagram',
-    href:  'https://instagram.com/senier451',
-    icon:  Instagram,
-  },
-  {
-    label: 'X (Twitter)',
-    href:  'https://x.com/senier451',
-    icon:  Twitter,
-  },
+  { label: 'Instagram', href: 'https://instagram.com/senier451', icon: Instagram },
+  { label: 'X (Twitter)', href: 'https://x.com/senier451', icon: Twitter },
 ];
+
+const linkHoverStyle = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  e.currentTarget.style.color = 'white';
+};
+const linkLeaveStyle = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  e.currentTarget.style.color = 'rgba(255,255,255,0.50)';
+};
 
 export function Footer() {
   return (
-    <footer className="bg-[#1F2937] text-white">
+    <footer style={{ background: '#0e0c0a', color: 'white' }}>
+
       {/* Main footer */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 lg:py-16">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8">
 
-          {/* ── Col 1: Logo + Tagline ── */}
+          {/* Col 1: Logo + Tagline */}
           <div className="sm:col-span-2 lg:col-span-1">
-            <a href="#hero" className="flex items-center gap-2.5 mb-4 group w-fit">
-              <FooterLogo />
+            <a href="#hero" className="flex items-center gap-2.5 mb-4 w-fit">
+              <div
+                className="w-8 h-8 rounded-lg flex items-center justify-center"
+                style={{ background: 'rgba(45,106,79,0.25)', border: '1px solid rgba(45,106,79,0.4)' }}
+              >
+                <span style={{ fontSize: 16 }}>🌿</span>
+              </div>
               <div>
-                <p className="font-bold text-white text-sm">Minha Jornada</p>
-                <p className="text-[#FB923C] text-xs font-semibold">Diária</p>
+                <p
+                  className="font-semibold text-sm text-white"
+                  style={{ fontFamily: 'var(--font-lora)' }}
+                >
+                  Minha Jornada
+                </p>
+                <p
+                  className="text-xs font-semibold"
+                  style={{ color: '#74C69D', fontFamily: 'var(--font-raleway)' }}
+                >
+                  Diária
+                </p>
               </div>
             </a>
-            <p className="text-[#9CA3AF] text-sm leading-relaxed max-w-xs mb-6">
+            <p
+              className="text-sm leading-relaxed max-w-xs mb-6"
+              style={{ color: 'rgba(255,255,255,0.45)', fontFamily: 'var(--font-raleway)' }}
+            >
               Transformando dias com a Palavra, oração e meditação.
               Uma jornada que floresce dia a dia.
             </p>
-            {/* Social links */}
+            {/* Social */}
             <div className="flex items-center gap-3">
               {socialLinks.map(({ label, href, icon: Icon }) => (
                 <a
@@ -60,17 +85,32 @@ export function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="w-9 h-9 rounded-xl bg-[#374151] hover:bg-[#4B5563] flex items-center justify-center transition-colors duration-200"
+                  className="w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-200"
+                  style={{
+                    background: 'rgba(255,255,255,0.08)',
+                    border: '1px solid rgba(255,255,255,0.10)',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'rgba(45,106,79,0.35)';
+                    e.currentTarget.style.borderColor = 'rgba(45,106,79,0.50)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.08)';
+                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.10)';
+                  }}
                 >
-                  <Icon size={16} className="text-[#9CA3AF] hover:text-white" />
+                  <Icon size={16} style={{ color: 'rgba(255,255,255,0.55)' }} />
                 </a>
               ))}
             </div>
           </div>
 
-          {/* ── Col 2: Navegação ── */}
+          {/* Col 2: Navegação */}
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-[#6B7280] mb-5">
+            <p
+              className="text-xs font-semibold uppercase tracking-widest mb-5"
+              style={{ color: 'rgba(255,255,255,0.30)', fontFamily: 'var(--font-raleway)' }}
+            >
               Navegação
             </p>
             <ul className="space-y-3">
@@ -78,7 +118,10 @@ export function Footer() {
                 <li key={link.label}>
                   <a
                     href={link.href}
-                    className="text-sm text-[#9CA3AF] hover:text-white transition-colors duration-150"
+                    className="text-sm transition-colors duration-150"
+                    style={{ color: 'rgba(255,255,255,0.50)', fontFamily: 'var(--font-raleway)' }}
+                    onMouseEnter={linkHoverStyle}
+                    onMouseLeave={linkLeaveStyle}
                   >
                     {link.label}
                   </a>
@@ -87,25 +130,25 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* ── Col 3: Recursos ── */}
+          {/* Col 3: Recursos */}
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-[#6B7280] mb-5">
+            <p
+              className="text-xs font-semibold uppercase tracking-widest mb-5"
+              style={{ color: 'rgba(255,255,255,0.30)', fontFamily: 'var(--font-raleway)' }}
+            >
               Recursos
             </p>
             <ul className="space-y-3">
-              {[
-                'Devocional Diário',
-                'Meditação Guiada',
-                'Bíblia Offline',
-                'Diário de Oração',
-                'Árvore da Vida',
-              ].map((item) => (
+              {resourceLinks.map((item) => (
                 <li key={item}>
                   <a
                     href={APP_URL}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-sm text-[#9CA3AF] hover:text-white transition-colors duration-150"
+                    className="text-sm transition-colors duration-150"
+                    style={{ color: 'rgba(255,255,255,0.50)', fontFamily: 'var(--font-raleway)' }}
+                    onMouseEnter={linkHoverStyle}
+                    onMouseLeave={linkLeaveStyle}
                   >
                     {item}
                   </a>
@@ -114,9 +157,12 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* ── Col 4: Legal + CTA ── */}
+          {/* Col 4: Legal + CTA */}
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-[#6B7280] mb-5">
+            <p
+              className="text-xs font-semibold uppercase tracking-widest mb-5"
+              style={{ color: 'rgba(255,255,255,0.30)', fontFamily: 'var(--font-raleway)' }}
+            >
               Legal & Contato
             </p>
             <ul className="space-y-3 mb-7">
@@ -124,7 +170,10 @@ export function Footer() {
                 <li key={link.label}>
                   <a
                     href={link.href}
-                    className="text-sm text-[#9CA3AF] hover:text-white transition-colors duration-150"
+                    className="text-sm transition-colors duration-150"
+                    style={{ color: 'rgba(255,255,255,0.50)', fontFamily: 'var(--font-raleway)' }}
+                    onMouseEnter={linkHoverStyle}
+                    onMouseLeave={linkLeaveStyle}
                   >
                     {link.label}
                   </a>
@@ -137,7 +186,20 @@ export function Footer() {
               href={APP_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#FB923C] hover:bg-[#F97316] text-white text-sm font-semibold transition-all duration-200 shadow-md hover:shadow-lg hover:-translate-y-0.5"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-white text-sm font-semibold transition-all duration-200 hover:-translate-y-0.5"
+              style={{
+                background: BRAND,
+                boxShadow: '0 4px 16px rgba(45,106,79,0.35)',
+                fontFamily: 'var(--font-raleway)',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = '#1B4332';
+                e.currentTarget.style.boxShadow = '0 8px 24px rgba(45,106,79,0.45)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = BRAND;
+                e.currentTarget.style.boxShadow = '0 4px 16px rgba(45,106,79,0.35)';
+              }}
             >
               Acessar o App ↗
             </a>
@@ -147,31 +209,24 @@ export function Footer() {
       </div>
 
       {/* Bottom bar */}
-      <div className="border-t border-[#374151]">
+      <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-[#6B7280] text-sm">
-            © {new Date().getFullYear()} Minha Jornada Diária. Todos os direitos reservados.
+          <p
+            className="text-xs"
+            style={{ color: 'rgba(255,255,255,0.30)', fontFamily: 'var(--font-raleway)' }}
+          >
+            © {new Date().getFullYear()} · app.minhajornadadiaria.com.br
           </p>
-          <div className="flex items-center gap-1.5 text-[#6B7280] text-sm">
+          <div
+            className="flex items-center gap-1.5 text-xs"
+            style={{ color: 'rgba(255,255,255,0.30)', fontFamily: 'var(--font-raleway)' }}
+          >
             <span>Feito com</span>
-            <Heart size={13} className="fill-[#C98989] text-[#C98989]" aria-hidden="true" />
-            <span>e muita oração 🌱</span>
+            <Heart size={12} className="fill-[#C98989] text-[#C98989]" aria-hidden="true" />
+            <span>e muita oração 🌿</span>
           </div>
         </div>
       </div>
     </footer>
-  );
-}
-
-function FooterLogo() {
-  return (
-    <svg width="32" height="32" viewBox="0 0 36 36" fill="none" aria-hidden="true">
-      <rect x="3" y="10" width="13" height="18" rx="2" fill="#374151" stroke="#FB923C" strokeWidth="1.5"/>
-      <rect x="20" y="10" width="13" height="18" rx="2" fill="#374151" stroke="#FB923C" strokeWidth="1.5"/>
-      <path d="M16 11 Q18 9 20 11 L20 28 Q18 26 16 28 Z" fill="#FB923C" opacity="0.3"/>
-      <line x1="18" y1="11" x2="18" y2="28" stroke="#FB923C" strokeWidth="1.5"/>
-      <path d="M18 10 C18 7 14 4 14 4 C14 4 14 8 18 10Z" fill="#10B981"/>
-      <path d="M18 10 C18 7 22 4 22 4 C22 4 22 8 18 10Z" fill="#3FDFB8"/>
-    </svg>
   );
 }
