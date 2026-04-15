@@ -1,29 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { searchQuerySchema } from '@/lib/validation/schemas';
 import { zodErrorResponse } from '@/lib/validation/schemas';
+import { createRateLimiter } from '@/lib/rate-limit';
 import type { SearchResult } from '@/types/search';
 import { ORACOES } from '@/data/oracoes';
 import { MEDITACOES } from '@/data/meditacoes';
 import { ESTUDOS } from '@/data/estudos';
 import { DEVOCIONAIS } from '@/data/devocionais';
 
-// ─── In-memory rate limiter (10 req / 10s per IP) ────────────────────────────
-const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
-
-function checkRateLimit(ip: string): boolean {
-  const now = Date.now();
-  const entry = rateLimitMap.get(ip);
-
-  if (!entry || now > entry.resetAt) {
-    rateLimitMap.set(ip, { count: 1, resetAt: now + 10_000 });
-    return true;
-  }
-
-  if (entry.count >= 10) return false;
-
-  entry.count++;
-  return true;
-}
+// ─── Rate limiter distribuído (20 req / 10s per IP) ──────────────────────────
+const searchLimiter = createRateLimiter(20, 10, '@jornada/search');
 
 // ─── Scoring helpers ──────────────────────────────────────────────────────────
 function score(text: string, query: string): number {
@@ -51,7 +37,8 @@ export async function GET(req: NextRequest) {
   const forwarded = req.headers.get('x-forwarded-for');
   const ip = forwarded ? forwarded.split(',')[0].trim() : 'unknown';
 
-  if (!checkRateLimit(ip)) {
+  const rl = await searchLimiter.check(ip);
+  if (!rl.success) {
     return NextResponse.json(
       { error: 'Muitas requisições. Tente novamente em alguns segundos.' },
       { status: 429, headers: { 'Retry-After': '10' } }

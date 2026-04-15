@@ -5,7 +5,6 @@ import { Plus, Search, RefreshCw } from 'lucide-react'
 import { ContentTable } from '@/components/admin/ContentTable'
 import { ContentFormModal } from '@/components/admin/ContentFormModal'
 import type { ContentItem, ContentType } from '@/lib/admin/content-queries'
-import { supabase } from '@/lib/supabase'
 
 type TabType = 'todos' | ContentType
 
@@ -24,14 +23,6 @@ interface FetchResult {
 }
 
 export default function ConteudoPage() {
-  const [authToken, setAuthToken] = useState('')
-
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      setAuthToken(data.session?.access_token ?? '')
-    })
-  }, [])
-
   const [activeTab, setActiveTab] = useState<TabType>('todos')
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(1)
@@ -77,10 +68,8 @@ export default function ConteudoPage() {
 
     const res = await fetch(url, {
       method,
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${authToken}`,
-      },
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
       body: JSON.stringify(formData),
     })
 
@@ -94,7 +83,7 @@ export default function ConteudoPage() {
   const handleDelete = async (id: string) => {
     await fetch(`/api/admin/content/${id}`, {
       method: 'DELETE',
-      headers: { Authorization: `Bearer ${authToken}` },
+      credentials: 'include',
     })
     fetchData()
   }
@@ -103,10 +92,8 @@ export default function ConteudoPage() {
     const newStatus = item.status === 'published' ? 'draft' : 'published'
     await fetch(`/api/admin/content/${item.id}`, {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${authToken}`,
-      },
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
       body: JSON.stringify({ status: newStatus }),
     })
     fetchData()
@@ -211,7 +198,6 @@ export default function ConteudoPage() {
           setEditItem(null)
         }}
         onSave={handleSave}
-        authToken={authToken}
       />
     </div>
   )

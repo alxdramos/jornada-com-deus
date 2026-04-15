@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { createServerClient } from '@supabase/ssr';
 import { PushSubscribeBodySchema, PushUnsubscribeBodySchema, zodErrorResponse } from '@/lib/validation/schemas';
 
 function getSupabase() {
@@ -9,9 +10,34 @@ function getSupabase() {
   );
 }
 
+async function getSessionUser(req: NextRequest) {
+  const response = NextResponse.next();
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() { return req.cookies.getAll(); },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value, options }) =>
+            response.cookies.set(name, value, options)
+          );
+        },
+      },
+    }
+  );
+  const { data: { user } } = await supabase.auth.getUser();
+  return user;
+}
+
 // POST /api/push/subscribe — salva ou atualiza subscription
 export async function POST(req: NextRequest) {
   try {
+    const user = await getSessionUser(req);
+    if (!user) {
+      return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
+    }
+
     const rawBody = await req.json();
     const parsed = PushSubscribeBodySchema.safeParse(rawBody);
 
@@ -20,6 +46,10 @@ export async function POST(req: NextRequest) {
     }
 
     const { subscription, userId } = parsed.data;
+
+    if (userId && userId !== user.id) {
+      return NextResponse.json({ error: 'Acesso negado' }, { status: 403 });
+    }
 
     const supabase = getSupabase();
     const { error } = await supabase
@@ -51,6 +81,11 @@ export async function POST(req: NextRequest) {
 // DELETE /api/push/subscribe — remove subscription
 export async function DELETE(req: NextRequest) {
   try {
+    const user = await getSessionUser(req);
+    if (!user) {
+      return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
+    }
+
     const rawBody = await req.json();
     const parsed = PushUnsubscribeBodySchema.safeParse(rawBody);
 

@@ -118,10 +118,13 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Webhook não configurado' }, { status: 500 });
   }
 
-  const receivedToken =
-    req.nextUrl.searchParams.get('token') ??
-    req.headers.get('x-herospark-token') ??
-    '';
+  const tokenFromHeader = req.headers.get('x-herospark-token');
+  const tokenFromQuery = req.nextUrl.searchParams.get('token');
+  const receivedToken = tokenFromHeader ?? tokenFromQuery ?? '';
+
+  if (!tokenFromHeader && tokenFromQuery) {
+    console.warn('[herospark] Token recebido via query param — considere migrar para header X-Herospark-Token');
+  }
 
   if (!receivedToken || !timingSafeCompare(receivedToken, expectedToken)) {
     console.warn('[herospark] Token inválido — IP:', ip);
@@ -136,7 +139,8 @@ export async function POST(req: NextRequest) {
   const offerTitle = payload.offer_title ?? '';
   const valueReais = payload.value !== undefined ? parseFloat(String(payload.value)) : 0;
 
-  console.log(`[herospark] Evento: "${event}" | Email: "${buyerEmail}" | Oferta: "${offerTitle}" | Valor: R$${valueReais}`);
+  const maskedEmail = buyerEmail.replace(/(.{2})[^@]+(@.+)/, '$1***$2');
+  console.log(`[herospark] Evento: "${event}" | Email: "${maskedEmail}" | Oferta: "${offerTitle}" | Valor: R$${valueReais}`);
 
   // ── 5. Apenas Purchase é processado (por agora) ───────────────────────────
   if (event !== 'Purchase') {

@@ -10,7 +10,6 @@ interface ContentFormModalProps {
   editItem?: ContentItem | null
   onClose: () => void
   onSave: (data: Partial<ContentItem>) => Promise<void>
-  authToken: string
 }
 
 type FormData = {
@@ -48,7 +47,7 @@ const CATEGORIES_BY_TYPE: Record<ContentType, string[]> = {
 
 type UploadState = { status: 'idle' | 'uploading' | 'done' | 'error'; progress?: number; error?: string }
 
-export function ContentFormModal({ isOpen, editItem, onClose, onSave, authToken }: ContentFormModalProps) {
+export function ContentFormModal({ isOpen, editItem, onClose, onSave }: ContentFormModalProps) {
   const defaultForm: FormData = {
     type: editItem?.type ?? 'meditacao',
     status: editItem?.status ?? 'draft',
@@ -85,10 +84,8 @@ export function ContentFormModal({ isOpen, editItem, onClose, onSave, authToken 
         // 1. Obter presigned URL
         const res = await fetch('/api/admin/content/upload', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${authToken}`,
-          },
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
           body: JSON.stringify({
             fileName: file.name,
             contentMimeType: file.type,
@@ -129,7 +126,7 @@ export function ContentFormModal({ isOpen, editItem, onClose, onSave, authToken 
         setter({ status: 'error', error: 'Erro inesperado no upload' })
       }
     },
-    [form.type, authToken]
+    [form.type]
   )
 
   const handleSubmit = async () => {
