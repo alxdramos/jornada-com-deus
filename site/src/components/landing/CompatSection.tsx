@@ -81,8 +81,8 @@ export function CompatSection() {
           Abre no navegador e adiciona à tela inicial, como qualquer app normal.
         </motion.p>
 
-        {/* Device cards — 1 col mobile, 3 cols md+ */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-9">
+        {/* Device cards — 1 col mobile, flex-wrap sm+ */}
+        <div className="flex flex-col sm:flex-row justify-center gap-5 flex-wrap mb-9">
           {devices.map((device, i) => (
             <motion.div
               key={device.name}
@@ -95,6 +95,8 @@ export function CompatSection() {
                 background: '#fff',
                 borderColor: 'rgba(0,0,0,0.055)',
                 padding: '28px 28px',
+                minWidth: '200px',
+                flex: '0 1 200px',
               }}
             >
               <span style={{ fontSize: 36, display: 'block', marginBottom: 12 }} role="img" aria-label={device.name}>

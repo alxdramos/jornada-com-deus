@@ -107,7 +107,7 @@ export function TestimonialsSection() {
         </div>
 
         {/* Cards */}
-        <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-5">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {testimonials.map((t, i) => (
             <motion.div
               key={t.name}
@@ -161,8 +161,8 @@ export function TestimonialsSection() {
                     {t.name}
                   </p>
                   <p
-                    className="text-[11px] leading-snug"
-                    style={{ color: '#9CA3AF', fontFamily: 'var(--font-raleway)', overflowWrap: 'break-word' }}
+                    className="text-[10px] truncate"
+                    style={{ color: '#9CA3AF', fontFamily: 'var(--font-raleway)' }}
                   >
                     {t.role}
                   </p>

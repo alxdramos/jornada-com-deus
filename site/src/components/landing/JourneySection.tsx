@@ -153,14 +153,14 @@ export function JourneySection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.55 }}
-            className="inline-block font-semibold italic rounded-[14px] max-w-full"
+            className="inline-block font-semibold italic rounded-[14px]"
             style={{
               fontFamily: 'var(--font-lora)',
-              fontSize: 'clamp(15px, 1.8vw, 18px)',
+              fontSize: 18,
               color: BRAND,
               background: BRAND_DIM,
               border: '1px solid rgba(45,106,79,0.15)',
-              padding: '18px 28px',
+              padding: '20px 32px',
             }}
           >
             Em menos de 1 minuto, você já está no seu momento com Deus.
